@@ -24,6 +24,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: 'emqx/docs-emqx-com-frontend'
+        token: ${{ secrets.CI_GIT_TOKEN }}
         path: frontend
 
     - name: use node.js
