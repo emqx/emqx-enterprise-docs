@@ -104,37 +104,11 @@ ref:
   - 从 MongoDB 中获取订阅关系
 - Schema Registry：将 EMQ X 的事件、消息 提供了数据编解码能力
 
-{% emqxce %}
 
-## EMQ X Enterprise
-
-[EMQ X Enterprise](https://www.emqx.com/zh/products/emqx) 是一个强大的企业级物联网 MQTT 消息平台，由开发开源 EMQ X 的人员构建。
-
-EMQ X Enterprise 支持百万级物联网设备一站式接入、MQTT&CoAP 多协议处理、低时延实时消息通信。它保持了 EMQ X 的简单性和高性能，同时增加了许多企业特性：
-
-  - 连接性能增强到百万级、千万级，支持私有协议及行业协议定制，基于 TCP/UDP 私有协议的旧网设备接入兼容，支持全网络多协议设备接入；
-  - 支持 Redis, MySQL, PostgreSQL, MongoDB 多种数据库消息数据持久化，消息转换写入 InfluxDB, OpenTSDB, TimescaleDB 多种时序数据库，支持自动从 Redis 或数据库加载订阅，无需客户端主动发起；
-  - 消息与流中间件消息桥接：10万/秒高性能高可靠转发消息到 Kafka 流处理中间件，无缝集成 RabbitMQ、Pulsar 企业消息中间件；
-  - 全球专业团队技术支持，我们的团队覆盖全球北美、欧洲、中国 5 个分支机构，有来自华为、IBM、Amazon 专业创始团队，以及欧洲、北美、印度近十家合作伙伴，能够全天侯相应一流的技术支持与咨询服务。
-
-
-::: tip
-感谢你对 EMQ X 的支持，如果有企业服务需要，请联系我们的销售人员 sales-cn@emqx.io。
-:::
-
-{% endemqxce %}
-
-{% emqxee %}
 
 ## 功能说明
 
-{% endemqxee %}
 
-{% emqxce %}
-
-## 企业版功能
-
-{% endemqxce %}
 
 ### 消息数据存储
 
@@ -179,10 +153,3 @@ Avro 和 Protobuf 是依赖 Schema 的数据格式，编码后的数据为二进
 编解码相关配置，详见"编解码"章节。
 
 
-{% emqxce %}
-
-## EMQ X 不同版本对比
-
-详细对比以及价格参见 [EMQ X 定价](https://www.emqx.com/zh/products/emqx)。
-
-{% endemqxce %}

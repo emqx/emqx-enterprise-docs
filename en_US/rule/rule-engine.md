@@ -1247,21 +1247,8 @@ The FROM statement is used to select the source of the event. If the message is 
 
 
 
-{% emqxce %}
-
-| Function | Purpose                             |        Parameters         | Returned value    |
-| -------- | ------------------------------------|-------------------------- | --------------------------- |
-| `base64_encode` | BASE64 encode   | The binary to be encoded | The encoded base64-formatted string |
-| `base64_decode` | BASE64 decode   | The base64-formatted string to be decoded | The decoded binary |
-| `json_encode` | JSON encode   | The data to be encoded | The JSON string |
-| `json_decode` | JSON decode   | The JSON string to be decoded | The decoded data |
-| `bin2hexstr` | Binary to Hex String | The binary | The hex string |
-| `hexstr2bin` | Binary to Hex String | The hex string | The binary |
-
-{% endemqxce %}
 
 
-{% emqxee %}
 
 | Function | Purpose                             |        Parameters         | Returned value |
 | -------- | ------------------------------------|------------------------- | --------------------------- |
@@ -1274,7 +1261,6 @@ The FROM statement is used to select the source of the event. If the message is 
 | `bin2hexstr` | Binary to Hex String | The binary | The hex string |
 | `hexstr2bin` | Binary to Hex String | The hex string | The binary |
 
-{% endemqxee %}
 
 
 ### Test SQL statements in Dashboard
