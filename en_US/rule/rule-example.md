@@ -1,18 +1,5 @@
 # Rule engine example
 
-{% emqxce %}
-
-::: danger
-Only the following operations are applicable in EMQ X Broker:
-- Check (debug)
-- Send data to web service
-- Bridge data to MQTT Broker
-
-
-The rest are exclusive to EMQ X Enterprise.
-:::
-
-{% endemqxce %}
 
 
 
