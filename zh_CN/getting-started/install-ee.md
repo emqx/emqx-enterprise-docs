@@ -3,7 +3,7 @@
 EMQ X 消息服务器可跨平台运行在 Linux、FreeBSD、macOS、Windows 或 openSUSE 服务器上。
 
 
-::: danger
+::: tip
 产品部署建议 Linux 服务器，不推荐 Windows 服务器。
 :::
 
