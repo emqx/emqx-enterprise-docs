@@ -18,7 +18,7 @@
       "children": [
         {
           "title": "安装",
-          "path": "getting-started/install"
+          "path": "getting-started/install-ee"
         },
         {
           "title": "启动 EMQ X",
@@ -42,7 +42,7 @@
         },
         {
           "title": "Dashboard",
-          "path": "getting-started/dashboard"
+          "path": "getting-started/dashboard-ee"
         }
       ]
     },
@@ -94,7 +94,7 @@
           "path": "advanced/hooks"
         },
         {
-          "title": "Plugins",
+          "title": "插件",
           "path": "advanced/plugins"
         },
         {
@@ -337,10 +337,6 @@
       "title": "版本发布",
       "children": [
         {
-          "title": "变更日志",
-          "path": "changes/changes"
-        },
-        {
           "title": "升级指南",
           "path": "changes/upgrade"
         }
@@ -352,10 +348,6 @@
         {
           "title": "架构设计",
           "path": "design/design"
-        },
-        {
-          "title": "资源",
-          "path": "awesome/awesome"
         }
       ]
     }
@@ -379,7 +371,7 @@
       "children": [
         {
           "title": "Installation",
-          "path": "getting-started/install"
+          "path": "getting-started/install-ee"
         },
         {
           "title": "Start EMQ X",
@@ -403,7 +395,7 @@
         },
         {
           "title": "Dashboard",
-          "path": "getting-started/dashboard"
+          "path": "getting-started/dashboard-ee"
         }
       ]
     },
@@ -699,10 +691,6 @@
       "title": "Changes",
       "children": [
         {
-          "title": "Change log",
-          "path": "changes/changes"
-        },
-        {
           "title": "Upgrade guide",
           "path": "changes/upgrade"
         }
@@ -714,10 +702,6 @@
         {
           "title": "Design",
           "path": "design/design"
-        },
-        {
-          "title": "Awsome",
-          "path": "awesome/awesome"
         }
       ]
     }
