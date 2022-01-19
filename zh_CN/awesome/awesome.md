@@ -1,4 +1,6 @@
 ---
+# 标题
+title: 资源
 # 编写日期
 date: 2020-02-07 17:15:26
 # 作者 Github 名称
@@ -18,13 +20,13 @@ ref:
 [![GitHub Release](https://img.shields.io/github/release/emqx/emqx?color=brightgreen)](https://github.com/emqx/emqx/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/emqx/emqx)](https://hub.docker.com/r/emqx/emqx)
 [![Slack Invite](<https://slack-invite.emqx.io/badge.svg>)](https://slack-invite.emqx.io)
-[![Twitter](https://img.shields.io/badge/Twitter-EMQ-1DA1F2?logo=twitter)](https://twitter.com/EMQTech)
+[![Twitter](https://img.shields.io/badge/Twitter-EMQ%20X-1DA1F2?logo=twitter)](https://twitter.com/emqtt)
 
 
 ## 官方资源
 
-  - [EMQ 官方网站](https://www.emqx.com/zh?spm=docs)
-  - [EMQ 官方博客](https://www.emqx.com/en/blog?spm=docs)
+  - [EMQ 官方网站](https://www.emqx.cn?spm=docs)
+  - [EMQ 官方博客](https://www.emqx.cn/blog?spm=docs)
   - [EMQ X GitHub 仓库](https://github.com/emqx/emqx)
 
 ## 社区、讨论、贡献和支持
@@ -32,7 +34,7 @@ ref:
 你可通过以下途径与 EMQ 社区及开发者联系：
 
   - [EMQ X Slack](https://slack-invite.emqx.io)
-  - [Twitter](https://twitter.com/EMQTech)
+  - [Twitter](https://twitter.com/emqtt)
   - [Forum](https://groups.google.com/d/forum/emqtt)
   - [Medium](https://medium.com/@emqtt)
   - [Reddit](https://www.reddit.com/r/emqx/)

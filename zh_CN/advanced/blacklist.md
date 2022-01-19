@@ -1,4 +1,6 @@
 ---
+# 标题
+title: 黑名单
 # 编写日期
 date: 2020-02-25 17:15:26
 # 作者 Github 名称
@@ -10,7 +12,7 @@ description:
 # 分类
 category: 
 # 引用
-ref:
+ref: undefined
 ---
 
 # 黑名单

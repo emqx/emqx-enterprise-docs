@@ -1,4 +1,6 @@
 ---
+# 标题
+title: 常见错误
 # 编写日期
 date: 2020-02-20 12:44:32
 # 作者 Github 名称
@@ -14,13 +16,10 @@ ref:
 ---
 
 # 常见错误
-## EMQ X 无法连接 MySQL 8.0
+### EMQ X 无法连接 MySQL 8.0
 
 **标签:** [*MySQL*](tags.md#mysql)  [*认证*](tags.md#认证)
 
-::: tip
-4.3 已兼容 caching_sha2_password，该问题仅在 4.3 以下的版本中出现。
-:::
 
 不同于以往版本，MySQL 8.0 对账号密码配置默认使用`caching_sha2_password`插件，需要将密码插件改成`mysql_native_password`
 
@@ -62,11 +61,11 @@ ref:
   + 重启 MySQL 即可
 
 
-## OPENSSL 版本不正确
+### OPENSSL 版本不正确
 
 **标签:** [*启动失败*](tags.md#启动失败)
 
-### 现象
+#### 现象
 
 执行  `./bin/emqx console` 输出的错误内容包含：
 
@@ -76,9 +75,9 @@ ref:
 
 它表示，EMQ X 依赖的 Erlang/OTP 中的 `crypto` 应用启动失败。
 
-### 解决方法
+#### 解决方法
 
-#### Linux
+##### Linux
 
 进入到 EMQ X 的安装目录（如果使用包管理工具安装 EMQ X，则应该进入与 EMQ X 的 `lib` 目录同级的位置）
 
@@ -131,7 +130,7 @@ $ ln -s /usr/local/lib64/libcrypto.so.1.1 /usr/lib64/libcrypto.so.1.1
 完成后，执行在 EMQ X 的 lib 同级目录下执行 `ldd lib/crypto-*/priv/lib/crypto.so` ，检查是否已能正确识别。如果不在有 `not found` 的 `.so` 库，即可正常启动 EMQ X。
 
 
-#### macOS
+##### macOS
 
 进入到 EMQ X 的安装目录：
 
@@ -168,21 +167,3 @@ $ brew install openssl@1.1
 ```
 
 安装完成后，即可正常启动 EMQ X。
-
-## Windows 缺失 MSVCR120.dll
-
-**标签:** [*启动失败*](tags.md#启动失败)
-
-### 现象
-
-Windows 执行  `./bin/emqx console` 弹出错误窗口：
-
-```bash
-无法启动次程序，因为计算机中丢失 MSVCR120.dll。请尝试重新安装该程序以解决此问题。
-```
-
-![error](./static/WechatIMG18396.png)
-
-### 解决方法
-
-安装 [Microsoft Visual C++ RedistributablePackage](https://www.microsoft.com/en-us/download/search.aspx?q=redistributable+package.)

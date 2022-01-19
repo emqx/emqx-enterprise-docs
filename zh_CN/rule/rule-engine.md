@@ -1,4 +1,6 @@
 ---
+# 标题
+title: 规则引擎示例
 # 编写日期
 date: 2020-02-20 17:46:13
 # 作者 Github 名称
@@ -10,15 +12,16 @@ description:
 # 分类
 category:
 # 引用
-ref:
+ref: undefined
 ---
 
+
 # 规则引擎
+
 
 EMQ X Rule Engine (以下简称规则引擎) 用于配置 EMQ X 消息流与设备事件的处理、响应规则。规则引擎不仅提供了清晰、灵活的 "配置式" 的业务集成方案，简化了业务开发流程，提升用户易用性，降低业务系统与 EMQ X 的耦合度；也为 EMQ X 的私有功能定制提供了一个更优秀的基础架构。
 
 ![image-20190506171815028](../assets/image-20190506171815028.jpg)
-
 
 EMQ X 在 **消息发布或事件触发** 时将触发规则引擎，满足触发条件的规则将执行各自的 SQL 语句筛选并处理消息和事件的上下文信息。
 
@@ -28,16 +31,7 @@ EMQ X 在 **消息发布或事件触发** 时将触发规则引擎，满足触�
 兼容提示: EMQ X v4.0 对规则引擎 SQL 语法做出较大调整，v3.x 升级用户请参照 [迁移指南](./rule-engine.md#迁移指南) 进行适配。
 :::
 
-
-## EMQ X 规则引擎快速入门
-
-此处包含规则引擎的简介与实战，演示使用规则引擎结合华为云 RDS 上的 MySQL 服务，进行物联网 MQTT 设备在线状态记录、消息存储入库。
-
-从本视频中可以快速了解规则引擎解决的问题和基础使用方法。
-
-<iframe style="width: 500px; height: 360px; margin: 10px auto" src="//player.bilibili.com/player.html?aid=927036281&bvid=BV19T4y1w7Nj&cid=233977851&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
-
-## 消息发布
+### 消息发布
 
 规则引擎借助响应动作可将特定主题的消息处理结果存储到数据库，发送到 HTTP Server，转发到消息队列 Kafka 或 RabbitMQ，重新发布到新的主题甚至是另一个 Broker 集群中，每个规则可以配置多个响应动作。
 
@@ -53,7 +47,7 @@ SELECT * FROM "t/#"
 SELECT payload.x as x FROM "t/a"
 ```
 
-## 事件触发
+### 事件触发
 
 规则引擎使用 **$events/** 开头的虚拟主题（**事件主题**）处理 EMQ X 内置事件，内置事件提供更精细的消息控制和客户端动作处理能力，可用在 QoS 1 QoS 2 的消息抵达记录、设备上下线记录等业务中。
 
@@ -114,27 +108,27 @@ Dashboard 中提供了旧版 SQL 语法转换功能可以完成 SQL 升级迁移
 与 EMQ X 规则引擎相关的概念包括: 规则(rule)、动作(action)、资源(resource) 和 资源类型(resource-type)。
 
 规则、动作、资源的关系:
-```
-规则: {
-    SQL 语句,
-    动作列表: [
-        {
-            动作1,
-            动作参数,
-            绑定资源: {
-                资源配置
-            }
-        },
-        {
-            动作2,
-            动作参数,
-            绑定资源: {
-                资源配置
-            }
-         }
-    ]
-}
-```
+
+        规则: {
+            SQL 语句,
+            动作列表: [
+                {
+                    动作1,
+                    动作参数,
+                    绑定资源: {
+                        资源配置
+                    }
+                },
+                {
+                    动作2,
+                    动作参数,
+                    绑定资源: {
+                        资源配置
+                    }
+                }
+            ]
+        }
+
 - 规则(Rule): 规则由 SQL 语句和动作列表组成。动作列表包含一个或多个动作及其参数。
 - SQL 语句用于筛选或转换消息中的数据。
 - 动作(Action) 是 SQL 语句匹配通过之后，所执行的任务。动作定义了一个针对数据的操作。
@@ -146,19 +140,19 @@ Dashboard 中提供了旧版 SQL 语法转换功能可以完成 SQL 升级迁移
 动作和资源类型是由 emqx 或插件的代码提供的，不能通过 API 和 CLI 动态创建。
 :::
 
-## SQL 语句
-### SQL 语法
+## SQL 语句 
+### SQL 语法 
 **FROM、SELECT 和 WHERE 子句:**
 
 规则引擎的 SQL 语句基本格式为:
 
 ```sql
 SELECT <字段名> FROM <主题> [WHERE <条件>]
-```
+````
 
-- `FROM` 子句将规则挂载到某个主题上
-- `SELECT` 子句用于对数据进行变换，并选择出感兴趣的字段
-- `WHERE` 子句用于对 SELECT 选择出来的某个字段施加条件过滤
+- ``FROM`` 子句将规则挂载到某个主题上
+- ``SELECT`` 子句用于对数据进行变换，并选择出感兴趣的字段
+- ``WHERE`` 子句用于对 SELECT 选择出来的某个字段施加条件过滤
 
 **FOREACH、DO 和 INCASE 子句:**
 
@@ -166,23 +160,23 @@ SELECT <字段名> FROM <主题> [WHERE <条件>]
 
 ```sql
 FOREACH <字段名> [DO <条件>] [INCASE <条件>] FROM <主题> [WHERE <条件>]
-```
+````
 
-- `FOREACH` 子句用于选择需要做 foreach 操作的字段，注意选择出的字段必须为数组类型
-- `DO` 子句用于对 FOREACH 选择出来的数组中的每个元素进行变换，并选择出感兴趣的字段
-- `INCASE` 子句用于对 DO 选择出来的某个字段施加条件过滤
+- ``FOREACH`` 子句用于选择需要做 foreach 操作的字段，注意选择出的字段必须为数组类型
+- ``DO`` 子句用于对 FOREACH 选择出来的数组中的每个元素进行变换，并选择出感兴趣的字段
+- ``INCASE`` 子句用于对 DO 选择出来的某个字段施加条件过滤
 
 其中 DO 和 INCASE 子句都是可选的。DO 相当于针对当前循环中对象的 SELECT 子句，而 INCASE 相当于针对当前循环中对象的 WHERE 语句。
 
-### 事件和事件主题
+### 事件和事件主题 
 规则引擎的 SQL 语句既可以处理消息(消息发布)，也可以处理事件(客户端上下线、客户端订阅等)。对于消息，FROM 子句后面直接跟主题名；对于事件，FROM 子句后面跟事件主题。
 
 事件消息的主题以 `"$events/"` 开头，比如 `"$events/client_connected",` `"$events/session_subscribed"。`
-如果想让 emqx 将事件消息发布出来，可以在 `emqx_rule_engine.conf` 文件中配置。
+如果想让 emqx 将事件消息发布出来，可以在 ``emqx_rule_engine.conf`` 文件中配置。
 
 所有支持的事件及其可用字段详见: [规则事件](#rule-sql-events)。
 
-### SQL 语句示例:
+### SQL 语句示例: 
 #### 基本语法举例
 
 - 从 topic 为 "t/a" 的消息中提取所有字段:
@@ -218,13 +212,13 @@ SELECT username FROM "#" WHERE username='Steven'
 - 从任意 topic 的 JSON 消息体(payload) 中提取 x 字段，并创建别名 x 以便在 WHERE 子句中使用。WHERE 子句限定条件为 x = 1。下面这个 SQL 语句可以匹配到消息体 {"x": 1}, 但不能匹配到消息体 {"x": 2}:
 
 ```sql
-SELECT payload FROM "#" WHERE payload.x = 1
+SELECT payload as p FROM "#" WHERE p.x = 1
 ```
 
 - 类似于上面的 SQL 语句，但嵌套地提取消息体中的数据，下面的 SQL 语句可以匹配到 JSON 消息体 {"x": {"y": 1}}:
 
 ```sql
-SELECT payload FROM "#" WHERE payload.x.y = 1
+SELECT payload as a FROM "#" WHERE a.x.y = 1
 ```
 
 - 在 clientid = 'c1' 尝试连接时，提取其来源 IP 地址和端口号:
@@ -245,19 +239,13 @@ SELECT clientid FROM "$events/session_subscribed" WHERE topic = 't/#' and qos = 
 SELECT clientid FROM "$events/session_subscribed" WHERE topic =~ 't/#' and qos = 1
 ```
 
-- 对于一个 MQTT 5.0 PUBLISH 消息，筛选出 Key 为 "foo" 的 User Property:
-
-```sql
-SELECT pub_props.'User-Property'.foo as foo FROM "t/#"
-```
-
 ::: tip
 
-- FROM 子句后面的主题需要用双引号 `""`，或者单引号 `''` 引起来。
-- WHERE 子句后面接筛选条件，如果使用到字符串需要用单引号 `''` 引起来。
-- FROM 子句里如有多个主题，需要用逗号 `","` 分隔。例如 SELECT * FROM "t/1", "t/2" 。
-- 可以使用使用 `"."` 符号对 payload 进行嵌套选择。
-- 尽量不要给 payload 创建别名，否则会影响运行性能。即尽量不要这么写：`SELECT payload as p`
+- FROM 子句后面的主题需要用双引号 ``""`` 引起来。
+- WHERE 子句后面接筛选条件，如果使用到字符串需要用单引号 ``''`` 引起来。
+- FROM 子句里如有多个主题，需要用逗号 ``","`` 分隔。例如 SELECT * FROM "t/1", "t/2" 。
+- 可以使用使用 ``"."`` 符号对 payload 进行嵌套选择。
+
 :::
 
 #### 遍历语法(FOREACH-DO-INCASE) 举例
@@ -450,122 +438,8 @@ FROM "t/#"
 {"x": 7}
 ```
 
-#### 数组操作语法举例
 
-**示例1: 创建一个数组，赋值给变量 a:**
-
-```sql
-SELECT
-  [1,2,3] as a
-FROM
-  "t/#"
-```
-
-下标从 1 开始，上面的 SQL 输出为:
-
-```json
-{
-  "a": [1, 2, 3]
-}
-```
-
-**示例2: 从数组中取出第 N 个元素。下标为负数时，表示从数组的右边取:**
-
-```sql
-SELECT
-  [1,2,3] as a,
-  a[2] as b,
-  a[-2] as c
-FROM
-  "t/#"
-```
-
-上面的 SQL 输出为:
-
-```json
-{
-  "b": 2,
-  "c": 2,
-  "a": [1, 2, 3]
-}
-```
-
-**示例3: 从 JSON 格式的 payload 中嵌套的获取值:**
-
-```sql
-SELECT
-  payload.data[1].id as id
-FROM
-  "t/#"
-```
-
-假设消息为:
-
-```json
-{"data": [
-    {"id": 1, "name": "steve"},
-    {"id": 2, "name": "bill"}
-]}
-```
-
-则上面的 SQL 输出为:
-
-```json
-{"id": 1}
-```
-
-**示例4: 数组范围(range)操作:**
-
-```sql
-SELECT
-  [1..5] as a,
-  a[2..4] as b
-FROM
-  "t/#"
-```
-
-上面的 SQL 输出为:
-
-```json
-{
-  "b": [2, 3, 4],
-  "a": [1, 2, 3, 4, 5]
-}
-```
-
-**示例5: 使用下标语法修改数组中的某个元素:**
-
-```sql
-SELECT
-  payload,
-  'STEVE' as payload.data[1].name
-FROM
-  "t/#"
-```
-
-假设消息为:
-
-```json
-{"data": [
-    {"id": 1, "name": "steve"},
-    {"id": 2, "name": "bill"}
-]}
-```
-
-则上面的 SQL 输出为:
-
-```json
-{
-  "payload": {
-    "data": [
-      {"name": "STEVE", "id": 1},
-      {"name": "bill", "id": 2}
-    ]
-  }
-}
-```
-
-### FROM 子句可用的事件主题
+### FROM 子句可用的事件主题 
 | 事件主题名                    | 释义     |
 | ----------------------------- | :------- |
 | $events/message_delivered    | 消息投递 |
@@ -576,8 +450,8 @@ FROM
 | $events/session_subscribed   | 订阅     |
 | $events/session_unsubscribed | 取消订阅 |
 
-### SELECT 和 WHERE 子句可用的字段
-SELECT 和 WHERE 子句可用的字段与事件的类型相关。其中 `clientid`, `username` 和 `event` 是通用字段，每种事件类型都有。
+### SELECT 和 WHERE 子句可用的字段 
+SELECT 和 WHERE 子句可用的字段与事件的类型相关。其中 ``clientid``, ``username`` 和 ``event`` 是通用字段，每种事件类型都有。
 
 #### 普通主题 (消息发布)
 
@@ -591,8 +465,7 @@ SELECT 和 WHERE 子句可用的字段与事件的类型相关。其中 `clienti
 | topic               | MQTT 主题                             |
 | qos                 | MQTT 消息的 QoS                       |
 | flags               | MQTT 消息的 Flags                     |
-| headers             | MQTT 消息内部与流程处理相关的额外数据     |
-| pub_props           | PUBLISH Properties (仅适用于 MQTT 5.0) |
+| headers             | MQTT 消息内部与流程处理相关的额外数据 |
 | timestamp           | 事件触发时间 (ms)                     |
 | publish_received_at | PUBLISH 消息到达 Broker 的时间 (ms)   |
 | node                | 事件触发所在节点                      |
@@ -611,13 +484,11 @@ SELECT 和 WHERE 子句可用的字段与事件的类型相关。其中 `clienti
 | topic               | MQTT 主题                            |
 | qos                 | MQTT 消息的 QoS                      |
 | flags               | MQTT 消息的 Flags                    |
-| pub_props           | PUBLISH Properties (仅适用于 MQTT 5.0) |
 | timestamp           | 事件触发时间 (ms)                    |
 | publish_received_at | PUBLISH 消息到达 Broker 的时间 (ms)  |
 | node                | 事件触发所在节点                     |
 
 #### $events/message_acked (消息确认)
-
 |        event        |  事件类型，固定为 "message.acked"   |
 | :------------------ | :---------------------------------- |
 | id                  | MQTT 消息 ID                        |
@@ -630,8 +501,6 @@ SELECT 和 WHERE 子句可用的字段与事件的类型相关。其中 `clienti
 | topic               | MQTT 主题                           |
 | qos                 | MQTT 消息的 QoS                     |
 | flags               | MQTT 消息的 Flags                   |
-| pub_props           | PUBLISH Properties (仅适用于 MQTT 5.0) |
-| puback_props        | PUBACK Properties (仅适用于 MQTT 5.0) |
 | timestamp           | 事件触发时间 (ms)                   |
 | publish_received_at | PUBLISH 消息到达 Broker 的时间 (ms) |
 | node                | 事件触发所在节点                    |
@@ -649,13 +518,11 @@ SELECT 和 WHERE 子句可用的字段与事件的类型相关。其中 `clienti
 | topic               | MQTT 主题                           |
 | qos                 | MQTT 消息的 QoS                     |
 | flags               | MQTT 消息的 Flags                   |
-| pub_props           | PUBLISH Properties (仅适用于 MQTT 5.0) |
 | timestamp           | 事件触发时间 (ms)                   |
 | publish_received_at | PUBLISH 消息到达 Broker 的时间 (ms) |
 | node                | 事件触发所在节点                    |
 
 #### $events/client_connected (终端连接成功)
-
 |      event      | 事件类型，固定为 "client.connected" |
 | --------------- | :---------------------------------- |
 | clientid        | 消息目的 Client ID                  |
@@ -670,26 +537,23 @@ SELECT 和 WHERE 子句可用的字段与事件的类型相关。其中 `clienti
 | expiry_interval | MQTT Session 过期时间               |
 | is_bridge       | 是否为 MQTT bridge 连接             |
 | connected_at    | 终端连接完成时间 (s)                |
-| conn_props      | CONNECT Properties (仅适用于 MQTT 5.0) |
 | timestamp       | 事件触发时间 (ms)                   |
 | node            | 事件触发所在节点                    |
 
 #### $events/client_disconnected (终端连接断开)
 
-| event           | 事件类型，固定为 "client.disconnected"                       |
-| --------------- | :----------------------------------------------------------- |
-| reason          | 终端连接断开原因：<br/>normal：客户端主动断开<br/>kicked：服务端踢出，通过 REST API<br/>keepalive_timeout: keepalive 超时<br/>not_authorized:  认证失败，或者 acl_nomatch = disconnect 时没有权限的 Pub/Sub 会主动断开客户端<br/>tcp_closed: 对端关闭了网络连接<br/>internal_error: 畸形报文或其他未知错误<br/> |
-| clientid        | 消息目的 Client ID                                           |
-| username        | 消息目的用户名                                               |
-| peername        | 终端的 IPAddress 和 Port                                     |
-| sockname        | emqx 监听的 IPAddress 和 Port                                |
-| disconnected_at | 终端连接断开时间 (s)                                         |
-| disconn_props   | DISCONNECT Properties (仅适用于 MQTT 5.0)                    |
-| timestamp       | 事件触发时间 (ms)                                            |
-| node            | 事件触发所在节点                                             |
+|      event      | 事件类型，固定为 "client.disconnected" |
+| --------------- | :------------------------------------- |
+| reason          | 终端连接断开原因                       |
+| clientid        | 消息目的 Client ID                     |
+| username        | 消息目的用户名                         |
+| peername        | 终端的 IPAddress 和 Port               |
+| sockname        | emqx 监听的 IPAddress 和 Port          |
+| disconnected_at | 终端连接断开时间 (s)                   |
+| timestamp       | 事件触发时间 (ms)                      |
+| node            | 事件触发所在节点                       |
 
 #### $events/session_subscribed (终端订阅成功)
-
 |   event   | 事件类型，固定为 "session.subscribed" |
 | --------- | ------------------------------------- |
 | clientid  | 消息目的 Client ID                    |
@@ -697,7 +561,6 @@ SELECT 和 WHERE 子句可用的字段与事件的类型相关。其中 `clienti
 | peerhost  | 客户端的 IPAddress                    |
 | topic     | MQTT 主题                             |
 | qos       | MQTT 消息的 QoS                       |
-| sub_props | SUBSCRIBE Properties (仅适用于 5.0)  |
 | timestamp | 事件触发时间 (ms)                     |
 | node      | 事件触发所在节点                      |
 
@@ -710,12 +573,11 @@ SELECT 和 WHERE 子句可用的字段与事件的类型相关。其中 `clienti
 | peerhost  | 客户端的 IPAddress                      |
 | topic     | MQTT 主题                               |
 | qos       | MQTT 消息的 QoS                         |
-| unsub_props | UNSUBSCRIBE Properties (仅适用于 5.0)  |
 | timestamp | 事件触发时间 (ms)                       |
 | node      | 事件触发所在节点                        |
 
-### SQL 关键字和符号
-#### SELECT - FROM - WHERE 语句
+### SQL 关键字和符号 
+#### SELECT - FROM - WHERE 语句 
 SELECT 语句用于决定最终的输出结果里的字段。比如:
 
 下面 SQL 的输出结果中将只有两个字段 "a" 和 "b":
@@ -748,7 +610,7 @@ SELECT clientid as cid FROM "#" WHERE xyz = 'abc'
 
 FROM 语句用于选择事件来源。如果是消息发布则填写消息的主题，如果是事件则填写对应的事件主题。
 
-#### 运算符号
+#### 运算符号 
 | 函数名 |   函数作用            |   返回值   |     |
 | ------ | ------------------- | ---------- | --- |
 | `+`    | 加法，或字符串拼接     | 加和，或拼接之后的字符串 |     |
@@ -760,7 +622,7 @@ FROM 语句用于选择事件来源。如果是消息发布则填写消息的主
 | `=`    | 比较两者是否完全相等。可用于比较变量和主题 | true/false |     |
 | `=~`   | 比较主题(topic)是否能够匹配到主题过滤器(topic filter)。只能用于主题匹配 | true/false |     |
 
-### SQL 语句中可用的函数
+### SQL 语句中可用的函数 
 #### 数学函数
 
 <table style="width:99%;">
@@ -990,11 +852,11 @@ FROM 语句用于选择事件来源。如果是消息发布则填写消息的主
 </tr>
 <tr class="odd">
 <td>is_not_null</td>
-<td>判断变量是否为非空值</td>
+<td>判断变量是否不为空值</td>
 <td><ol type="1">
 <li>Data</li>
 </ol></td>
-<td>Boolean 类型的数据。如果为空值(undefined) 则返回 false，否则返回 true</td>
+<td>Boolean 类型的数据。如果为空值(undefined) 则返回 true，否则返回 false</td>
 </tr>
 <tr class="even">
 <td>is_str</td>
@@ -1126,39 +988,39 @@ FROM 语句用于选择事件来源。如果是消息发布则填写消息的主
 
 | 函数名   |   函数作用    |    参数     |       返回值       |       举例       |
 | ------- | ------------ | ----------- | ------------------ | ----------------- |
-| <img width=120/>lower | <img width=300/>转为小写 | <img width=200/>1. 原字符串 | 小写字符串         |<img width=400/>`lower('AbC') = 'abc'`<br/><br/>`lower('abc') = 'abc' `|
-| upper   | 转为大写      | 1. 原字符串     | 大写字符串         |`upper('AbC') = 'ABC'`<br/><br/>`lower('ABC') = 'ABC' `|
-| trim    | 去掉左右空格  | 1. 原字符串     | 去掉空格后的字符串 |`trim(' hello  ') = 'hello' `|
-| ltrim   | 去掉左空格    | 1. 原字符串     | 去掉空格后的字符串 |`ltrim(' hello  ') = 'hello  '`|
-| rtrim   | 去掉右空格    | 1. 原字符串     | 去掉空格后的字符串 |`rtrim(' hello  ') = ' hello'`|
-| reverse | 字符串反转    | 1. 原字符串     | 翻转后的字符串 |`reverse('hello') = 'olleh' `|
-| strlen  | 取字符串长度    | 1. 原字符串     | 整数值，字符长度 |`strlen('hello') = 5 `|
-| substr  | 取字符的子串  | 1. 原字符串 2. 起始位置. 注意: 下标从 0 开始 | 子串 |`substr('abcdef', 2) = 'cdef' `|
-| substr  | 取字符的子串  | 1. 原字符串 2. 起始位置 3. 要取出的子串长度. 注意: 下标从 0 开始 | 子串 |`substr('abcdef', 2, 3) = 'cde' `|
-| split   | 字符串分割    | 1. 原字符串 2. 分割符子串 | 分割后的字符串数组 | `split('a/b/ c', '/') = ['a', 'b', ' c']` |
-| split   | 字符串分割, 只查找左边第一个分隔符 | 1. 原字符串 2. 分割符子串 3. 'leading' | 分割后的字符串数组 | `split('a/b/ c', '/', 'leading') = ['a', 'b/ c']` |
-| split   | 字符串分割, 只查找右边第一个分隔符 | 1. 原字符串 2. 分割符子串 3. 'trailing' | 分割后的字符串数组 | `split('a/b/ c', '/', 'trailing') = ['a/b', ' c']` |
-| concat   | 字符串拼接  | 1. 左字符串 2. 右符子串 | 拼接后的字符串 | `concat('a', '/bc') = 'a/bc'`<br/><br/>`'a' + '/bc' = 'a/bc'` |
-| tokens   | 字符串分解(按照指定字符串符分解)  | 1. 输入字符串 2. 分割符或字符串 | 分解后的字符串数组 | `tokens(' a/b/ c', '/') = [' a', 'b', ' c']`<br/><br/>`tokens(' a/b/ c', '/ ') = ['a', 'b', 'c']`<br/><br/>`tokens(' a/b/ c\n', '/ ') = ['a', 'b', 'c\n']` |
-| tokens   | 字符串分解(按照指定字符串和换行符分解)  | 1. 输入字符串 2. 分割符或字符串 3. 'nocrlf' | 分解后的字符串数组 | `tokens(' a/b/ c\n', '/ ', 'nocrlf') = ['a', 'b', 'c']`<br/><br/>`tokens(' a/b/ c\r\n', '/ ', 'nocrlf') = ['a', 'b', 'c']` |
-| sprintf   | 字符串格式化, 格式字符串的用法详见 https://erlang.org/doc/man/io.html#fwrite-1 里的 Format 部分 | 1. 格式字符串 2,3,4... 参数列表。参数个数不定 | 分解后的字符串数组 | `sprintf('hello, ~s!', 'steve') = 'hello, steve!'`<br/><br/>`sprintf('count: ~p~n', 100) = 'count: 100\n'` |
-| pad   | 字符串补足长度，补空格，从尾部补足  | 1. 原字符串 2. 字符总长度 | 补足后的字符串 | `pad('abc', 5) = 'abc  '` |
-| pad   | 字符串补足长度，补空格，从尾部补足  | 1. 原字符串 2. 字符总长度 3. 'trailing' | 补足后的字符串 | `pad('abc', 5, 'trailing') = 'abc  '` |
-| pad   | 字符串补足长度，补空格，从两边补足  | 1. 原字符串 2. 字符总长度 3. 'both' | 补足后的字符串 | `pad('abc', 5, 'both') = ' abc '` |
-| pad   | 字符串补足长度，补空格，从头部补足  | 1. 原字符串 2. 字符总长度 3. 'leading' | 补足后的字符串 | `pad('abc', 5, 'leading') = '  abc'` |
-| pad   | 字符串补足长度，补指定字符，从尾部补足  | 1. 原字符串 2. 字符总长度 3. 'trailing' 4. 指定用于补足的字符 | 补足后的字符串 |  `pad('abc', 5, 'trailing', '*') = 'abc**'`<br/><br/>`pad('abc', 5, 'trailing', '*#') = 'abc*#*#'` |
-| pad   | 字符串补足长度，补指定字符，从两边补足  | 1. 原字符串 2. 字符总长度 3. 'both' 4. 指定用于补足的字符 | 补足后的字符串 |  `pad('abc', 5, 'both', '*') = '*abc*'`<br/><br/>`pad('abc', 5, 'both', '*#') = '*#abc*#'` |
-| pad   | 字符串补足长度，补指定字符，从头部补足  | 1. 原字符串 2. 字符总长度 3. 'leading' 4. 指定用于补足的字符 | 补足后的字符串 | `pad('abc', 5, 'leading', '*') = '**abc'`<br/><br/>`pad('abc', 5, 'leading', '*#') = '*#*#abc'` |
-| replace | 替换字符串中的某子串，查找所有匹配子串替换  | 1. 原字符串 2. 要被替换的子串 3. 指定用于替换的字符串 | 替换后的字符串 | `replace('ababef', 'ab', 'cd') = 'cdcdef'` |
-| replace | 替换字符串中的某子串，查找所有匹配子串替换  | 1. 原字符串 2. 要被替换的子串 3. 指定用于替换的字符串 4. 'all' | 替换后的字符串 | `replace('ababef', 'ab', 'cd', 'all') = 'cdcdef'` |
-| replace | 替换字符串中的某子串，从尾部查找第一个匹配子串替换  | 1. 原字符串 2. 要被替换的子串 3. 指定用于替换的字符串 4. 'trailing' | 替换后的字符串 | `replace('ababef', 'ab', 'cd', 'trailing') = 'abcdef'` |
-| replace | 替换字符串中的某子串，从头部查找第一个匹配子串替换  | 1. 原字符串 2. 要被替换的子串 3. 指定用于替换的字符串 4. 'leading' | 替换后的字符串 | `replace('ababef', 'ab', 'cd', 'leading') = 'cdabef'` |
-| regex_match | 判断字符串是否与某正则表达式匹配  | 1. 原字符串 2. 正则表达式 | true 或 false | `regex_match('abc123', '[a-zA-Z1-9]*') = true` |
-| regex_replace | 替换字符串中匹配到某正则表达式的子串  | 1. 原字符串 2. 正则表达式 3. 指定用于替换的字符串 | 替换后的字符串 | `regex_replace('ab1cd3ef', '[1-9]', '[&]') = 'ab[1]cd[3]ef'`<br/><br/>`regex_replace('ccefacef', 'c+', ':') = ':efa:ef'` |
-| ascii | 返回字符对应的 ASCII 码  | 1. 字符 | 整数值，字符对应的 ASCII 码 | `ascii('a') = 97` |
-| find | 查找并返回字符串中的某个子串，从头部查找  | 1. 原字符串 2. 要查找的子串 | 查抄到的子串，如找不到则返回空字符串 | `find('eeabcabcee', 'abc') = 'abcabcee'` |
-| find | 查找并返回字符串中的某个子串，从头部查找  | 1. 原字符串 2. 要查找的子串 3. 'leading' | 查抄到的子串，如找不到则返回空字符串 | `find('eeabcabcee', 'abc', 'leading') = 'abcabcee'` |
-| find | 查找并返回字符串中的某个子串，从尾部查找  | 1. 原字符串 2. 要查找的子串 3. 'trailing' | 查抄到的子串，如找不到则返回空字符串 | `find('eeabcabcee', 'abc', 'trailing') = 'abcee'` |
+| lower   | 转为小写      | 1. 原字符串     | 小写字符串         |` 1. lower('AbC') = 'abc'`<br/><br/>`2. lower('abc') = 'abc' `|
+| upper   | 转为大写      | 1. 原字符串     | 大写字符串         |` 1. upper('AbC') = 'ABC'`<br/><br/>`2. lower('ABC') = 'ABC' `|
+| trim    | 去掉左右空格  | 1. 原字符串     | 去掉空格后的字符串 |` 1. trim(' hello  ') = 'hello' `|
+| ltrim   | 去掉左空格    | 1. 原字符串     | 去掉空格后的字符串 |` 1. ltrim(' hello  ') = 'hello  '`|
+| rtrim   | 去掉右空格    | 1. 原字符串     | 去掉空格后的字符串 |` 1. rtrim(' hello  ') = ' hello'`|
+| reverse | 字符串反转    | 1. 原字符串     | 翻转后的字符串 |` 1. reverse('hello') = 'olleh' `|
+| strlen  | 取字符串长度    | 1. 原字符串     | 整数值，字符长度 |` 1. strlen('hello') = 5 `|
+| substr  | 取字符的子串  | 1. 原字符串 2. 起始位置. 注意: 下标从 0 开始 | 子串 |` 1. substr('abcdef', 2) = 'cdef' `|
+| substr  | 取字符的子串  | 1. 原字符串 2. 起始位置 3. 要取出的子串长度. 注意: 下标从 0 开始 | 子串 |` 1. substr('abcdef', 2, 3) = 'cde' `|
+| split   | 字符串分割    | 1. 原字符串 2. 分割符子串 | 分割后的字符串数组 | `1. split('a/b/ c', '/') = ['a', 'b', ' c']` |
+| split   | 字符串分割, 只查找左边第一个分隔符 | 1. 原字符串 2. 分割符子串 3. 'leading' | 分割后的字符串数组 | `1. split('a/b/ c', '/', 'leading') = ['a', 'b/ c']` |
+| split   | 字符串分割, 只查找右边第一个分隔符 | 1. 原字符串 2. 分割符子串 3. 'trailing' | 分割后的字符串数组 | `1. split('a/b/ c', '/', 'trailing') = ['a/b', ' c']` |
+| concat   | 字符串拼接  | 1. 左字符串 2. 右符子串 | 拼接后的字符串 | `1. concat('a', '/bc') = 'a/bc'`<br/><br/>`2. 'a' + '/bc' = 'a/bc'` |
+| tokens   | 字符串分解(按照指定字符串符分解)  | 1. 输入字符串 2. 分割符或字符串 | 分解后的字符串数组 | `1. tokens(' a/b/ c', '/') = [' a', 'b', ' c']`<br/><br/>`2. tokens(' a/b/ c', '/ ') = ['a', 'b', 'c']`<br/><br/>`3. tokens(' a/b/ c\n', '/ ') = ['a', 'b', 'c\n']` |
+| tokens   | 字符串分解(按照指定字符串和换行符分解)  | 1. 输入字符串 2. 分割符或字符串 3. 'nocrlf' | 分解后的字符串数组 | `1. tokens(' a/b/ c\n', '/ ', 'nocrlf') = ['a', 'b', 'c']`<br/><br/>`2. tokens(' a/b/ c\r\n', '/ ', 'nocrlf') = ['a', 'b', 'c']` |
+| sprintf   | 字符串格式化, 格式字符串的用法详见 https://erlang.org/doc/man/io.html#fwrite-1 里的 Format 部分 | 1. 格式字符串 2,3,4... 参数列表。参数个数不定 | 分解后的字符串数组 | `1. sprintf('hello, ~s!', 'steve') = 'hello, steve!'`<br/><br/>`2. sprintf('count: ~p~n', 100) = 'count: 100\n'` |
+| pad   | 字符串补足长度，补空格，从尾部补足  | 1. 原字符串 2. 字符总长度 | 补足后的字符串 | `1. pad('abc', 5) = 'abc  '` |
+| pad   | 字符串补足长度，补空格，从尾部补足  | 1. 原字符串 2. 字符总长度 3. 'trailing' | 补足后的字符串 | `1. pad('abc', 5, 'trailing') = 'abc  '` |
+| pad   | 字符串补足长度，补空格，从两边补足  | 1. 原字符串 2. 字符总长度 3. 'both' | 补足后的字符串 | `1. pad('abc', 5, 'both') = ' abc '` |
+| pad   | 字符串补足长度，补空格，从头部补足  | 1. 原字符串 2. 字符总长度 3. 'leading' | 补足后的字符串 | `1. pad('abc', 5, 'leading') = '  abc'` |
+| pad   | 字符串补足长度，补指定字符，从尾部补足  | 1. 原字符串 2. 字符总长度 3. 'trailing' 4. 指定用于补足的字符 | 补足后的字符串 |  `1. pad('abc', 5, 'trailing', '*') = 'abc**'`<br/><br/>`2. pad('abc', 5, 'trailing', '*#') = 'abc*#*#'` |
+| pad   | 字符串补足长度，补指定字符，从两边补足  | 1. 原字符串 2. 字符总长度 3. 'both' 4. 指定用于补足的字符 | 补足后的字符串 |  `1. pad('abc', 5, 'both', '*') = '*abc*'`<br/><br/>`2. pad('abc', 5, 'both', '*#') = '*#abc*#'` |
+| pad   | 字符串补足长度，补指定字符，从头部补足  | 1. 原字符串 2. 字符总长度 3. 'leading' 4. 指定用于补足的字符 | 补足后的字符串 | `1. pad('abc', 5, 'leading', '*') = '**abc'`<br/><br/>`2. pad('abc', 5, 'leading', '*#') = '*#*#abc'` |
+| replace | 替换字符串中的某子串，查找所有匹配子串替换  | 1. 原字符串 2. 要被替换的子串 3. 指定用于替换的字符串 | 替换后的字符串 | `1. replace('ababef', 'ab', 'cd') = 'cdcdef'` |
+| replace | 替换字符串中的某子串，查找所有匹配子串替换  | 1. 原字符串 2. 要被替换的子串 3. 指定用于替换的字符串 4. 'all' | 替换后的字符串 | `1. replace('ababef', 'ab', 'cd', 'all') = 'cdcdef'` |
+| replace | 替换字符串中的某子串，从尾部查找第一个匹配子串替换  | 1. 原字符串 2. 要被替换的子串 3. 指定用于替换的字符串 4. 'trailing' | 替换后的字符串 | `1. replace('ababef', 'ab', 'cd', 'trailing') = 'abcdef'` |
+| replace | 替换字符串中的某子串，从头部查找第一个匹配子串替换  | 1. 原字符串 2. 要被替换的子串 3. 指定用于替换的字符串 4. 'leading' | 替换后的字符串 | `1. replace('ababef', 'ab', 'cd', 'leading') = 'cdabef'` |
+| regex_match | 判断字符串是否与某正则表达式匹配  | 1. 原字符串 2. 正则表达式 | true 或 false | `1. regex_match('abc123', '[a-zA-Z1-9]*') = true` |
+| regex_replace | 替换字符串中匹配到某正则表达式的子串  | 1. 原字符串 2. 正则表达式 3. 指定用于替换的字符串 | 替换后的字符串 | `1. regex_replace('ab1cd3ef', '[1-9]', '[&]') = 'ab[1]cd[3]ef'`<br/><br/>`2. regex_replace('ccefacef', 'c+', ':') = ':efa:ef'` |
+| ascii | 返回字符对应的 ASCII 码  | 1. 字符 | 整数值，字符对应的 ASCII 码 | `1. ascii('a') = 97` |
+| find | 查找并返回字符串中的某个子串，从头部查找  | 1. 原字符串 2. 要查找的子串 | 查抄到的子串，如找不到则返回空字符串 | `1. find('eeabcabcee', 'abc') = 'abcabcee'` |
+| find | 查找并返回字符串中的某个子串，从头部查找  | 1. 原字符串 2. 要查找的子串 3. 'leading' | 查抄到的子串，如找不到则返回空字符串 | `1. find('eeabcabcee', 'abc', 'leading') = 'abcabcee'` |
+| find | 查找并返回字符串中的某个子串，从尾部查找  | 1. 原字符串 2. 要查找的子串 3. 'trailing' | 查抄到的子串，如找不到则返回空字符串 | `1. find('eeabcabcee', 'abc', 'trailing') = 'abcee'` |
 
 #### Map 函数
 
@@ -1321,33 +1183,90 @@ FROM 语句用于选择事件来源。如果是消息发布则填写消息的主
 </tbody>
 </table>
 
-#### 比特操作函数
-
-| 函数名  | 函数功能| 参数| 返回值 | 示例 |
-|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------|-------------------------------------------------------|
-| `subbits` | 从二进制数据的起始位置获取指定长度的比特位, 然后转换为无符号整型 (大端). | 1. 二进制数据 2. 要获取的长度(bits) | 无符号整数 | `subbits(payload, 10)`                                |
-| `subbits` | 从二进制数据的指定下标位置获取指定长度的比特位, 然后转换为无符号整型 (大端). 下标是从 1 开始的 | 1. 二进制数据 2. 起始位置的下标 3. 要获取的长度(bits) | 无符号整数 | `subbits(payload, 1, 10)`                             |
-| `subbits` | 从二进制数据的指定下标位置获取指定长度的比特位, 然后按照给定的参数转换为想要的数据类型. 下标是从 1 开始的. | 1. 二进制数据 2. 起始位置的下标 3. 要获取的长度(bits) 4. 数据类型，可选值：'integer', 'float', 'bits' 5. 符号类型, 只对整型数据有效, 可选值：'unsigned', 'signed', 6. 大端还是小端, 只对整型数据有效, 可选值：'big', 'little' | 获取到的数据 | `subbits(payload, 1, 10, 'integer', 'signed', 'big')` |
-
 #### 编解码函数
 
-#### Decode and encode functions
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 14%" />
+<col style="width: 52%" />
+<col style="width: 16%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>函数名</td>
+<td>函数作用</td>
+<td>参数</td>
+<td>返回值</td>
+</tr>
+<tr class="even">
+<td>base64_encode</td>
+<td>BASE64 编码</td>
+<td><ol type="1">
+<li>数据</li>
+</ol></td>
+<td>BASE64 字符串</td>
+</tr>
+<tr class="odd">
+<td>base64_decode</td>
+<td>BASE64 解码</td>
+<td><ol type="1">
+<li>BASE64 字符串</li>
+</ol></td>
+<td>数据</td>
+</tr>
+<tr class="even">
+<td>json_encode</td>
+<td>JSON 编码</td>
+<td><ol type="1">
+<li>JSON 字符串</li>
+</ol></td>
+<td>内部 Map</td>
+</tr>
+<tr class="odd">
+<td>json_decode</td>
+<td>JSON 解码</td>
+<td><ol type="1">
+<li>内部 Map</li>
+</ol></td>
+<td>JSON 字符串</td>
+</tr>
+<tr class="even">
+<td>schema_encode</td>
+<td>Schema 编码</td>
+<td><ol type="1">
+<li>Schema ID 2. 内部 Map</li>
+</ol></td>
+<td>数据</td>
+</tr>
+<tr class="odd">
+<td>schema_encode</td>
+<td>Schema 编码</td>
+<td><ol type="1">
+<li>Schema ID 2. 内部 Map 3. Protobuf Message 名</li>
+</ol></td>
+<td>数据</td>
+</tr>
+<tr class="even">
+<td>schema_decode</td>
+<td>Schema 解码</td>
+<td><ol type="1">
+<li>Schema ID 2. 数据</li>
+</ol></td>
+<td>内部 Map</td>
+</tr>
+<tr class="odd">
+<td>schema_decode</td>
+<td>Schema 解码</td>
+<td><ol type="1">
+<li>Schema ID 2. 数据 3. Protobuf Message 名</li>
+</ol></td>
+<td>内部 Map</td>
+</tr>
+</tbody>
+</table>
 
-
-
-| 函数名 | 函数功能 |        参数         | 返回值 |
-| -------- | -------------- |--------------- | --------------------------- |
-| `base64_encode` | BASE64 编码 | 要编码的二进制数据 | Base64 编码的字符串 |
-| `base64_decode` | BASE64 解码 | Base64 编码的字符串 | 解码后的二进制数据 |
-| `json_encode` | JSON 编码 | 要转成 JSON 的数据结构 | JSON 字符串 |
-| `json_decode` | JSON 解码 | 要解码的 JSON 字符串 | 解码后的数据结构 |
-| `schema_encode` | 按照 schema 编码. 依赖 [schema registry](schema-registry.md) | 1. 由 schema registry 定义的 Schema ID 2. 要编码的数据 3..N. 其他参数，跟 schema 相关 | 编码后的数据 |
-| `schema_decode` | 按照 schema 编码. 依赖 [schema registry](schema-registry.md) | 1. 由 schema registry 定义的 Schema ID 2. 要解码的数据 3..N.  其他参数，跟 schema 相关 | 解码后的数据 |
-| `bin2hexstr` | 二进制数据转为 Hex 字符串 | 二进制数据 | Hex 字符串 |
-| `hexstr2bin` | Hex 字符串转为二进制数据 | Hex 字符串 | 二进制数据 |
-
-
-### 在 Dashboard 中测试 SQL 语句
+### 在 Dashboard 中测试 SQL 语句 
 Dashboard 界面提供了 SQL 语句测试功能，通过给定的 SQL 语句和事件参数，展示 SQL 测试结果。
 
 1.  在创建规则界面，输入 **规则SQL**，并启用 **SQL 测试** 开关:

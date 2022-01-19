@@ -1,4 +1,6 @@
 ---
+# 标题
+title: 指标监控
 # 编写日期
 date: 2020-02-25 17:15:26
 # 作者 Github 名称
@@ -10,7 +12,7 @@ description:
 # 分类
 category: 
 # 引用
-ref:
+ref: undefined
 ---
 
 # 指标监控
@@ -28,8 +30,6 @@ EMQ X 提供 [emqx_statsd](https://github.com/emqx/emqx-statsd) 插件，用于�
 ## Metrics & Stats
 
 EMQ X 将指标分为了 Metrics 与 Stats 两种。Metrics 通常指那些只会单调递增的数据，例如发送字节数量、发送报文数量。EMQ X 目前提供的 Metrics 覆盖了字节、报文、消息和事件四个维度。Stats 则通常指那些成对出现的数据，包括当前值和历史最大值，例如当前订阅数量和订阅历史最大数量。
-
-从 v4.1.0 版本开始，EMQ X 增加了针对指定主题的 Metrics 统计，包括消息收发数量和**收发速率**。我们提供了新建主题统计、取消主题统计和返回指定主题统计信息的 HTTP API，参见 [HTTP API](./http-api.md#endpoint-topic-metrics)，你也可以直接在 Dashboard -> Analysis -> Topic Metrics 页面进行相关操作。
 
 ### Metrics
 
@@ -117,9 +117,8 @@ EMQ X 将指标分为了 Metrics 与 Stats 两种。Metrics 通常指那些只�
 
 | Name                  | Data Type | Description                        |
 | --------------------- | --------- | ---------------------------------- |
-| actions.success       | Integer   | 规则引擎 action 执行成功次数       |
-| actions.error         | Integer   | 规则引擎 action 执行失败次数       |
-| actions.exception     | Integer   | 规则引擎 action 运行异常次数       |
+| actions.failure       | Integer   | 规则引擎 action 执行成功次数       |
+| actions.success       | Integer   | 规则引擎 action 执行失败次数       |
 | rules.matched         | Integer   | 规则的匹配次数                     |
 | client.auth.anonymous | Integer   | 客户端最终匿名形式登录的次数       |
 | client.connect        | Integer   | `client.connect` 钩子触发次数      |
@@ -130,12 +129,6 @@ EMQ X 将指标分为了 Metrics 与 Stats 两种。Metrics 通常指那些只�
 | client.check_acl      | Integer   | `client.check_acl` 钩子触发次数    |
 | client.subscribe      | Integer   | `client.subscribe` 钩子触发次数    |
 | client.unsubscribe    | Integer   | `client.unsubscribe` 钩子触发次数  |
-| client.auth.success   | Integer   | 客户端认证成功次数，至少启用一个认证插件后可用 |
-| client.auth.failure   | Integer   | 客户端认证失败次数，至少启用一个认证插件后可用  |
-| client.auth.ignore    | Integer   | 认证忽略次数，至少启用一个认证插件后可用，同时启用多个认证插件时，一次登录事件可能触发多次 ignore 计数，所有认证插件都 ignore 后，客户端可能以匿名方式成功登录 |
-| client.acl.allow      | Integer   | 客户端 ACL 校验通过次数，至少启用一个 ACL 插件后可用 |
-| client.acl.deny       | Integer   | 客户端 ACL 校验失败次数，至少启用一个 ACL 插件后可用  |
-| client.acl.ignore     | Integer   | ACL 校验忽略次数，至少启用一个 ACL 插件后可用，同时启用多个 ACL 插件时，一次发布/订阅事件可能触发多次 ignore 计数，所有 ACL插件都 ignore 后，发布/订阅操作可能因 acl_nomatch = true 成功 |
 | session.created       | Integer   | `session.created` 钩子触发次数     |
 | session.discarded     | Integer   | `session.discarded` 钩子触发次数   |
 | session.resumed       | Integer   | `session.resumed` 钩子触发次数     |
@@ -166,3 +159,5 @@ EMQ X 将指标分为了 Metrics 与 Stats 两种。Metrics 通常指那些只�
 | routes.max                 | Integer   | 路由数量的历史最大值       |
 | retained.count             | Integer   | 当前保留消息数量           |
 | retained.max               | Integer   | 保留消息的历史最大值       |
+
+

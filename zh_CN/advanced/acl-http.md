@@ -1,4 +1,6 @@
 ---
+# 标题
+title: HTTP ACL
 # 编写日期
 date: 2020-02-07 17:15:26
 # 作者 Github 名称
@@ -10,7 +12,7 @@ description:
 # 分类
 category: 
 # 引用
-ref:
+ref: undefined
 ---
 
 # HTTP ACL
@@ -107,13 +109,15 @@ HTTP 请求方法为 GET 时，请求参数将以 URL 查询字符串的形式�
 
 你可以在认证请求中使用以下占位符，请求时 EMQ X 将自动填充为客户端信息：
 
-- %A：操作类型，'1' 订阅；'2' 发布
-- %u：客户端用户名
+- %u：用户名
 - %c：Client ID
 - %a：客户端 IP 地址
 - %r：客户端接入协议
-- %m：Mountpoint
-- %t：主题
+- %P：明文密码
+- %p：客户端端口
+- %C：TLS 证书公用名（证书的域名或子域名），仅当 TLS 连接时有效
+- %d：TLS 证书 subject，仅当 TLS 连接时有效
+
 
 ::: danger 
 推荐使用 POST 与 PUT 方法，使用 GET 方法时明文密码可能会随 URL 被记录到传输过程中的服务器日志中。

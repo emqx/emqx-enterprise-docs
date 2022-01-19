@@ -1,4 +1,6 @@
 ---
+# 标题
+title: 启动 EMQ X
 # 编写日期
 date: 2020-02-07 17:15:26
 # 作者 Github 名称
@@ -10,7 +12,7 @@ description:
 # 分类
 category: 
 # 引用
-ref:
+ref: undefined
 ---
 
 # 启动 EMQ X
@@ -57,24 +59,22 @@ Node 'emqx@127.0.0.1' not responding to pings。
 你可以查看 [`logs`](../getting-started/directory.md) 下的日志文件并确认是否属于 [常见错误](../faq/error.md#)。
 
 
-
 ## License
 
 EMQ X Enterprise 需要 License 文件才能正常启动，请联系销售人员或在线自助购买/申请试用以获取 License。
 
 - 试用版 License：到期后将停止正在运行的 EMQ X；
-- 正式版 License：到期后不会停止正在运行的 EMQ X，但是新节点或手动停止之后的节点将无法启动。
-
+- 正式版 License：到期后
 
 ### 申请试用 License
 
-- 访问 [EMQ X Enterprise 下载页面](https://www.emqx.com/zh/downloads?product=enterprise)，点击 **[免费获取 License](https://www.emqx.com/zh/apply-licenses/emqx)**。
+- 访问 `https://emqx.io`，在 EMQ X Enterprise 下载页面，点击 **Get FREE Trial License**。
 
-    ![](./static/download_enterprise_page.png)
+    ![](./static/WX20200210-153301@2x.png)
 
-- 申请 License 文件试用，下载 License 文件。
+- 注册登陆并申请 License 文件试用，下载 License 文件。
 
-    ![](./static/apply_license.png)
+    ![](./static/WX20200210-153822@2x.png)
 
 ### 放置 License
 

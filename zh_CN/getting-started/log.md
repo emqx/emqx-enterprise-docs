@@ -1,4 +1,6 @@
 ---
+# 标题
+title: 日志与追踪
 # 编写日期
 date: 2020-02-18 13:52:34
 # 作者 Github 名称
@@ -10,16 +12,16 @@ description:
 # 分类
 category: 
 # 引用
-ref:
+ref: undefined
 ---
 
-# 日志与追踪
-## 控制日志输出
+# 日志与追踪 
+## 控制日志输出 
 EMQ X 支持将日志输出到控制台或者日志文件，或者同时使用两者。可在 `emqx.conf` 中配置：
-```
-log.to = file
-```
-`log.to` 默认值是 file，可选的值为：
+
+    log.to = both
+
+`log.to` 默认值是 both，可选的值为：
 
 - **off:** 完全关闭日志功能
 
@@ -29,7 +31,7 @@ log.to = file
 
 - **both:** 同时将日志输出到文件和标准输出(emqx 控制台)
 
-## 日志级别
+## 日志级别 
 EMQ X 的日志分 8 个等级 ([RFC 5424](https://www.ietf.org/rfc/rfc5424.txt))，由低到高分别为：
 
 ```bash
@@ -44,7 +46,7 @@ log.level = warning
 
 此配置将所有 log handler 的配置设置为 warning。
 
-## 日志文件和日志滚动
+## 日志文件和日志滚动 
 EMQ X 的默认日志文件目录在 `./log` (zip包解压安装) 或者 `/var/log/emqx` (二进制包安装)。可在 `emqx.conf` 中配置：
 
 ```bash
@@ -71,7 +73,7 @@ log.rotation.size = 10MB
 log.rotation.count = 5
 ```
 
-## 针对日志级别输出日志文件
+## 针对日志级别输出日志文件 
 如果想把大于或等于某个级别的日志写入到单独的文件，可以在 `emqx.conf` 中配置 `log.<level>.file`：
 
 将 info 及 info 以上的日志单独输出到 `info.log.N` 文件中：
@@ -86,7 +88,7 @@ log.info.file = info.log
 log.error.file = error.log
 ```
 
-## 日志格式
+## 日志格式 
 可在 `emqx.conf` 中修改单个日志消息的最大字符长度，如长度超过限制则截断日志消息并用 `...` 填充。默认不限制长度：
 
 将单个日志消息的最大字符长度设置为 8192:
@@ -106,7 +108,7 @@ log.chars_limit = 8192
 - **module_info:** 可选字段，仅当此日志消息与某个模块相关时存在。其格式为：[Module Info]
 - **msg:** 日志消息内容。格式任意，可包含空格。
 
-### 日志消息举例 1：
+#### 日志消息举例 1：
 
 ```bash
 2020-02-18 16:10:03.872 [debug] <<"mqttjs_9e49354bb3">>@127.0.0.1:57105 [MQTT/WS] SEND CONNACK(Q0, R0, D0, AckFlags=0, ReasonCode=0)
@@ -121,7 +123,7 @@ log.chars_limit = 8192
 - **module_info:** `[MQTT/WS]`
 - **msg:** `SEND CONNACK(Q0, R0, D0, AckFlags=0, ReasonCode=0)`
 
-### 日志消息举例 2：
+#### 日志消息举例 2：
 
 ```bash
 2020-02-18 16:10:08.474 [warning] [Alarm Handler] New Alarm: system_memory_high_watermark, Alarm Info: []
@@ -137,7 +139,7 @@ log.chars_limit = 8192
 
 注意此日志消息中，client_info 字段不存在。
 
-## 日志级别和 log handlers
+## 日志级别和 log handlers 
 EMQ X 使用了分层的日志系统，在日志级别上，包括全局日志级别 (primary log level)、以及各 log hanlder 的日志级别。
 
 ```bash
@@ -157,9 +159,9 @@ log handler 是负责日志处理和输出的工作进程，它由 log handler i
 ```bash
 $ emqx_ctl log handlers list
 
-LogHandler(id=ssl_handler, level=debug, destination=console, status=started)
-LogHandler(id=file, level=warning, destination=log/emqx.log, status=started)
-LogHandler(id=default, level=warning, destination=console, status=started)
+LogHandler(id=ssl_handler, level=debug, destination=console)
+LogHandler(id=file, level=debug, destination=log/emqx.log)
+LogHandler(id=default, level=debug, destination=console)
 ```
 
 - file: 负责输出到日志文件的 log handler。它没有设置特殊过滤条件，即所有日志消息只要级别满足要求就输出。输出目的地为日志文件。
@@ -178,10 +180,10 @@ LogHandler(id=default, level=warning, destination=console, status=started)
 
 Primary Log Level 相当于一个自来水管道系统的总开关，一旦关闭则各个分支管道都不再有水流通过。这个机制保证了日志系统的高性能运作。
 
-## 运行时修改日志级别
+## 运行时修改日志级别 
 你可以使用 EMQ X 的命令行工具 `emqx_ctl` 在运行时修改 emqx 的日志级别：
 
-### 修改全局日志级别：
+#### 修改全局日志级别：
 
 例如，将 primary log level 以及所有 log handlers 的级别设置为 debug：
 
@@ -189,7 +191,7 @@ Primary Log Level 相当于一个自来水管道系统的总开关，一旦关�
 $ emqx_ctl log set-level debug
 ```
 
-### 修改主日志级别：
+#### 修改主日志级别：
 
 例如，将 primary log level 设置为 debug:
 
@@ -197,7 +199,7 @@ $ emqx_ctl log set-level debug
 $ emqx_ctl log primary-level debug
 ```
 
-### 修改某个 log handler 的日志级别：
+#### 修改某个 log handler 的日志级别：
 
 例如，将 log handler `file` 设置为 debug:
 
@@ -205,23 +207,7 @@ $ emqx_ctl log primary-level debug
 $ emqx_ctl log handlers set-level file debug
 ```
 
-### 停止某个 log handler：
-
-例如，为了让日志不再输出到 console，可以停止 log handler `default`:
-
-```bash
-$ emqx_ctl log handlers stop default
-```
-
-### 启动某个已经停止的 log handler：
-
-例如，启动上面已停止的 log handler `default`:
-
-```bash
-$ emqx_ctl log handlers start default
-```
-
-## 日志追踪
+## 日志追踪 
 EMQ X 支持针对 ClientID 或 Topic 过滤日志并输出到文件。在使用日志追踪功能之前，必须将 primary log level 设置为 debug：
 
 ```bash
@@ -252,7 +238,7 @@ trace topic t/# successfully
 即使 `emqx.conf` 中，`log.level` 设置为 error，使用消息追踪功能仍然能够打印出某 client 或 topic 的 debug 级别的信息。这在生产环境中非常有用。
 :::
 
-### 日志追踪的原理
+### 日志追踪的原理 
 日志追踪的原理是给 emqx 安装一个新的 log handler，并设置 handler 的过滤条件。在 [日志级别和 log handlers](#log-level-and-log-handlers) 小节，我们讨论过 log handler 的细节。
 
 比如使用如下命令启用 client 日志追踪：
@@ -265,14 +251,14 @@ $ emqx_ctl log primary-level debug && emqx_ctl trace start client my_client log/
 
 ```bash
 $ emqx_ctl trace list
-Trace(clientid=my_client, level=debug, destination="log/my_client.log", status=started)
+Trace(clientid=my_client, level=debug, destination="log/my_client.log")
 ```
 
 在后台，emqx 会安装一个新的 log handler，并给其指定过滤条件为：仅当 ClientID 为 "my_client" 的时候，输出日志：
 
 ```bash
 $ emqx_ctl log handlers list
-LogHandler(id=trace_clientid_my_client, level=debug, destination=log/my_client.log, status=started)
+LogHandler(id=trace_clientid_my_client, level=debug, destination=log/my_client.log)
 ...
 ```
 

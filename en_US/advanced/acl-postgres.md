@@ -1,4 +1,6 @@
 ---
+# 标题
+title: PostgreSQL ACL
 # 编写日期
 date: 2020-02-07 17:15:26
 # 作者 Github 名称
@@ -64,12 +66,11 @@ Under the default configuration of the PostgreSQL authentication plugin, you nee
 
 ```sql
 CREATE TABLE mqtt_user (
-  id SERIAL PRIMARY KEY,
-  username CHARACTER VARYING(100),
-  password CHARACTER VARYING(100),
-  salt CHARACTER VARYING(40),
-  is_superuser BOOLEAN,
-  UNIQUE (username)
+  id SERIAL primary key,
+  is_superuser boolean,
+  username character varying(100),
+  password character varying(100),
+  salt character varying(40)
 )
 ```
 
@@ -86,17 +87,14 @@ VALUES
 
 ```sql
 CREATE TABLE mqtt_acl (
-  id SERIAL PRIMARY KEY,
-  allow INTEGER,
-  ipaddr CHARACTER VARYING(60),
-  username CHARACTER VARYING(100),
-  clientid CHARACTER VARYING(100),
-  access  INTEGER,
-  topic CHARACTER VARYING(100)
-);
-CREATE INDEX ipaddr ON mqtt_acl (ipaddr);
-CREATE INDEX username ON mqtt_acl (username);
-CREATE INDEX clientid ON mqtt_acl (clientid);
+  id SERIAL primary key,
+  allow integer,
+  ipaddr character varying(60),
+  username character varying(100),
+  clientid character varying(100),
+  access  integer,
+  topic character varying(100)
+)
 ```
 
 Rule table field description:
@@ -122,10 +120,10 @@ INSERT INTO mqtt_acl (allow, ipaddr, username, clientid, access, topic) VALUES (
 INSERT INTO mqtt_acl (allow, ipaddr, username, clientid, access, topic) VALUES (1, '10.59.1.100', NULL, NULL, 1, '$SYS/#');
 
 -- Deny client to subscribe to the topic of /smarthome/+/temperature
-INSERT INTO mqtt_acl (allow, ipaddr, username, clientid, access, topic) VALUES (0, NULL, '$all', NULL, 1, '/smarthome/+/temperature');
+INSERT INTO mqtt_acl (allow, ipaddr, username, clientid, access, topic) VALUES (0, NULL, NULL, NULL, 1, '/smarthome/+/temperature');
 
 -- Allow clients to subscribe to the topic of /smarthome/${clientid}/temperature with their own Client ID
-INSERT INTO mqtt_acl (allow, ipaddr, username, clientid, access, topic) VALUES (1, NULL, '$all', NULL, 1, '/smarthome/%c/temperature');
+INSERT INTO mqtt_acl (allow, ipaddr, username, clientid, access, topic) VALUES (1, NULL, NULL, NULL, 1, '/smarthome/%c/temperature');
 ```
 
 After enabling PostgreSQL ACL and successfully connecting with the username emqx, the client should have permissions on the topics it wants to subscribe to/publish.

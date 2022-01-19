@@ -1,4 +1,6 @@
 ---
+# 标题
+title: 生产部署
 # 编写日期
 date: 2020-02-07 17:15:26
 # 作者 Github 名称
@@ -10,21 +12,13 @@ description:
 # 分类
 category: 
 # 引用
-ref:
+ref: undefined
 ---
 
 # 生产部署
 
 在开发时我们通常使用压缩包方式以单节点的形式启动服务，生产运行需要一个更加简单稳定的方式。本页主要从部署架构最佳实践讲解如何部署你的 EMQ X 服务。
 
-::: tip
-如果 EMQ X 集群部署在 HAProxy 或 Nginx 后，且需要拿到客户端真实的源 IP 地址与端口，则需打开 Proxy Protocol 配置，配置项：[EMQ X 监听器 proxy_protocol](../configuration/configuration.md#listenertcpexternalproxyprotocol)
-
-`Proxy Protcol` 参考: [https://www.haproxy.com/blog/haproxy/proxy-protocol](https://www.haproxy.com/blog/haproxy/proxy-protocol)。
-
-Nginx 使用 Proxy Prorcol 参考: [https://docs.nginx.com/nginx/admin-guide/load-balancer/using-proxy-protocol/](https://docs.nginx.com/nginx/admin-guide/load-balancer/using-proxy-protocol/)
-
-:::
 
 
 ## 部署架构
@@ -45,13 +39,13 @@ LB (负载均衡器) 负责分发设备的 MQTT 连接与消息到 EMQ X 集群�
 
 公有云厂商 LB 产品:
 
-| 云计算厂商                       | 是否支持 TLS 终结 | LB 产品介绍                                                |
-| -------------------------------- | ----------------- | ---------------------------------------------------------- |
-| [青云](https://qingcloud.com)    | 是                | <https://docs.qingcloud.com/product/network/loadbalancer/> |
-| [AWS](https://aws.amazon.com)    | 是                | <https://aws.amazon.com/cn/elasticloadbalancing/>          |
-| [阿里云](https://www.aliyun.com) | 否                | <https://www.aliyun.com/product/slb>                       |
-| [UCloud](https://ucloud.cn)      | 未知              | <https://ucloud.cn/site/product/ulb.html>                  |
-| [QCloud](https://www.qcloud.com) | 未知              | <https://www.qcloud.com/product/clb>                       |
+| 云计算厂商                            | 是否支持 TLS 终结 | LB 产品介绍                                              |
+| -------------------------------- | ----------- | ---------------------------------------------------- |
+| [青云](https://qingcloud.com)      | 是           | <https://docs.qingcloud.com/guide/loadbalancer.html> |
+| [AWS](https://aws.amazon.com)    | 是           | <https://aws.amazon.com/cn/elasticloadbalancing/>    |
+| [阿里云](https://www.aliyun.com)    | 否           | <https://www.aliyun.com/product/slb>                 |
+| [UCloud](https://ucloud.cn)      | 未知          | <https://ucloud.cn/site/product/ulb.html>            |
+| [QCloud](https://www.qcloud.com) | 未知          | <https://www.qcloud.com/product/clb>                 |
 
 私有部署 LB 服务器:
 
@@ -76,13 +70,13 @@ EMQ X 节点集群部署在 LB 之后，建议部署在 VPC 或私有网络内�
 
 EMQ X 默认开启的 MQTT 服务 TCP 端口:
 
-| 端口  | 说明                    |
-| ----- | ----------------------- |
-| 1883  | MQTT 协议端口           |
+| 端口 | 说明 |
+| ----- | --------------------- |
+| 1883  | MQTT 协议端口             |
 | 8883  | MQTT/SSL 端口           |
 | 8083  | MQTT/WebSocket 端口     |
 | 8084  | MQTT/WebSocket/SSL 端口 |
-| 8081  | 管理 API 端口           |
+| 8081 | 管理 API 端口              |
 | 18083 | Dashboard 端口          |
 
 防火墙根据使用的 MQTT 接入方式，开启上述端口的访问权限。
@@ -91,13 +85,15 @@ EMQ X 默认开启的 MQTT 服务 TCP 端口:
 
 EMQ X 节点集群使用的 TCP 端口:
 
-| 端口 | 说明                         |
-|------|----------------------------|
-| 4369 | 集群节点发现端口 (EPMD 模式) |
-| 4370 | 集群节点发现端口             |
-| 5370 | 集群节点 PRC 通道            |
+| 端口 | 说明 |
+| ---- | --------- |
+| 4369 | 集群节点发现端口  |
+| 5369 | 集群节点 PRC 通道 |
+| 6369 | 集群节点控制通道  |
 
 集群节点间如有防护墙，需开启上述 TCP 端口互访权限。
+
+
 
 ## 青云 (QingCloud) 部署
 
@@ -137,7 +133,7 @@ EMQ X 节点集群使用的 TCP 端口:
 
 3. 私有网络内创建两台 EMQ X 主机，指定上面创建的 VPC 网络，例如:
   
-| 节点  | IP 地址     |
+|  节点  |  IP 地址   |
 | ----- | ----------- |
 | emqx1 | 192.168.0.2 |
 | emqx2 | 192.168.0.3 |
@@ -181,7 +177,7 @@ HAProxy 作为 LB 部署 EMQ X 集群，并终结 SSL 连接:
 
 1. 创建 EMQ X 集群节点，例如:
 
-| 节点  | IP 地址     |
+| 节点    | IP 地址    |
 | ----- | ----------- |
 | emqx1 | 192.168.0.2 |
 | emqx2 | 192.168.0.3 |
@@ -213,7 +209,7 @@ Nginx 产品作为 EMQ X 集群 LB，并终结 SSL 连接:
 
 1. 创建 EMQ X 节点集群，例如:
 
-| 节点  | IP 地址     |
+| 节点    | IP 地址     |
 | ----- | ----------- |
 | emqx1 | 192.168.0.2 |
 | emqx2 | 192.168.0.3 |

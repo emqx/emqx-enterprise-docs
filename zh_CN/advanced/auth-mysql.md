@@ -1,4 +1,6 @@
 ---
+# 标题
+title: MySQL 认证
 # 编写日期
 date: 2020-02-07 17:15:26
 # 作者 Github 名称
@@ -10,7 +12,7 @@ description:
 # 分类
 category: 
 # 引用
-ref:
+ref: undefined
 ---
 
 # MySQL 认证
@@ -32,9 +34,11 @@ emqx_auth_mysql 插件同时包含 ACL 功能，可通过注释禁用。
 
 ## MySQL 连接信息
 
-配置 MySQL 服务相关的连接地址，用户名密码和数据库：
+MySQL 基础连接信息，需要保证集群内所有节点均能访问。
 
 ```bash
+# etc/plugins/emqx_auth_mysql.conf
+
 ## 服务器地址
 auth.mysql.server = 127.0.0.1:3306
 
@@ -49,6 +53,7 @@ auth.mysql.database = mqtt
 
 auth.mysql.query_timeout = 5s
 ```
+
 
 
 ## 默认表结构
@@ -67,6 +72,8 @@ CREATE TABLE `mqtt_user` (
   UNIQUE KEY `mqtt_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
+
+
 
 默认配置下示例数据如下：
 
@@ -128,11 +135,6 @@ auth.mysql.auth_query = select password from mqtt_user where username = '%u' lim
 可以在 SQL 中使用 AS 语法为字段重命名指定 password，或者将 salt 值设为固定值。
 :::
 
-### 进阶
-
-默认表结构中，我们将 username 字段设为了唯一索引（UNIQUE），与默认的查询语句（`select password from mqtt_user where username = '%u' limit 1`）配合使用可以获得非常不错的查询性能。
-
-如果默认查询条件不能满足您的需要，例如你需要根据 Client ID 查询相应的 Password Hash 和 Salt，请确保将 Client ID 设置为索引；又或者您想要对 Username、Client ID 或者其他更多字段进行多条件查询，建议设置正确的单列索引或是联合索引。总之，设置正确的表结构和查询语句，尽可能不要让索引失效而影响查询性能。
 
 ## 特殊说明
 
@@ -141,4 +143,3 @@ MySQL 8.0 及以后版本使用了 `caching_sha2_password` 作为默认身份验
 ```sql
 ALTER USER 'your_username'@'your_host' IDENTIFIED WITH mysql_native_password BY 'your_password';
 ```
-

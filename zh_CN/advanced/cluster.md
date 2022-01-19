@@ -1,4 +1,6 @@
 ---
+# 标题
+title: 分布集群
 # 编写日期
 date: 2020-02-25 18:39:23
 # 作者 Github 名称
@@ -10,17 +12,15 @@ description:
 # 分类
 category:
 # 引用
-ref:
+ref: undefined
 ---
 
 # 分布式集群
 
-## 分布式 Erlang
-
+## 分布式 Erlang 
 Erlang/OTP 最初是爱立信为开发电信设备系统设计的编程语言平台，电信设备 (路由器、接入网关...) 典型设计是通过背板连接主控板卡与多块业务板卡的分布式系统。
 
-### 节点与分布式 Erlang
-
+### 节点与分布式 Erlang 
 Erlang/OTP 语言平台的分布式程序，由分布互联的 Erlang 运行时系统组成，每个 Erlang
 运行时系统被称为节点(Node)，节点间通过 TCP 两两互联，组成一个网状结构。
 
@@ -71,14 +71,12 @@ true
 
 ![image](../assets/cluster_1.png)
 
-### 安全
-
+### 安全 
 Erlang 节点间通过 cookie 进行互连认证。cookie 是一个字符串，只有 cookie 相同的两个节点才能建立连接。[上节](#node-and-distributed-erlang) 中我们曾经使用 `-setcookie my_nodes` 参数给四个节点设置了相同的 cookie: `my_nodes`。
 
 详见: <http://erlang.org/doc/reference_manual/distributed.html>
 
-### EMQ X 集群协议设置
-
+### EMQ X 集群协议设置 
 Erlang 集群中各节点可通过 TCPv4、TCPv6 或 TLS 方式连接，可在 `etc/emqx.conf`
 中配置连接方式:
 
@@ -87,16 +85,14 @@ Erlang 集群中各节点可通过 TCPv4、TCPv6 或 TLS 方式连接，可在 `
 | cluster.proto_dist | enum | `inet_tcp` | 分布式协议，可选值：<br />  - inet_tcp: 使用 TCP IPv4<br/>  - inet6_tcp: 使用 TCP IPv6<br/>  - inet_tls: 使用 TLS |
 | node.ssl_dist_optfile | 文件路径 | `etc/ssl_dist.conf` | 当 `cluster.proto_dist` 选定为 inet_tls 时，需要配置 `etc/ssl_dist.conf` 文件，指定 TLS 证书等 |
 
-## EMQ X 分布式集群设计
-
+## EMQ X 分布式集群设计 
 EMQ X 分布式的基本功能是将消息转发和投递给各节点上的订阅者，如下图所示：
 
-![image](../assets/design_9.png)
+![image](./../assets/design_9.png)
 
 为实现此过程，EMQ X 维护了几个与之相关的数据结构：订阅表，路由表，主题树。
 
-### 订阅表: 主题 - 订阅者
-
+### 订阅表: 主题 - 订阅者 
 MQTT 客户端订阅主题时，EMQ X 会维护主题(Topic) -\> 订阅者(Subscriber) 映射的**订阅表**。订阅表只存在于订阅者所在的 EMQ X 节点上，例如:
 
 ```bash
@@ -110,8 +106,7 @@ node2:
     topic1 -> client4
 ```
 
-### 路由表: 主题 - 节点
-
+### 路由表: 主题 - 节点 
 而同一集群的所有节点，都会**复制**一份主题(Topic) -\> 节点(Node) 映射的**路由表**，例如:
 
 ```bash
@@ -120,8 +115,7 @@ topic2 -> node3
 topic3 -> node2, node4
 ```
 
-### 主题树: 带统配符的主题匹配
-
+### 主题树: 带统配符的主题匹配 
 除路由表之外，EMQ X 集群中的每个节点也会维护一份**主题树**(Topic Trie) 的备份。
 
 例如下述主题订阅关系:
@@ -136,8 +130,7 @@ topic3 -> node2, node4
 
 ![image](../assets/cluster_2.png)
 
-### 消息派发过程
-
+### 消息派发过程 
 当 MQTT 客户端发布消息时，所在节点会根据消息主题，检索路由表并转发消息到相关节点，再由相关节点检索本地的订阅表并将消息发送给相关订阅者。
 
 例如 client1 向主题 `t/a` 发布消息，消息在节点间的路由与派发流程:
@@ -149,12 +142,10 @@ topic3 -> node2, node4
 5. node3 收到转发来的 `t/a` 消息后，查询本地订阅表，获取本节点上订阅了 `t/a` 的订阅者，并把消息投递给他们。
 6. 消息转发和投递结束。
 
-### 数据分片与共享方式
-
+### 数据分片与共享方式 
 EMQ X 的订阅表在集群中是分片(partitioned)的，而主题树和路由表是共享(replicated)的。
 
-## 节点发现与自动集群
-
+## 节点发现与自动集群 
 EMQ X 支持基于 Ekka 库的集群自动发现 (Autocluster)。Ekka 是为 Erlang/OTP 应用开发的集群管理库，支持
 Erlang 节点自动发现 (Service Discovery)、自动集群 (Autocluster)、脑裂自动愈合 (Network Partition
 Autoheal)、自动删除宕机节点 (Autoclean)。
@@ -170,16 +161,14 @@ EMQ X 支持多种节点发现策略:
 | etcd   | 通过 etcd 自动集群      |
 | k8s    | Kubernetes 服务自动集群 |
 
-### manual 手动创建集群
-
+### manual 手动创建集群 
 默认配置为手动创建集群，节点须通过 ./bin/emqx\_ctl join <Node\> 命令加入:
 
 ```bash
 cluster.discovery = manual
 ```
 
-### 基于 static 节点列表自动集群
-
+### 基于 static 节点列表自动集群 
 配置固定的节点列表，自动发现并创建集群:
 
 ```bash
@@ -187,8 +176,7 @@ cluster.discovery = static
 cluster.static.seeds = emqx1@127.0.0.1,emqx2@127.0.0.1
 ```
 
-### 基于 mcast 组播自动集群
-
+### 基于 mcast 组播自动集群 
 基于 UDP 组播自动发现并创建集群:
 
 ```bash
@@ -200,8 +188,7 @@ cluster.mcast.ttl = 255
 cluster.mcast.loop = on
 ```
 
-### 基于 DNS A 记录自动集群
-
+### 基于 DNS A 记录自动集群 
 基于 DNS A 记录自动发现并创建集群:
 
 ```bash
@@ -210,8 +197,7 @@ cluster.dns.name = localhost
 cluster.dns.app  = ekka
 ```
 
-### 基于 etcd 自动集群
-
+### 基于 etcd 自动集群 
 基于 [etcd](https://coreos.com/etcd/) 自动发现并创建集群:
 
 ```bash
@@ -221,8 +207,7 @@ cluster.etcd.prefix = emqcl
 cluster.etcd.node_ttl = 1m
 ```
 
-### 基于 kubernetes 自动集群
-
+### 基于 kubernetes 自动集群 
 [Kubernetes](https://kubernetes.io/) 下自动发现并创建集群:
 
 ```bash
@@ -233,10 +218,7 @@ cluster.k8s.address_type = ip
 cluster.k8s.app_name = ekka
 ```
 
-> Kubernetes 不建议使用 Fannel 网络插件，推荐使用 Calico 网络插件。
-
-### 手动(manual) 方式管理集群介绍
-
+### 手动(manual) 方式管理集群介绍 
 假设要在两台服务器 s1.emqx.io, s2.emqx.io 上部署 EMQ X 集群:
 
 |                节点名                 | 主机名 (FQDN)  |   IP 地址    |
@@ -321,14 +303,7 @@ $ ./bin/emqx_ctl cluster leave
 $ ./bin/emqx_ctl cluster force-leave emqx@s2.emqx.io
 ```
 
-#### 单机伪分布式
-
-对于只有个人电脑或者一台服务器的用户来说，可以使用伪分布式集群。请注意，我们若要在单机上启动两个或多个 emqx 实例，为避免端口冲突，我们需要对其它节点的监听端口做出调整。
-
-基本思路是复制一份 emqx 文件夹然后命名为 emqx2 ，将原先所有 emqx 节点监听的端口 port 加上一个偏移 offset 作为新的 emqx2 节点的监听端口。例如，将原先 emqx 的MQTT/TCP 监听端口由默认的 1883 改为了 2883 作为 emqx2 的 MQTT/TCP 监听端口。完成以上操作的自动化脚本可以参照 [集群脚本](https://github.com/terry-xiaoyu/one_more_emqx)，具体配置请参见 [配置说明](../getting-started/config.md) 与 [配置项](../configuration/configuration.md)。
-
-## 集群脑裂与自动愈合
-
+## 集群脑裂与自动愈合 
 *EMQ X* 支持集群脑裂自动恢复(Network Partition Autoheal)，可在 `etc/emqx.conf` 中配置:
 
 ```bash
@@ -343,51 +318,21 @@ cluster.autoheal = on
 4. Leader 节点在多数派 (majority) 分区选择集群自愈的 Coordinator 节点；
 5. Coordinator 节点重启少数派 (minority) 分区节点恢复集群。
 
-## 集群节点自动清除
-
+## 集群节点自动清除 
 *EMQ X* 支持从集群自动删除宕机节点 (Autoclean)，可在 `etc/emqx.conf` 中配置:
 
 ```bash
 cluster.autoclean = 5m
 ```
 
-## 防火墙设置
+## 防火墙设置 
+如果集群节点间存在防火墙，防火墙需要开启 4369 端口和一个 TCP 端口段。4369 由 epmd 端口映射服务使用，TCP
+端口段用于节点间建立连接与通信。
 
-### 集群节点发现端口
+防火墙设置后，需要在 `emqx/etc/emqx.conf` 中配置相同的端口段:
 
-若预先设置了环境变量 WITH_EPMD=1, 启动 emqx 时会使用启动 epmd (监听端口 4369) 做节点发现。称为 `epmd 模式`。
-
-若环境变量 WITH_EPMD 没有设置，则启动 emqx 时不启用 epmd，而使用 emqx ekka 的节点发现，这也是 4.0 之后的默认节点发现方式。称为 `ekka 模式`。
-
-**epmd 模式：**
-
-如果集群节点间存在防火墙，防火墙需要为每个节点开通 TCP 4369 端口，用来让各节点能互相访问。
-
-防火墙还需要开通一个 TCP 从 `node.dist_listen_min`(包含) 到 `node.dist_listen_max`(包含) 的端口段，
-这两个配置的默认值都是 `6369`。
-
-**ekka 模式（4.0 版本之后的默认模式）：**
-
-跟`empd 模式`不同，在`ekka 模式`下，集群发现端口的映射关系是约定好的，而不是动态的。
-`node.dist_listen_min` and `node.dist_listen_max` 两个配置在`ekka 模式`下不起作用。
-
-如果集群节点间存在防火墙，防火墙需要放开这个约定的端口。约定端口的规则如下：
-
+```bash
+## Distributed node port range
+node.dist_listen_min = 6369
+node.dist_listen_max = 7369
 ```
-ListeningPort = BasePort + Offset
-```
-
-其中 `BasePort` 为 4370 (不可配置), `Offset` 为节点名的数字后缀. 如果节点名没有数字后缀的话，
-`Offsset` 为 0。
-
-举例来说, 如果 `emqx.conf` 里配置了节点名：`node.name = emqx@192.168.0.12`，那么监听端口为 `4370`，
-但对于 `emqx1` (或者 `emqx-1`) 端口就是 `4371`，以此类推。
-
-### The Cluster PRC Port
-
-每个节点还需要监听一个 RPC 端口，也需要被防火墙也放开。跟上面说的`ekka 模式`下的集群发现端口一样，这个 RPC 端口也是约定式的。
-
-RPC 端口的规则跟`ekka 模式`下的集群发现端口类似，只不过 `BasePort = 5370`。
-
-就是说，如果 `emqx.conf` 里配置了节点名：`node.name = emqx@192.168.0.12`，那么监听端口为 `5370`，
-但对于 `emqx1` (或者 `emqx-1`) 端口就是 `5371`，以此类推。

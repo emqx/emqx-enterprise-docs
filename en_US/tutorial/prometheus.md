@@ -1,3 +1,21 @@
+---
+# 标题
+title: Prometheus 监控告警
+# 编写日期
+date: 2020-02-25 09:15:26
+# 作者 Github 名称
+author: hjianbo
+# 关键字
+keywords:
+# 描述
+description:
+# 分类
+category: 
+# 引用
+ref: undefined
+---
+
+
 # Prometheus
 
 EMQ X Broker provides [emqx_statsd](https://github.com/emqx/emqx-statsd) plug-in, which is used to output the monitoring data of the system to the third-party monitoring system.
@@ -14,7 +32,7 @@ Take  [Prometheus](https://prometheus.io) as an example:
 
 The `emqx_statsd` plugin internally starts a timer to collect the monitoring data in EMQ X Broker every interval.
 
-For the specific fields and meanings of the monitoring data pushed by `emqx_statsd`, see [Metrics & Stats](../advanced/metrics-and-stats.md)
+For the specific fields and meanings of the monitoring data pushed by `emqx_statsd`, see [Metrics & Stats](metrics.md)
 
 The configuration file is located in `etc/plugins/emqx_statsd.conf`, where:
 

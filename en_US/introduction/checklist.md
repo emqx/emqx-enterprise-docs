@@ -1,3 +1,20 @@
+---
+# 标题
+title: Features List
+# 编写日期
+date: 2020-02-07 17:15:26
+# 作者 Github 名称
+author: wivwiv
+# 关键字
+keywords:
+# 描述
+description:
+# 分类
+category: 
+# 引用
+ref: undefined
+---
+
 # Features List
 
 - Full MQTT V3.1 / V3.1.1 and V5.0 protocol specification support
@@ -39,11 +56,6 @@
   - Bridge data to MQTT Broker
   - Check (debug)
   - Send data to web service
-
-<strong class="emqxce">
-The following are the unique features of EMQ X Enterprise
-</strong>
-
 - Scalable RPC architecture: Separate Erlang's own cluster channel from EMQ X nodes data channel
 - Data persistence
   - Redis stores subscription relationships, device online status, MQTT messages, retained messages, and publishes SUB/UNSUB events
@@ -78,9 +90,7 @@ The following are the unique features of EMQ X Enterprise
 - Schema Registry: provide data encoding and decoding capabilities for EMQ X events and messages
 
 
-
 ## Function Description
-
 
 
 

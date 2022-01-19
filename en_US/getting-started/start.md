@@ -1,3 +1,20 @@
+---
+# 标题
+title: 启动 EMQ X
+# 编写日期
+date: 2020-02-07 17:15:26
+# 作者 Github 名称
+author: wivwiv
+# 关键字
+keywords:
+# 描述
+description:
+# 分类
+category: 
+# 引用
+ref: undefined
+---
+
 # Start EMQ X
 
 Start EMQ X broker in the background
@@ -46,7 +63,7 @@ $ emqx_ctl status
 Node 'emqx@127.0.0.1' not responding to pings。
 ```
 
-You can check the log file from [`logs`](./directory.md) and confirm whether it belongs to [Common Error](../faq/error.md#).
+You can check the log file from [`logs`](getting-started/directory.md) and confirm whether it belongs to [Common Error](faq/error.md#).
 
 
 
@@ -54,17 +71,17 @@ You can check the log file from [`logs`](./directory.md) and confirm whether it 
 
 EMQ X Enterprise requires a license file to start normally. EMQ X Broker can skip this step.
 
-1. Visit the [EMQ X Enterprise download page](https://www.emqx.com/en/downloads?product=enterprise), click **[Get FREE Trial License](https://www.emqx.com/en/apply-licenses/emqx)**.
+1. Visit `https: // emqx.io`. On the EMQ X Enterprise download page, click **Get FREE Trial License**.
 
-    ![](./static/download_enterprise_page.png)
+    ![](./static/WX20200210-153301@2x.png)
 
-2. Apply for a trial license file, then download the license file.
+2. Register to log in and apply for a trial license file, then download the license file.
 
-    ![](./static/apply_license.png)
+    ![](./static/WX20200210-153822@2x.png)
 
 3. Replace the license file (`etc/emqx.lic`) in the default certificate directory. You can also choose to change the read path of the certificate file, modify `license.file` in the `etc/emqx.conf` file, and make sure that the license file is in the updated read path and EMQ X Enterprise has read permission. Then, start EMQ X Enterprise. EMQ X Enterprise is started in the same way as EMQ X Broker, which can be seen below.
 
-4. If the running EMQ X Enterprise needs to update the license file, you can use the `emqx_ctl license reload [path of the license file]` command to directly update the license file without restarting EMQ X Enterprise. It should be noted that the certificate loaded by the `emqx_ctl license reload` command will only take effect during this run of EMQ X Enterprise. If you need to permanently update the license certificate path, you still need to replace the old certificate or modify the configuration file, which can be seen from the previous step.
+2. If the running EMQ X Enterprise needs to update the license file, you can use the `emqx_ctl license reload [path of the license file]` command to directly update the license file without restarting EMQ X Enterprise. It should be noted that the certificate loaded by the `emqx_ctl license reload` command will only take effect during this run of EMQ X Enterprise. If you need to permanently update the license certificate path, you still need to replace the old certificate or modify the configuration file, which can be seen from the previous step.
 
 
 ::: danger
