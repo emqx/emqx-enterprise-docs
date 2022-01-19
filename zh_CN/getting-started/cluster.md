@@ -181,11 +181,6 @@ $ ./bin/emqx_ctl cluster leave
 $ ./bin/emqx_ctl cluster force-leave emqx@s2.emqx.io
 ```
 
-#### 单机伪分布式
-
-对于只有个人电脑或者一台服务器的用户来说，可以使用伪分布式集群。请注意，我们若要在单机上启动两个或多个 emqx 实例，为避免端口冲突，我们需要对其它节点的监听端口做出调整。
-
-基本思路是复制一份 emqx 文件夹然后命名为 emqx2 ，将原先所有 emqx 节点监听的端口 port 加上一个偏移 offset 作为新的 emqx2 节点的监听端口。例如，将原先 emqx 的MQTT/TCP 监听端口由默认的 1883 改为了 2883 作为 emqx2 的 MQTT/TCP 监听端口。完成以上操作的自动化脚本可以参照 [集群脚本](https://github.com/terry-xiaoyu/one_more_emqx)，具体配置请参见 [配置说明](../getting-started/config.md) 与 [配置项](../configuration/configuration.md)。
 
 ## 防火墙设置
 
@@ -219,7 +214,7 @@ ListeningPort = BasePort + Offset
 举例来说, 如果 `emqx.conf` 里配置了节点名：`node.name = emqx@192.168.0.12`，那么监听端口为 `4370`，
 但对于 `emqx1` (或者 `emqx-1`) 端口就是 `4371`，以此类推。
 
-### The Cluster RPC Port
+### The Cluster PRC Port
 
 每个节点还需要监听一个 RPC 端口，也需要被防火墙也放开。跟上面说的`ekka 模式`下的集群发现端口一样，这个 RPC 端口也是约定式的。
 

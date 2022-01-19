@@ -31,7 +31,7 @@ EMQ X 目前支持的操作系统:
 + macOS 10.15
 + Windows Server 2019
 
-::: tip
+::: danger
 产品部署建议 Linux 服务器，不推荐 Windows 服务器。
 :::
 
@@ -320,7 +320,7 @@ curl https://repos.emqx.io/install_emqx.sh | bash
 
 ## 二进制包安装 (Linux)
 
-1.  通过 [emqx.io](https://www.emqx.com/en/downloads/broker?osType=Linux) 或 [Github](https://github.com/emqx/emqx/releases) 选择系统发行版，然后下载要安装的 EMQ X 版本的二进制包。
+1.  通过 [emqx.io](https://www.emqx.io/downloads/broker?osType=Linux) 或 [Github](https://github.com/emqx/emqx/releases) 选择系统发行版，然后下载要安装的 EMQ X 版本的二进制包。
 
 2. 安装 EMQ X Broker，将下面的路径更改为您下载 EMQ X 软件包的路径。
 
@@ -385,7 +385,7 @@ curl https://repos.emqx.io/install_emqx.sh | bash
 
 ## ZIP 压缩包安装 (Linux、MaxOS、Windows)
 
-1.  通过 [emqx.io](https://www.emqx.com/en/downloads/broker?osType=Linux) 或 [Github](https://github.com/emqx/emqx/releases) 下载要安装的 EMQ X 版本的 zip 包。
+1.  通过 [emqx.io](https://www.emqx.io/downloads/broker?osType=Linux) 或 [Github](https://github.com/emqx/emqx/releases) 下载要安装的 EMQ X 版本的 zip 包。
 
 2.  解压程序包
 
@@ -465,10 +465,10 @@ curl https://repos.emqx.io/install_emqx.sh | bash
         $ docker pull emqx/emqx:v4.0.0
         ```
 
-      - 通过 [emqx.io](https://www.emqx.com/en/downloads/broker?osType=Linux) 或 [Github](https://github.com/emqx/emqx/releases) 下载 Docker 镜像，并手动加载
+      - 通过 [emqx.io](https://www.emqx.io/downloads/broker?osType=Linux) 或 [Github](https://github.com/emqx/emqx/releases) 下载 Docker 镜像，并手动加载
 
         ```
-        $ wget -O emqx-docker.zip https://www.emqx.com/en/downloads/broker/v4.0.0/emqx-docker-v4.0.0-alpine3.10-amd64.zip
+        $ wget -O emqx-docker.zip https://www.emqx.io/downloads/broker/v4.0.0/emqx-docker-v4.0.0-alpine3.10-amd64.zip
         $ unzip emqx-docker.zip
         $ docker load < emqx-docker-v4.0.0
         ```
@@ -591,20 +591,19 @@ curl https://repos.emqx.io/install_emqx.sh | bash
 1. 获取源码
 
 ```bash
-$ git clone https://github.com/emqx/emqx.git
+$ git clone -b v4.0.0 https://github.com/emqx/emqx-rel.git
 ```
 
-2. 切换到最近的 Tag
+2. 设置环境变量
 
 ```bash
-$ cd emqx
-$ git checkout $(git describe --abbrev=0 --tags)
+$ export EMQX_DEPS_DEFAULT_VSN=v4.0.0
 ```
 
 3. 编译
 
 ```bash
-$ make
+$ cd emqx-rel && make
 ```
 
 4. 启动 EMQ X Broker
@@ -613,9 +612,9 @@ $ make
 $ cd _build/emqx/rel/emqx
 
 $ ./bin/emqx start
-EMQ X Broker 4.3-beta.1 is started successfully!
+emqx 4.0.0 is started successfully!
 
 $ ./bin/emqx_ctl status
 Node 'emqx@127.0.0.1' is started
-emqx 4.3-beta.1 is running
+emqx v4.0.0 is running
 ```

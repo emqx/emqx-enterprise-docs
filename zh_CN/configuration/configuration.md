@@ -16,7 +16,7 @@ ref:
 # 配置项
 
 
-## Cluster
+## cluster
 
 ### cluster.name
 
@@ -387,7 +387,7 @@ emqx@172-16-122-33.default.pod.cluster.local
 
 <br />
 
-## Node
+## node
 
 ### node.name
 
@@ -599,7 +599,7 @@ emqx@172-16-122-33.default.pod.cluster.local
 
 <br />
 
-## RPC
+## rpc
 
 ### rpc.mode
 
@@ -625,23 +625,6 @@ RPC 模式。可选同步或异步模式。
 
 <br />
 
-### rpc.port_discovery
-
-| Type | Optional Value Default |
-| ---- | --------------------- |
-| enum | `manual`, `stateless` |
-
-#### 说明
-
-`manual`: 手动指定服务器客户端的端口号 `tcp_server_port` and `tcp_client_port`.
-`stateless`: discover ports in a stateless manner. If node name is `emqx<N>@127.0.0.1`, where the `<N>` is an integer,
-then the listening port will be `5370 + <N>`
-
-Default is `manual` when started from docker (environment variable override from docker-entrypoint)
-otherwise `stateless`.
-
-<br />
-
 ### node.tcp_server_port
 
 | Type    | Optional Value | Default |
@@ -651,11 +634,22 @@ otherwise `stateless`.
 #### 说明
 
 设置 RPC 本地服务使用的监听 port。
-注意，该配置仅在 `rpc.port_discovery` 设置成 `manual` 时有效
 
 <br />
 
-### rpc.tcp_client_num
+### node.tcp_client_port
+
+| Type    | Optional Value | Default |
+| ------- | -------------- | ------- |
+| integer | 1024-65535     | 5369    |
+
+#### 说明
+
+设置远程 RPC 服务的端口。
+
+<br />
+
+### node.tcp_client_num
 
 | Type    | Optional Value | Default         |
 | ------- | -------------- | --------------- |
@@ -787,13 +781,13 @@ TCP 调优参数。用户态的 Socket 缓冲区大小。
 
 <br />
 
-## Log
+## log
 
 ### log.to
 
 | Type | Optional Value                   | Default |
 | ---- | -------------------------------- | ------- |
-| enum | `off`, `file`, `console`, `both` | `file`  |
+| enum | `off`, `file`, `console`, `both` | `both`  |
 
 #### 说明
 
@@ -858,19 +852,6 @@ TCP 调优参数。用户态的 Socket 缓冲区大小。
 
 <br />
 
-### log.max_depth
-
-| Type                        | Default |
-| --------------------------- | ------- |
-| union(integer, 'unlimited') | 20      |
-
-#### Description
-
-控制 Eralng 数据结构的打印深度，和 Erlang 进程消息队列查看的深度。
-或配置成 'unlimited' (不带引号) 不限深度打印。
-
-<br />
-
 ### log.rotation.size
 
 | Type     | Default |
@@ -920,45 +901,6 @@ log.error.file = error.log
 ```
 
 <br />
-
-### log.max_depth
-
-| Type    | Default |
-| ------- | ------- |
-| integer | 20      |
-
-#### 说明
-
-控制对大的数据结构打印日志时的最大深度。超过深度的部分将被 '...' 代替。
-
-
-<br />
-
-### log.single_line
-
-| Type    | Default |
-| ------- | ------- |
-| boolean | true    |
-
-#### 说明
-
-设置成 `true` 时，单行打印日志。
-如果设置成 `false`, 如 crash 日志中的堆栈信息等将打印多行
-
-<br />
-
-### log.formatter
-
-| Type | Optional Value  | Default |
-| ---- | --------------- | ------- |
-| enum | `text`, `json`  | `text`  |
-
-#### 说明
-
-选择打印日志的格式
-
-<br />
-
 
 ## authacl
 
@@ -1097,15 +1039,11 @@ ACL 检查失败后，执行的操作。
 
 | Type    | Default |
 | ------- | ------- |
-| integer | 128       |
+| integer | 0       |
 
 #### 说明
 
 允许客户端订阅主题的最大层级。0 表示不限制。
-
-::: warning Warning
-Topic层级过多可能导致订阅时的性能问题。
-:::
 
 <br />
 
@@ -1325,10 +1263,6 @@ ACL 检查失败后，执行的操作。
 #### 说明
 
 允许客户端订阅主题的最大层级。0 表示不限制。
-
-::: warning Warning
-Topic层级过多可能导致订阅时的性能问题。
-:::
 
 <br />
 
@@ -2009,39 +1943,6 @@ listener.tcp.external.access.2 = allow all
 
 <br />
 
-### listener.tcp.external.peer_cert_as_username
-
-| Type | Optional Value                  | Default |
-| ---- | ------------------------------- | ------- |
-| enum | `cn`, `dn`, `crt`, `pem`, `md5` | `cn`    |
-
-#### 说明
-
-使用客户端证书来覆盖 Username 字段的值。其可选值为：
-- cn：客户端证书的 Common Name 字段值
-- dn：客户端证书的 Subject Name 字段值
-- crt：DER 格式编码的客户端证书二进制
-- pem：基于 DER 格式上的 base64 编码后的字符串
-- md5：DER 格式证书的 MD5 哈希值
-
-注意：在 TCP 的监听器下，该配置仅在负载均衡服务器终结 SSL 的部署情况下可以用；且负载均衡服务器需要配置
-Proxy Protocol 将证书域的内容给发送至 EMQ X。例如 HAProxy 的配置可参考
-[send-proxy-v2-ssl](http://cbonte.github.io/haproxy-dconv/1.7/configuration.html#5.2-send-proxy-v2-ssl)
-
-<br />
-
-### listener.tcp.external.peer_cert_as_clientid
-
-| Type | Optional Value                  | Default |
-| ---- | ------------------------------- | ------- |
-| enum | `cn`, `dn`, `crt`, `pem`, `md5` | `cn`    |
-
-#### 说明
-
-使用客户端证书来覆盖 ClientID 字段的值。其可选值的含义同上。
-
-<br />
-
 ### listener.tcp.external.backlog
 
 | Type    | Default |
@@ -2503,7 +2404,7 @@ listener.ssl.external.access.2 = allow all
 
 | Type   | Default                 |
 | ------ | ----------------------- |
-| string | `tlsv1.3,tlsv1.2,tlsv1.1,tlsv1` |
+| string | `tlsv1.2,tlsv1.1,tlsv1` |
 
 #### 说明
 
@@ -2520,30 +2421,6 @@ listener.ssl.external.access.2 = allow all
 #### 说明
 
 指定 SSL 握手过程的超时时间。
-
-<br />
-
-### listener.ssl.external.depth
-
-| Type     | Default |
-| -------- | ------- |
-| number   | `10`    |
-
-#### 说明
-
-证书链中非自签发的中间证书的最大数量。如果该值为 0 则表示，对端证书必须是根 CA 直接授信的。
-
-<br />
-
-### listener.ssl.external.key_password
-
-| Type     | Default |
-| -------- | ------- |
-| string   | -       |
-
-#### 说明
-
-证书密钥文件的密码。如果你的证书密钥设置了密码，则需要配置该选项。
 
 <br />
 
@@ -2579,8 +2456,7 @@ listener.ssl.external.access.2 = allow all
 
 #### 说明
 
-指定 SSL 的 CA 证书文件 (PEM)。该文件应包含发布服务器证书的所有中间CA证书以及根证书。
-该文件还应包含所有受信CA的证书用以用于验证客户端的证书。
+指定 SSL 的 CA 证书文件 (PEM)。
 
 <br />
 
@@ -2682,33 +2558,13 @@ SSL 握手过程中若客户端没有证书，是否让握手失败。
 
 ### listener.ssl.external.peer_cert_as_username
 
-| Type | Optional Value                  | Default |
-| ---- | ------------------------------- | ------- |
-| enum | `cn`, `dn`, `crt`, `pem`, `md5` | `cn`    |
+| Type | Optional Value    | Default |
+| ---- | ----------------- | ------- |
+| enum | `cn`, `dn`, `crt` | `cn`    |
 
 #### 说明
 
-使用客户端证书来覆盖 Username 字段的值。其可选值为：
-- cn：客户端证书的 Common Name 字段值
-- dn：客户端证书的 Subject Name 字段值
-- crt：DER 格式编码的客户端证书二进制
-- pem：基于 DER 格式上的 base64 编码后的字符串
-- md5：DER 格式证书的 MD5 哈希值
-
-注意 `listener.ssl.external.verify` 应当设置为 `verify_peer`。
-
-<br />
-
-### listener.ssl.external.peer_cert_as_clientid
-
-| Type | Optional Value                  | Default |
-| ---- | ------------------------------- | ------- |
-| enum | `cn`, `dn`, `crt`, `pem`, `md5` | `cn`    |
-
-#### 说明
-
-使用客户端证书来覆盖 ClientID 字段的值。其可选值的含义同上。
-
+使用客户端证书中的 CN、DN 或者 CRT 字段的值作为 MQTT CONNECT 报文中的 Username 字段的值。
 注意 `listener.ssl.external.verify` 应当设置为 `verify_peer`。
 
 <br />
@@ -2857,7 +2713,7 @@ TCP 缓冲区大小 (用户级)。
 
 #### 说明
 
-WebSocket 的 MQTT 协议路径。因此 EMQ X 的 WebSocket 的地址是： `ws://{ip}:{port}/mqtt`。
+WebSocket 的 MQTT 协议路径。因此 EMQ X 的 WebSocket 的地址是： `ws://<ip>:<port>/mqtt`。
 
 <br />
 
@@ -2949,27 +2805,15 @@ WebSocket 的 MQTT 协议路径。因此 EMQ X 的 WebSocket 的地址是： `ws
 
 <br />
 
-### listener.ws.external.fail_if_no_subprotocol
+### listener.ws.external.verify_protocol_header
 
-| Type    | Optional Value  | Default |
-| ------- | --------------- | ------- |
-| enum    | `true`, `false` | `true`  |
-
-#### 说明
-
-如果设置为 true，则服务器将在客户端没有携带 Sec-WebSocket-Protocol 字段时返回错误。**微信小程序需关闭该验证**。
-
-<br />
-
-### listener.ws.external.supported_protocols
-
-| Type    | Default                               |
-| ------- | ------------------------------------- |
-| string  | `mqtt, mqtt-v3, mqtt-v3.1.1, mqtt-v5` |
+| Type    | Optional Value | Default |
+| ------- | -------------- | ------- |
+| enum    | `on`, `off`    | `on`    |
 
 #### 说明
 
-指定支持的子协议，子协议之间以逗号分隔。
+是否验证 WebSocket 携带的 HTTP 头部是否正确。**微信小程序需关闭该验证**。
 
 <br />
 
@@ -3377,27 +3221,15 @@ listener.wss.external.access.2 = allow all
 
 <br />
 
-### listener.wss.external.fail_if_no_subprotocol
+### listener.wss.external.verify_protocol_header
 
-| Type    | Optional Value  | Default |
-| ------- | --------------- | ------- |
-| enum    | `true`, `false` | `true`  |
-
-#### 说明
-
-如果设置为 true，则服务器将在客户端没有携带 Sec-WebSocket-Protocol 字段时返回错误。**微信小程序需关闭该验证**。
-
-<br />
-
-### listener.wss.external.supported_protocols
-
-| Type    | Default                               |
-| ------- | ------------------------------------- |
-| string  | `mqtt, mqtt-v3, mqtt-v3.1.1, mqtt-v5` |
+| Type    | Optional Value | Default |
+| ------- | -------------- | ------- |
+| enum    | `on`, `off`    | `on`    |
 
 #### 说明
 
-指定支持的子协议，子协议之间以逗号分隔。
+是否验证 WebSocket 携带的 HTTP 头部是否正确。**微信小程序需关闭该验证**。
 
 <br />
 
@@ -3445,7 +3277,7 @@ listener.wss.external.access.2 = allow all
 
 | Type   | Default                |
 | ------ | ----------------------- |
-| string | `tlsv1.3,tlsv1.2,tlsv1.1,tlsv1` |
+| string | `tlsv1.2,tlsv1.1,tlsv1` |
 
 #### 说明
 
@@ -3485,32 +3317,7 @@ listener.wss.external.access.2 = allow all
 
 #### 说明
 
-指定 SSL 的 CA 证书文件 (PEM)。该文件应包含发布服务器证书的所有中间CA证书以及根证书。
-该文件还应包含所有受信CA的证书用以用于验证客户端的证书。
-
-<br />
-
-### listener.wss.external.depth
-
-| Type     | Default |
-| -------- | ------- |
-| number   | `10`    |
-
-#### 说明
-
-证书链中非自签发的中间证书的最大数量。如果该值为 0 则表示，对端证书必须是根 CA 直接授信的。
-
-<br />
-
-### listener.wss.external.key_password
-
-| Type     | Default |
-| -------- | ------- |
-| string   | -       |
-
-#### 说明
-
-证书密钥文件的密码。如果你的证书密钥设置了密码，则需要配置该选项。
+若使用 SSL，指定 SSL 的 CA 证书文件 (PEM)。
 
 <br />
 
@@ -3612,33 +3419,13 @@ SSL 握手过程中若客户端没有证书，是否让握手失败。
 
 ### listener.wss.external.peer_cert_as_username
 
-| Type | Optional Value                  | Default |
-| ---- | ------------------------------- | ------- |
-| enum | `cn`, `dn`, `crt`, `pem`, `md5` | `cn`    |
+| Type | Optional Value    | Default |
+| ---- | ----------------- | ------- |
+| enum | `cn`, `dn`, `crt` | `cn`    |
 
 #### 说明
 
-使用客户端证书来覆盖 Username 字段的值。其可选值为：
-- cn：客户端证书的 Common Name 字段值
-- dn：客户端证书的 Subject Name 字段值
-- crt：DER 格式编码的客户端证书二进制
-- pem：基于 DER 格式上的 base64 编码后的字符串
-- md5：DER 格式证书的 MD5 哈希值
-
-注意 `listener.wss.external.verify` 应当设置为 `verify_peer`。
-
-<br />
-
-### listener.wss.external.peer_cert_as_clientid
-
-| Type | Optional Value                  | Default |
-| ---- | ------------------------------- | ------- |
-| enum | `cn`, `dn`, `crt`, `pem`, `md5` | `cn`    |
-
-#### 说明
-
-使用客户端证书来覆盖 ClientID 字段的值。其可选值的含义同上。
-
+使用客户端证书中的 CN、DN 或者 CRT 字段的值作为 MQTT CONNECT 报文中的 Username 字段的值。
 注意 `listener.wss.external.verify` 应当设置为 `verify_peer`。
 
 <br />
@@ -3960,9 +3747,9 @@ TCP 连接建立后的发呆时间，如果这段时间内未收到任何报文�
 
 ### broker.session_locking_strategy
 
-| Type | Optional Value                     | Default  |
-| ---- | ---------------------------------- | -------- |
-| enum | `local`, `leader`, `quorum`, `all` | `quorum` |
+| Type | Optional Value                  | Default  |
+| ---- | ------------------------------- | -------- |
+| enum | `local`, `one`, `quorum`, `all` | `quorum` |
 
 #### 说明
 
@@ -4009,43 +3796,6 @@ TCP 连接建立后的发呆时间，如果这段时间内未收到任何报文�
 #### 说明
 
 开启或关闭批量清理路由信息。批量清理路由可用在短时间内大量客户端掉线的情况，以提高清理效率。
-
-<br />
-
-## broker.perf.route_lock_type = key
-
-| Type    | Optional Value         | Default |
-| ------- | ---------------------- | ------- |
-| enum    | `key`, `tab`, `global` | `key`   |
-
-### Description
-
-选择在数据库中为通配符订阅更新路由信息时锁的粒度。
-
-- `key` (默认值) 为每个前缀拿一次数据库锁。
-- `tab` 表锁
-- `global` 全局锁
-
-对于较大集群，(如7个node或以上），尤其是node之间网络延迟大的，推荐是用`tab` 和 `global`。
-注意：是需要重启整个集群来使得更新生效。
-
-<br />
-
-## broker.perf.trie_compaction = true
-
-| Type    | Optional Value  | Default |
-| ------- | --------------- | ------- |
-| enum    | `true`, `false` | `true`  |
-
-### Description
-
-设置为 `true` 时，对通配符订阅表进行压缩。
-压缩可优化写操作，降低高并发量的订阅请求响应时间，内存使用量也只有非压缩时的一半。
-非压缩优化读操作，适用于发布主题层数较多的场景。
-
-注意: 将该配置从 `fase` 改成 `true` 时，集群中的节点可依次重启来是配置生效。
-从 `true` 改为 `false` 时，需要将集群中所有的节点重启，否则会发生有些消息
-无法被路由的情况。
 
 <br />
 
@@ -4219,13 +3969,55 @@ EMQ X 为单个进程分配的内存占系统内存的百分比超过 `os_mon.pr
 
 <br />
 
-## 插件 `emqx-auth-http`
+## [emqx-auth-clientid](https://github.com/emqx/emqx-auth-clientid)
 
-### auth.http.auth_req.url
+### auth.client.<Number>.clientid` & `auth.client.<Number>.password
+
+| Type   | Default |
+| ------ | ------- |
+| string | -       |
+
+#### 说明
+
+客户端的认证数据，其中 `auth.client.<Number>.password` 为明文密码。`<Number>` 相同的 `auth.client.<Number>.clientid` 与 `auth.client.<Number>.password` 必须成对出现。`<Number>` 是一个整型数字，用于区分多个客户端的认证数据。
+
+<br />
+
+### auth.client.password_hash
+
+| Type | Optional Value                  | Default  |
+| ---- | ------------------------------- | -------- |
+| enum | `plain`, `md5`, `sha`, `sha256` | `sha256` |
+
+#### 说明
+
+密码存储至数据库时使用的 Hash 算法。以下选项可用：
+
+`plain`
+
+密码以明文形式存储。
+
+`md5`
+
+密码使用 MD5 算法加密后存储。
+
+`sha`
+
+密码使用 SHA-1 算法加密后存储。
+
+`sha256`
+
+密码使用 SHA-256 算法加密后存储。
+
+<br />
+
+## [emqx-auth-http](https://github.com/emqx/emqx-auth-http)
+
+### auth.http.auth_req
 
 | Type   | Default                           |
 | ------ | --------------------------------- |
-| string | `http://127.0.0.1:80/mqtt/auth` |
+| string | `http://127.0.0.1:8991/mqtt/auth` |
 
 #### 说明
 
@@ -4242,21 +4034,6 @@ EMQ X 为单个进程分配的内存占系统内存的百分比超过 `os_mon.pr
 #### 说明
 
 指定认证请求的请求方法。
-
-<br />
-
-### auth.http.auth_req.headers.\<Any\>
-
-#### 示例
-
-```
-auth.http.auth_req.headers.content-type = application/x-www-form-urlencoded
-auth.http.auth_req.headers.accept = */*
-```
-
-#### 说明
-
-指定 HTTP 请求头部中的数据。`<Key>` 指定 HTTP 请求头部中的字段名，此配置项的值为相应的字段值。`<Key>` 可以是标准的 HTTP 请求头部字段，也可以自定义的字段，可以配置多个不同的请求头部字段。
 
 <br />
 
@@ -4283,17 +4060,15 @@ auth.http.auth_req.headers.accept = */*
 
 <br />
 
-### auth.http.super_req.url
+### auth.http.super_req
 
 | Type   | Default                                |
 | ------ | -------------------------------------- |
-| string | `http://127.0.0.1:80/mqtt/superuser` |
+| string | `http://127.0.0.1:8991/mqtt/superuser` |
 
 #### 说明
 
 指定超级用户认证请求的目标 URL。
-
-<br />
 
 ### auth.http.super_req.method
 
@@ -4304,23 +4079,6 @@ auth.http.auth_req.headers.accept = */*
 #### 说明
 
 指定超级用户认证请求的请求方法。
-
-<br />
-
-### auth.http.super_req.headers.\<Any\>
-
-#### 示例
-
-```
-auth.http.super_req.headers.content-type = application/x-www-form-urlencoded
-auth.http.super_req.headers.accept = */*
-```
-
-#### 说明
-
-指定 HTTP 请求头部中的数据。`<Key>` 指定 HTTP 请求头部中的字段名，此配置项的值为相应的字段值。`<Key>` 可以是标准的 HTTP 请求头部字段，也可以自定义的字段，可以配置多个不同的请求头部字段。
-
-<br />
 
 ### auth.http.super_req.params
 
@@ -4358,21 +4116,6 @@ auth.http.super_req.headers.accept = */*
 
 <br />
 
-### auth.http.acl_req.headers.\<Any\>
-
-#### 示例
-
-```
-auth.http.acl_req.headers.content-type = application/x-www-form-urlencoded
-auth.http.acl_req.headers.accept = */*
-```
-
-#### 说明
-
-指定 HTTP 请求头部中的数据。`<Key>` 指定 HTTP 请求头部中的字段名，此配置项的值为相应的字段值。`<Key>` 可以是标准的 HTTP 请求头部字段，也可以自定义的字段，可以配置多个不同的请求头部字段。
-
-<br />
-
 ### auth.http.acl_req.params
 
 | Type   | Format                                                       | Default                                                              |
@@ -4395,11 +4138,11 @@ auth.http.acl_req.headers.accept = */*
 
 <br />
 
-### auth.http.timeout
+### auth.http.request.timeout
 
 | Type     | Default |
 | -------- | ------- |
-| duration | `5s`    |
+| duration | `0s`    |
 
 #### 说明
 
@@ -4407,15 +4150,70 @@ HTTP 请求超时时间。任何等价于 `0s` 的设定值都表示永不超时
 
 <br />
 
-### auth.http.connect_timeout
+### auth.http.request.connect_timeout
 
 | Type     | Default |
 | -------- | ------- |
-| duration | `5s`    |
+| duration | `0s`    |
 
 #### 说明
 
 HTTP 请求的连接超时时间。任何等价于 `0s` 的设定值都表示永不超时。
+
+<br />
+
+### auth.http.request.retry_times
+
+| Type    | Default |
+| ------- | ------- |
+| integer | 3       |
+
+#### 说明
+
+HTTP 请求失败时的重试次数。
+
+<br />
+
+### auth.http.request.retry_interval
+
+| Type     | Default |
+| -------- | ------- |
+| duration | `1s`    |
+
+#### 说明
+
+HTTP 请求失败时的重试间隔。
+
+<br />
+
+### auth.http.request.retry_backoff
+
+| Type  | Default |
+| ----- | ------- |
+| float | 2.0     |
+
+#### 说明
+
+HTTP 请求失败时的重试间隔使用了指数退避算法，此配置项用于指定指数退避算法的退避系数。
+
+<br />
+
+### auth.http.header.<Key>
+
+| Type   | Default |
+| ------ | ------- |
+| string | -       |
+
+#### 说明
+
+指定 HTTP 请求头部中的数据。`<Key>` 指定 HTTP 请求头部中的字段名，此配置项的值为相应的字段值。`<Key>` 可以是标准的 HTTP 请求头部字段，也可以自定义的字段，可以配置多个不同的请求头部字段。
+
+#### 示例
+
+```
+auth.http.header.Accept = */*
+auth.http.header.Accept-Encoding = *
+```
 
 <br />
 
@@ -4455,7 +4253,7 @@ CA 证书文件路径。
 
 <br />
 
-## 插件 `emqx_auth_jwt`
+## [emqx-auth-jwt](https://github.com/emqx/emqx-auth-jwt)
 
 ### auth.jwt.secret
 
@@ -4537,7 +4335,7 @@ auth.jwt.verify_claims.sub = %u
 
 <br />
 
-## 插件 `emqx_auth_ldap`
+## [emqx-auth-ldap](https://github.com/emqx/emqx-auth-ldap)
 
 ### auth.ldap.servers
 
@@ -4734,7 +4532,7 @@ SSL 认证方式：
 
 <br />
 
-## 插件 `emqx_auth_mongo`
+## [emqx-auth-mongo](https://github.com/emqx/emqx-auth-mongo)
 
 ### auth.mongo.type
 
@@ -5203,7 +5001,7 @@ MongoDB 拓扑参数，`heartbeat_frequency_ms` 允许的最小值，单位: 毫
 
 <br />
 
-## 插件 `emqx_auth_mysql`
+## [emqx-auth-mysql](https://github.com/emqx/emqx-auth-mysql)
 
 ### auth.mysql.server
 
@@ -5346,7 +5144,7 @@ ACL 校验时使用的 SQL 选取语句，此语句中所有表名与字段名�
 
 <br />
 
-## 插件 `emqx_auth_pgsql`
+## [emqx-auth-pgsql](https://github.com/emqx/emqx-auth-pgsql)
 
 ### auth.pgsql.server
 
@@ -5516,7 +5314,7 @@ ACL 校验时使用的 SQL 选取语句，同 `auth.mysql.acl_query`。
 
 <br />
 
-## 插件 `emqx_auth_redis`
+## [emqx-auth-redis](https://github.com/emqx/emqx-auth-redis)
 
 ### auth.redis.type
 
@@ -5663,7 +5461,49 @@ ACL 查询命令。可用的占位符有：
 
 <br />
 
-## 插件 `emqx_bridge_mqtt`
+## [emqx-auth-username](https://github.com/emqx/emqx-auth-username)
+
+### auth.user.<Number>.username` & `auth.user.<Number>.password
+
+| Type   | Default |
+| ------ | ------- |
+| string | -       |
+
+#### 说明
+
+客户端的认证数据，其中 `auth.user.<Number>.password` 为明文密码。`<Number>` 相同的 `auth.user.<Number>.username` 与 `auth.user.<Number>.password` 必须成对出现。`<Number>` 是一个整型数字，用于区分多个客户端的认证数据。
+
+<br />
+
+### auth.user.password_hash
+
+| Type | Optional Value                  | Default  |
+| ---- | ------------------------------- | -------- |
+| enum | `plain`, `md5`, `sha`, `sha256` | `sha256` |
+
+#### 说明
+
+密码存储至数据库时使用的 Hash 算法。以下选项可用：
+
+`plain`
+
+密码以明文形式存储。
+
+`md5`
+
+密码使用 MD5 算法加密后存储。
+
+`sha`
+
+密码使用 SHA-1 算法加密后存储。
+
+`sha256`
+
+密码使用 SHA-256 算法加密后存储。
+
+<br />
+
+## [emqx-bridge-mqtt](https://github.com/emqx/emqx-bridge-mqtt)
 
 ### bridge.mqtt.aws.address
 
@@ -5916,7 +5756,7 @@ MQTT 桥接客户端的心跳间隔。
 
 | Type     | Default                 |
 | -------- | ----------------------- |
-| string   | `tlsv1.3,tlsv1.2,tlsv1.1,tlsv1` |
+| string   | `tlsv1.2,tlsv1.1,tlsv1` |
 
 #### 说明
 
@@ -6008,7 +5848,7 @@ EMQ X 桥接的批处理大小。`emqx_bridge_mqtt` 的 EMQ X 桥接模式支持
 
 <br />
 
-## 插件 `emqx_coap`
+## [emqx-coap](https://github.com/emqx/emqx-coap)
 
 ### coap.port
 
@@ -6118,7 +5958,7 @@ EMQ X 桥接的批处理大小。`emqx_bridge_mqtt` 的 EMQ X 桥接模式支持
 
 <br />
 
-## 插件 `emqx_dashboard`
+## [emqx-dashboard](https://github.com/emqx/emqx-dashboard)
 
 ### dashboard.default_user.login` & `dashboard.default_user.password
 
@@ -6284,9 +6124,7 @@ HTTPS 监听器的监听端口，**默认此监听器被禁用**。
 
 #### 说明
 
-指定 SSL 的 CA 证书文件 (PEM)。该文件应包含发布服务器证书的所有中间CA证书以及根证书。
-该文件还应包含所有受信CA的证书用以用于验证客户端的证书。
-
+CA 证书文件路径。
 
 <br />
 
@@ -6330,7 +6168,7 @@ HTTPS 监听器的监听端口，**默认此监听器被禁用**。
 
 | Type   | Default                 |
 | ------ | ----------------------- |
-| string | `tlsv1.3,tlsv1.2,tlsv1.1,tlsv1` |
+| string | `tlsv1.2,tlsv1.1,tlsv1` |
 
 #### 说明
 
@@ -6386,7 +6224,7 @@ HTTPS 监听器的监听端口，**默认此监听器被禁用**。
 
 <br />
 
-## 插件 `emqx_lwm2m`
+## [emqx-lwm2m](https://github.com/emqx/emqx-lwm2m)
 
 ### lwm2m.port
 
@@ -6531,23 +6369,6 @@ HTTPS 监听器的监听端口，**默认此监听器被禁用**。
 | ------ | --------- |
 | string | `up/resp` |
 
-<br />
-
-### lwm2m.update_msg_publish_condition
-
-| Type | Optional Value                   | Default                |
-|------|----------------------------------|------------------------|
-| enum | `contains_object_list`, `always` | `contains_object_list` |
-
-#### Description
-
-发布 UPDATE 事件的条件。可以为下列两种之一：
-
-- contains_object_list: 仅当 UPDATE 消息包含 `object list` 时发布
-
-- always: 总是发布
-
-
 #### 说明
 
 设备的上行更新消息 (update) 需要发布到哪个主题。
@@ -6638,7 +6459,7 @@ UDP 调优参数，指定每次从 UDP socket 读取多少个报文。
 
 <br />
 
-## 插件 `emqx_management`
+## [emqx-management](https://github.com/emqx/emqx-management)
 
 ### management.max_row_limit
 
@@ -6874,9 +6695,7 @@ HTTPS 报文发送超时后，是否关闭该连接。
 
 #### 说明
 
-指定 SSL 的 CA 证书文件 (PEM)。该文件应包含发布服务器证书的所有中间CA证书以及根证书。
-该文件还应包含所有受信CA的证书用以用于验证客户端的证书。
-
+CA 证书文件路径。
 
 <br />
 
@@ -6928,7 +6747,33 @@ HTTPS 报文发送超时后，是否关闭该连接。
 
 <br />
 
-## 插件`emqx_retainer`
+## [emqx-reloader](https://github.com/emqx/emqx-reloader)
+
+### reloader.interval
+
+| Type     | Default |
+| -------- | ------- |
+| duration | `60s`   |
+
+#### 说明
+
+每隔多长时间将所有代码代码热更新一次。
+
+<br />
+
+### reloader.logfile
+
+| Type   | Default        |
+| ------ | -------------- |
+| string | `reloader.log` |
+
+#### 说明
+
+代码热更新的日志文件
+
+<br />
+
+## [emqx-retainer](https://github.com/emqx/emqx-retainer)
 
 ### retainer.storage_type
 
@@ -6990,7 +6835,7 @@ HTTPS 报文发送超时后，是否关闭该连接。
 
 <br />
 
-## 插件`emqx_rule_engine`
+## [emqx-rule-engine](https://github.com/emqx/emqx-rule-engine)
 
 ### rule-engine.ignore_sys_message
 
@@ -7037,7 +6882,7 @@ SELECT * FROM "$events/client_connected"
 
 <br />
 
-## 插件 `emqx_sn`
+## [emqx-sn](https://github.com/emqx/emqx-sn)
 
 ### mqtt.sn.port
 
@@ -7150,7 +6995,7 @@ mqtt.sn.predefined.topic.1 = foo/bar
 
 <br />
 
-## 插件 `emqx_prometheus`
+## [emqx-prometheus](https://github.com/emqx/emqx-prometheus)
 
 ### prometheus.push.gateway.server
 
@@ -7188,7 +7033,7 @@ mqtt.sn.predefined.topic.1 = foo/bar
 
 <br />
 
-## 插件 `emqx_stomp`
+## [emqx-stomp](https://github.com/emqx/emqx-stomp)
 
 ### stomp.listener
 
@@ -7454,48 +7299,9 @@ mqtt.sn.predefined.topic.1 = foo/bar
 
 <br />
 
-## 插件`emqx_web_hook`
+## [emqx-web-hook](https://github.com/emqx/emqx-web-hook)
 
-### web.hook.url
-
-| Type   | Default              |
-| ------ | -------------------- |
-| string | http://127.0.0.1:80  |
-
-#### 说明
-
-Webhook 请求转发的目的 Web 服务器地址。
-
-<br />
-
-### web.hook.headers.\<Any\>
-
-#### 示例
-
-```
-web.hook.headers.content-type = application/json
-web.hook.headers.accept = */*
-```
-
-#### 说明
-
-指定 HTTP 请求头部中的数据。`<Key>` 指定 HTTP 请求头部中的字段名，此配置项的值为相应的字段值。`<Key>` 可以是标准的 HTTP 请求头部字段，也可以自定义的字段，可以配置多个不同的请求头部字段。
-
-<br />
-
-### web.hook.encoding_of_payload_field
-
-| Type     | Optional Value              | Default |
-| -------- | --------------------------- | ------- |
-| enum     | `plain`, `base62`, `base64` | `plain` |
-
-#### 说明
-
-PUBLISH 报文中 Payload 字段的编码格式。
-
-<br />
-
-### web.hook.ssl.cacertfile
+### web.hook.api.url
 
 | Type   | Default |
 | ------ | ------- |
@@ -7503,55 +7309,19 @@ PUBLISH 报文中 Payload 字段的编码格式。
 
 #### 说明
 
-CA 证书文件路径。
+`emqx_web_hook` 转发的目的 Web 服务器地址。
 
 <br />
 
-### web.hook.ssl.certfile
+### web.hook.encode_payload
 
-| Type   | Default |
-| ------ | ------- |
-| string | -       |
-
-#### 说明
-
-客户端证书文件路径。
-
-<br />
-
-### web.hook.ssl.keyfile
-
-| Type   | Default |
-| ------ | ------- |
-| string | -       |
+| Type     | Optional Value      | Default |
+| -------- | ------------------- | ------- |
+| enum     | `base62`, `base64`  | -       |
 
 #### 说明
 
-客户端私钥文件路径。
-
-<br />
-
-### web.hook.ssl.verify
-
-| Type | Optional Value  | Default |
-| ---- | --------------- | ------- |
-| enum | `true`, `false` | `false`  |
-
-#### 说明
-
-指定是否校验对端证书。
-
-<br />
-
-### web.hook.ssl.pool_size
-
-| Type    | Default |
-| ------- | ------- |
-| integer | 32      |
-
-#### 说明
-
-HTTP 连接进程池大小。
+PUBLISH 消息中 Payload 字段的编码格式。
 
 <br />
 

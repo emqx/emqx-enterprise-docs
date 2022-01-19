@@ -1,8 +1,8 @@
 # $SYS - System Topic
 
-The EMQ X Broker periodically publishes its running status, message statistics, client online and offline events to the system topic starting with `$SYS/`.
+The EMQ X Broker periodically publishes its running status, message statistics, client online and offline events to the system topic starting with `$SYS/`. 
 
- The `$SYS` topic path begins with `$SYS/brokers/{node}/`. `{node}` is the name of the node where the event/message is generated, for example:
+ The `$SYS` topic path begins with `$SYS/brokers/{node}/`. `{node}` is the name of the node where the event/message is generated, for example: 
 
 ```bash
 $SYS/brokers/emqx@127.0.0.1/version
@@ -10,15 +10,11 @@ $SYS/brokers/emqx@127.0.0.1/uptime
 ```
 
 
- $SYS system message publish interval is configured in `etc/emqx.conf`:
+ $SYS system message publish interval is configured in `etc/emqx.conf`: 
 
 ```bash
 broker.sys_interval = 1m
 ```
-
-
-By default, only MQTT clients on localhost is allowed to subscribe to the $SYS topic. Please refer to build-in ACL to modify the ACL rules for publish and subscription.
-
 
 Most of the data of the $SYS topic in EMQ X Broker can be obtained through other method with lower Couplings. The device online and offline status can be obtained through [Webhook](./webhook.md)), and the node and cluster status can be obtained through  [HTTP API - Statistics Metrics](./http-api.md#endpoint-metrics).
 
@@ -43,38 +39,34 @@ Most of the data of the $SYS topic in EMQ X Broker can be obtained through other
 | ${clientid}/connected    | Online event. This message is published when a client goes online |
 | ${clientid}/disconnected | Offline event. This message is published when a client is offline |
 
- The Payload of the ‘connected’ event message can be parsed into JSON format:
+ The Payload of the ‘connected’ event message can be parsed into JSON format: 
 
 ```bash
 {
-    "username": "foo",
-    "ts": 1625572213873,
-    "sockport": 1883,
-    "proto_ver": 4,
-    "proto_name": "MQTT",
-    "keepalive": 60,
-    "ipaddress": "127.0.0.1",
-    "expiry_interval": 0,
-    "connected_at": 1625572213873,
-    "connack": 0,
-    "clientid": "emqtt-8348fe27a87976ad4db3",
-    "clean_start": true
+    "username":"undefined",
+    "ts":1582687922392,
+    "sockport":1883,
+    "proto_ver":5,
+    "proto_name":"MQTT",
+    "keepalive":300,
+    "ipaddress":"127.0.0.1",
+    "expiry_interval":0,
+    "connected_at":1582687922,
+    "connack":0,
+    "clientid":"emqtt-8348fe27a87976ad4db3",
+    "clean_start":true
 }
 ```
 
- The Payload of the ‘disconnected’ event message can be parsed into JSON format:
+ The Payload of the ‘disconnected’ event message can be parsed into JSON format: 
 
 ```bash
 {
-    "username": "foo",
-    "ts": 1625572213873,
-    "sockport": 1883,
-    "reason": "tcp_closed",
-    "proto_ver": 4,
-    "proto_name": "MQTT",
-    "ipaddress": "127.0.0.1",
-    "disconnected_at": 1625572213873,
-    "clientid": "emqtt-8348fe27a87976ad4db3"
+    "username":"undefined",
+    "ts":1582688032203,
+    "reason":"tcp_closed",
+    "disconnected_at":1582688032,
+    "clientid":"emqtt-8348fe27a87976ad4db3"
 }
 ```
 
@@ -117,12 +109,6 @@ System topic prefix : `$SYS/brokers/${node}/stats/`
 | routes/max   | maximum number of Routes |
 
  The topics/count and topics/max are numerically equal to routes/count and routes/max.
-
-### Slow subscriber statistics
-
-|  Topic  | Description  |
-| ------------ | ---------------- |
-| slow_subs | Statistics of current slow subscribers |
 
 ### Throughput (bytes/packets/message) statistics
 

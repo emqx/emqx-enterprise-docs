@@ -48,7 +48,7 @@ auth.mnesia.password_hash = sha256
 # etc/plugins/emqx_auth_mnesia.conf
 
 ## clientid 认证数据
-auth.client.1.clientid = admin
+auth.client.1.clientid = admin_client
 auth.client.1.password = public
 
 ## username 认证数据
@@ -60,7 +60,7 @@ auth.user.2.password = public
 
 <!-- TODO 补充加载规则 -->
 
-::: tip 
+::: danger 
 
 预设认证数据在配置文件中使用了明文密码，出于安全性与可维护性考虑应当避免使用该功能。
 :::

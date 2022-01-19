@@ -4,14 +4,11 @@ The builtin ACL sets rules through files, which is simple and lightweight enough
 
 
 ## Builtin ACL File
+emqx is enabled by default Builtin ACL file
 
-Builtin ACL module is enabled by default, it could be updated or stoped by dashboard but can not be deleted.
+Open [EMQ X Dashboard](http://127.0.0.1:18083/), log in, click the "Module" tab on the left, and select Add
 
-![image-20200927213049265](./assets/acl_file4.png)
-
-Editing ACL file content directly, or select a file to replace
-
-![image-20200927213049265](./assets/acl_file3.png)
+![image-20200927213049265](./assets/modules.png)
 
 ## Define ACL
 
@@ -67,7 +64,7 @@ The grammar rules of ʻacl.conf` are contained in the comments at the top. Those
 
 ​ * `{user, "dashboard"}`: indicates that the rule only takes effect for the user whose *Username (Username)* is "dashboard"
 
-​ * `{client, "dashboard"}`: indicates that the rule only takes effect for users whose *client ID (ClientId)* is "dashboard"
+​ * `{clientid, "dashboard"}`: indicates that the rule only takes effect for users whose *client ID (ClientId)* is "dashboard"
 
 ​ * `{ipaddr, "127.0.0.1"}`: indicates that the rule only takes effect for users whose source address is "127.0.0.1"
 

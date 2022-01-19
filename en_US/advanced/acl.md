@@ -29,6 +29,7 @@ The configuration file is used to provide an authentication data source, which i
 **External Database**
 
 
+
 * [MySQL ACL](../modules/mysql_authentication.md)
 * [PostgreSQL ACL](../modules/pgsql_authentication.md)
 * [Redis ACL](../modules/redis_authentication.md)
@@ -48,14 +49,18 @@ The external database can store a large amount of data and dynamically manage AC
 
 
 
+
 HTTP ACL enables complex ACL management.
 
 
-::: tip
+
+::: tip 
 
 The ACL function is included in the authentication plugin. After changing the plugin configuration, you need to restart the plugin to take effect.
 
 :::
+
+
 
 
 ## Detailed Rules
@@ -117,6 +122,7 @@ acl_nomatch = allow
 
 
 Configure the default, use the file to define the default ACL rule:
+
 
 
 ```bash
@@ -191,7 +197,7 @@ When multiple ACL plugins are enabled at the same time, EMQ X will perform chain
 
 <!-- replace -->
 
-::: tip
+::: tip 
 
 Enabling only one ACL plugin at the time can improve client ACL checking performance.
 

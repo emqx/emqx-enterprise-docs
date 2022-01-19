@@ -27,22 +27,22 @@ ref:
 
 而在这个过程中加入一个可挂载函数的点 (HookPoint)，允许外部插件挂载多个回调函数，形成一个调用链。达到对内部事件处理过程的扩展和修改。
 
-系统中常用到的认证插件则是按照该逻辑进行实现的。以最简单的 [emqx_auth_mnesia](https://github.com/emqx/emqx/tree/master/apps/emqx_auth_mnesia) 为例：
+系统中常用到的认证插件则是按照该逻辑进行实现的。以最简单的 [emqx_auth_username](https://github.com/emqx/emqx-auth-username) 为例：
 
-在只开启 `emqx_auth_mnesia` 认证插件，且关闭匿名用户登录时。按照上图对事件的处理逻辑可知，此时认证模块的逻辑为：
+在只开启 `emqx_auth_username` 认证插件，且关闭匿名用户登录时。按照上图对事件的处理逻辑可知，此时认证模块的逻辑为：
 
 1. 收到用户认证请求 (Authenticate)
 2. 读取 *是否允许匿名登录* 参数，得到 **拒绝登录**
-3. 执行 *认证事件的钩子*，即回调到 `emqx_auth_mnesia` 插件中，假设其认为此次登录合法，得到 **允许登录**
+3. 执行 *认证事件的钩子*，即回调到 `emqx_auth_username` 插件中，假设其认为此次登录合法，得到 **允许登录**
 4. 返回 **认证成功**，成功接入系统
 
 即，如下图所示：
 
 ```
-                     EMQ X Core          Hooks & Plugins
+                     EMQ X Core          Hooks & Plugins     
                 |<---  Scope  --->|<-------  Scope  -------->|
                 |                 |                          |
-  Authenticate  |     Allow       |   emqx_auth_mnesia       | Authenticate
+  Authenticate  |     Allow       |   emqx_auth_username     | Authenticate
  =============> > - - - - - - No -> - - - - - - - - - - -Yes->==============> Success
      Request    |    Anonymous?   |     authenticate?        |     Result
                 |                 |                          |
@@ -126,7 +126,6 @@ EMQ X 以一个客户端在其生命周期内的关键活动为基础，预置�
 | message.delivered    | 消息投递     | 消息准备投递到客户端前                                |
 | message.acked        | 消息回执     | 服务端在收到客户端发回的消息 ACK 后                   |
 | message.dropped      | 消息丢弃     | 发布出的消息被丢弃后                                  |
-| message.slow_subs_stats | 订阅者平均消息传输时延过高     |  QoS1或QoS2消息传输完成时         |
 
 
 ::: tip
@@ -163,7 +162,7 @@ emqx:unhook(Name, {Module, Function}).
 
 回调函数的入参及返回值要求，见下表：
 
-(参数数据结构参见：[emqx_types.erl](https://github.com/emqx/emqx/blob/main-v4.3/src/emqx_types.erl))
+(参数数据结构参见：[emqx_types.erl](https://github.com/emqx/emqx/blob/master/src/emqx_types.erl))
 
 
 | 名称                 | 入参                                                         | 返回                |

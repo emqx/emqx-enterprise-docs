@@ -64,12 +64,11 @@ PostgreSQL 认证插件默认配置下需要确保数据库中有以下两张数
 
 ```sql
 CREATE TABLE mqtt_user (
-  id SERIAL PRIMARY KEY,
-  username CHARACTER VARYING(100),
-  password CHARACTER VARYING(100),
-  salt CHARACTER VARYING(40),
-  is_superuser BOOLEAN,
-  UNIQUE (username)
+  id SERIAL primary key,
+  is_superuser boolean,
+  username character varying(100),
+  password character varying(100),
+  salt character varying(40)
 )
 ```
 
@@ -86,17 +85,14 @@ VALUES
 
 ```sql
 CREATE TABLE mqtt_acl (
-  id SERIAL PRIMARY KEY,
-  allow INTEGER,
-  ipaddr CHARACTER VARYING(60),
-  username CHARACTER VARYING(100),
-  clientid CHARACTER VARYING(100),
-  access  INTEGER,
-  topic CHARACTER VARYING(100)
-);
-CREATE INDEX ipaddr ON mqtt_acl (ipaddr);
-CREATE INDEX username ON mqtt_acl (username);
-CREATE INDEX clientid ON mqtt_acl (clientid);
+  id SERIAL primary key,
+  allow integer,
+  ipaddr character varying(60),
+  username character varying(100),
+  clientid character varying(100),
+  access  integer,
+  topic character varying(100)
+)
 ```
 
 规则表字段说明：
@@ -122,10 +118,10 @@ INSERT INTO mqtt_acl (allow, ipaddr, username, clientid, access, topic) VALUES (
 INSERT INTO mqtt_acl (allow, ipaddr, username, clientid, access, topic) VALUES (1, '10.59.1.100', NULL, NULL, 1, '$SYS/#');
 
 -- 禁止客户端订阅 /smarthome/+/temperature 主题
-INSERT INTO mqtt_acl (allow, ipaddr, username, clientid, access, topic) VALUES (0, NULL, '$all', NULL, 1, '/smarthome/+/temperature');
+INSERT INTO mqtt_acl (allow, ipaddr, username, clientid, access, topic) VALUES (0, NULL, NULL, NULL, 1, '/smarthome/+/temperature');
 
 -- 允许客户端订阅包含自身 Client ID 的 /smarthome/${clientid}/temperature 主题
-INSERT INTO mqtt_acl (allow, ipaddr, username, clientid, access, topic) VALUES (1, NULL, '$all', NULL, 1, '/smarthome/%c/temperature');
+INSERT INTO mqtt_acl (allow, ipaddr, username, clientid, access, topic) VALUES (1, NULL, NULL, NULL, 1, '/smarthome/%c/temperature');
 ```
 
 启用 PostgreSQL ACL 后并以用户名 emqx 成功连接后，客户端应当数据具有相应的主题权限。
@@ -191,3 +187,4 @@ auth.pgsql.acl_query = select allow, ipaddr, username, clientid, access, topic f
 ::: tip 
 可以在 SQL 中调整查询条件、指定排序方式实现更高效率的查询。
 :::
+

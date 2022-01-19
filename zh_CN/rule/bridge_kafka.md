@@ -2,16 +2,16 @@
 
 搭建 Kafka 环境，以 MacOS X 为例:
 ```bash
-wget http://apache.claz.org/kafka/2.8.0/kafka_2.13-2.8.0.tgz
+$ wget http://apache.claz.org/kafka/2.3.0/kafka_2.12-2.3.0.tgz
 
-tar -xzf  kafka_2.13-2.8.0.tgz
+$ tar -xzf  kafka_2.12-2.3.0.tgz
 
-cd kafka_2.13-2.8.0
+$ cd kafka_2.12-2.3.0
 
 # 启动 Zookeeper
-./bin/zookeeper-server-start.sh config/zookeeper.properties
+$ ./bin/zookeeper-server-start.sh config/zookeeper.properties
 # 启动 Kafka
-./bin/kafka-server-start.sh config/server.properties
+$ ./bin/kafka-server-start.sh config/server.properties
 ```
 
 创建 Kafka
@@ -21,7 +21,7 @@ cd kafka_2.13-2.8.0
 $ ./bin/kafka-topics.sh --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic testTopic --create
 ```
 
-::: tip
+::: danger
 创建 Kafka Rule 之前必须先在 Kafka 中创建好主题，否则创建 Kafka Rule 失败。
 :::
 

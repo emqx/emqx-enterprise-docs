@@ -44,9 +44,10 @@ SELECT create_hypertable('conditions', 'time');
 
 ```sql
 SELECT
-    payload.temp as temp,
-    payload.humidity as humidity,
-    payload.location as location
+    payload as p,
+    p.temp as temp,
+    p.humidity as humidity,
+    p.location as location
 FROM
     "#"
 ```

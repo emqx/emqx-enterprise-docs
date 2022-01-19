@@ -8,7 +8,7 @@ keywords:
 # 描述
 description:
 # 分类
-category:
+category: 
 # 引用
 ref: undefined
 ---
@@ -31,13 +31,13 @@ emqx v4.0.0 is running
 
 The mgmt command can query the application.
 
-| Command                            | Description                                             |
-| ---------------------------------- | ------------------------------------------------------- |
-| `mgmt list                       ` | List application                                        |
-| `mgmt insert <AppId> <Name>   `    | Add an application that can access to the HTTP API      |
-| `mgmt update <AppId> <status>`     | Update applications that can access to the HTTP API     |
-| `mgmt lookup <AppId>         `     | Get application details that can access to the HTTP API |
-| `mgmt delete <AppId>           `   | Remove applications that can access to the HTTP API     |
+| Command                      | Description               |
+| -------------------------------- | ---------------------------- |
+| `mgmt list                       ` | List application |
+| `mgmt insert <AppId> <Name>   `| Add an application that can access to the HTTP API |
+| `mgmt update <AppId> <status>` | Update applications that can access to the HTTP API |
+| `mgmt lookup <AppId>         ` | Get application details that can access to the HTTP API |
+| `mgmt delete <AppId>           ` | Remove applications that can access to the HTTP API |
 
 ### mgmt list
 
@@ -93,11 +93,11 @@ ok
 
 The broker command queries basic server information, startup time, statistics data and performance data.
 
-| Command          | Description                                                   |
-| ---------------- | ------------------------------------------------------------- |
-| `broker`         | Query EMQ X Broker description, version, start time           |
-| `broker stats`   | Statistics of Connection, Session, Topic, Subscription, Route |
-| `broker metrics` | Query MQTT Packet and Message Statistics                      |
+| Command     | Description                                               |
+| -------------- | ------------------------------------------------------------ |
+| `broker` | Query EMQ X Broker description, version, start time |
+| `broker stats` | Statistics of Connection, Session, Topic, Subscription, Route |
+| `broker metrics` | Query MQTT Packet and Message Statistics |
 
 Query basic information of EMQ X Broker, including version, startup time, etc .:
 
@@ -244,9 +244,7 @@ The cluster command is used to manage a cluster of multiple EMQ X Broker nodes (
 
 Example:
 
-To demonstrate the cluster command in a better way, we can firstly start a two-node cluster on the local machine, which is called pseudo-distributed starting mode. Since we need to start two nodes on one machine, we must adjust the listening port of the other node to avoid the port conflicts.
-
-The basic process is to copy another emqx folder and name it emqx2. After that, we let all the listening ports of the original emqx to be added by an offset as the listening ports of the emqx2 node. For example, we can change the MQTT/TCP listening port from the default 1883 to 2883 as the MQTT/TCP listening port for emqx2. Please refer to [Cluster Script](https://github.com/terry-xiaoyu/one_more_emqx) regarding to the above operations and also refer to [Configuration Instructions](../getting-started/config.md) and  [Configuration Items](../configuration/configuration.md) for details.
+To demonstrate the cluster command in a better way, we first start two nodes on the local machine and create a cluster. To avoid port conflicts, we have adjusted the listening port of the emqx2 node. For example, the MQTT/TCP listening port was changed from the default 1883 to 2883. Please refer to [Configuration Instructions](../getting-started/config.md) and  [Configuration Items](../configuration/configuration.md) for details.
 
 Start emqx1 :
 
@@ -264,7 +262,7 @@ Use `cluster join <Node>` to combine two nodes into one cluster:
 
 ```bash
 $ cd emqx2 && ./bin/emqx_ctl cluster join emqx1@127.0.0.1
-
+ 
 Join the cluster successfully.
 Cluster status: [{running_nodes,['emqx1@127.0.0.1','emqx2@127.0.0.1']}]
 ```
@@ -291,7 +289,7 @@ Client emqtt-0898fa447676e17479a5 sent CONNECT
 Client emqtt-0898fa447676e17479a5 sent PUBLISH (Q1, R0, D0, Topic=x, Payload=...(5 bytes))
 Client emqtt-0898fa447676e17479a5 sent DISCONNECT
 
-# received a message by emqx1 node (port 1883)
+# received a message by emqx1 node (port 1883) 
 $ ./bin/emqtt sub -t x -q 1 -p 1883
 hello
 ```
@@ -326,25 +324,14 @@ $ ./bin/emqx_ctl acl reload
 ok
 ```
 
-### acl cache-clean
-
-After v4.3, the command to clean up the ACL cache has been introduced:
-
-| Commads                     | Description                       |
-| --------------------------- | --------------------------------- |
-| acl cache-clean all         | Clears acl cache on all nodes     |
-| acl cache-clean node <Node> | Clears acl cache on given node    |
-| acl cache-clean <ClientId>  | Clears acl cache for given client |
-
-
 ## clients command
 
 The clients command can query the connected MQTT clients.
 
-| Command                   | Description                                                                                                  |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `clients list           ` | List all client connections                                                                                  |
-| `clients show <ClientId>` | Query the client with the specified ClientId                                                                 |
+| Command                | Description           |
+| ------------------------- | ------------------------ |
+| `clients list           ` | List all client connections |
+| `clients show <ClientId>` | Query the client with the specified ClientId |
 | `clients kick <ClientId>` | Kick out the client with the specified ClientId, and the connection and session will be terminated together. |
 
 ### clients list
@@ -360,23 +347,23 @@ Client (mosqsub/44011-airlee.lo, username=test2, peername=127.0.0.1:64961, clean
 
 Return the properties of the Client object:
 
-| Name                      | Description                                                                                 |
-| ------------------------- | ------------------------------------------------------------------------------------------- |
-| username                  | Username                                                                                    |
-| peername                  | Client IP and port                                                                          |
-| clean\_start              | MQTT Clean Start                                                                            |
-| keepalive                 | MQTT KeepAlive                                                                              |
-| session\_expiry\_interval | Session expiration interval                                                                 |
-| subscriptions             | Current subscriptions                                                                       |
-| inflight                  | Total number of QoS 1 and QoS 2 messages currently being issued                             |
-| awaiting\_rel             | Number of QoS2 messages waiting for the client to send PUBREL                               |
-| delivered\_msgs           | Number of messages forwarded by EMQ X Broker to this client (including retransmissions)     |
-| enqueued\_msgs            | Current length of message queue                                                             |
-| dropped\_msgs             | Number of messages dropped after the message queue reached the maximum length               |
-| connected                 | Whether online                                                                              |
-| created\_at               | Session creation timestamp                                                                  |
-| connected\_at             | Client connection timestamp                                                                 |
-| disconnected_at           | Client disconnection timestamp (appears only if the disconnection also retains the session) |
+| Name | Description |
+| ------------------------- | ------------------------- |
+| username                  | Username                |
+| peername                  | Client IP and port |
+| clean\_start              | MQTT Clean Start          |
+| keepalive                 | MQTT KeepAlive            |
+| session\_expiry\_interval | Session expiration interval |
+| subscriptions             | Current subscriptions |
+| inflight                  | Total number of QoS 1 and QoS 2 messages currently being issued |
+| awaiting\_rel             | Number of QoS2 messages waiting for the client to send PUBREL |
+| delivered\_msgs           | Number of messages forwarded by EMQ X Broker to this client (including retransmissions) |
+| enqueued\_msgs            | Current length of message queue |
+| dropped\_msgs             | Number of messages dropped after the message queue reached the maximum length |
+| connected                 | Whether online      |
+| created\_at               | Session creation timestamp |
+| connected\_at             | Client connection timestamp |
+| disconnected_at | Client disconnection timestamp (appears only if the disconnection also retains the session) |
 
 ### clients show <ClientId>
 
@@ -402,9 +389,9 @@ The routes command is used to query routing information.
 
 In EMQ X Broker, route refers to the mapping of topics to nodes, which is used to route messages between multiple nodes.
 
-| Command               | Description                            |
-| --------------------- | -------------------------------------- |
-| `routes list        ` | List all routes                        |
+| Command            | Description      |
+| --------------------- | ------------------- |
+| `routes list        ` | List all routes |
 | `routes show <Topic>` | Query the route of the specified topic |
 
 ### routes list
@@ -430,12 +417,12 @@ t/+/x -> emqx2@127.0.0.1,emqx@127.0.0.1
 
 The subscriptions command queries the subscription table of the message server.
 
-| Command                                      | Description                                             |
-| -------------------------------------------- | ------------------------------------------------------- |
-| `subscriptions list                        ` | List all subscriptions                                  |
+| Command                                   | Description           |
+| -------------------------------------------- | ------------------------ |
+| `subscriptions list                        ` | List all subscriptions |
 | `subscriptions show <ClientId>             ` | Query the subscription of the specified ClientId client |
-| `subscriptions add <ClientId> <Topic> <QoS>` | Add static subscriptions manually                       |
-| `subscriptions del <ClientId> <Topic>      ` | Delete static subscriptions manually                    |
+| `subscriptions add <ClientId> <Topic> <QoS>` | Add static subscriptions manually |
+| `subscriptions del <ClientId> <Topic>      ` | Delete static subscriptions manually |
 
 ### subscriptions list
 
@@ -478,12 +465,12 @@ ok
 
 The plugins command is used to load, unload, and query plugin applications. EMQ X Broker extends authentication and customization through plugins. The plugin configuration is located in the directory of `etc/plugins/` .
 
-| Command                    | Description      |
-| -------------------------- | ---------------- |
-| `plugins list            ` | List all plugins |
-| `plugins load <Plugin>   ` | Load plugins     |
-| `plugins unload <Plugin> ` | Unload plugins   |
-| `plugins reload <Plugin> ` | Reload plugins   |
+| Command | Description |
+| ------------------------- | -------------- |
+| `plugins list            `| List all plugins |
+| `plugins load <Plugin>   `| Load plugins |
+| `plugins unload <Plugin> `| Unload plugins |
+| `plugins reload <Plugin> `| Reload plugins |
 
 When the configuration file changesand it needs to take effect immediately, you can execute the `emqx_ctl reload <Plugin \>` command, even if the plugin is not running when the configuration is modified. You should use this command instead of `emqx_ctl load <Plugin\>` . Because `emqx_ctl load <Plugin \>` does not compile the new configuration file.
 
@@ -493,11 +480,32 @@ List all plugins:
 
 ```bash
 $ ./bin/emqx_ctl plugins list
-...
-Plugin(emqx_auth_http, description=EMQ X Authentication/ACL with HTTP API, active=false)
-Plugin(emqx_auth_jwt, description=EMQ X Authentication with JWT, active=false)
-Plugin(emqx_auth_ldap, description=EMQ X Authentication/ACL with LDAP, active=false)
-...
+Plugin (emqx_auth_clientid, version=v4.0.0, description=EMQ X Authentication with ClientId/Password, active=false)
+Plugin (emqx_auth_http, version=v4.0.0, description=EMQ X Authentication/ACL with HTTP API, active=false)
+Plugin (emqx_auth_jwt, version=v4.0.0, description=EMQ X Authentication with JWT, active=false)
+Plugin (emqx_auth_ldap, version=v4.0.0, description=EMQ X Authentication/ACL with LDAP, active=false)
+Plugin (emqx_auth_mongo, version=v4.0.0, description=EMQ X Authentication/ACL with MongoDB, active=false)
+Plugin (emqx_auth_mysql, version=v4.0.0, description=EMQ X Authentication/ACL with MySQL, active=false)
+Plugin (emqx_auth_pgsql, version=v4.0.0, description=EMQ X Authentication/ACL with PostgreSQL, active=false)
+Plugin (emqx_auth_redis, version=v4.0.0, description=EMQ X Authentication/ACL with Redis, active=false)
+Plugin (emqx_auth_username, version=v4.0.0, description=EMQ X Authentication with Username and Password, active=false)
+Plugin (emqx_bridge_mqtt, version=v4.0.0, description=EMQ X Bridge to MQTT Broker, active=false)
+Plugin (emqx_coap, version=v4.0.0, description=EMQ X CoAP Gateway, active=false)
+Plugin (emqx_dashboard, version=v4.0.0, description=EMQ X Web Dashboard, active=true)
+Plugin (emqx_delayed_publish, version=v4.0.0, description=EMQ X Delayed Publish, active=false)
+Plugin (emqx_lua_hook, version=v4.0.0, description=EMQ X Lua Hooks, active=false)
+Plugin (emqx_lwm2m, version=v4.0.0, description=EMQ X LwM2M Gateway, active=false)
+Plugin (emqx_management, version=v4.0.0, description=EMQ X Management API and CLI, active=true)
+Plugin (emqx_plugin_template, version=v4.0.0, description=EMQ X Plugin Template, active=false)
+Plugin (emqx_psk_file, version=v4.0.0, description=EMQX PSK Plugin from File, active=false)
+Plugin (emqx_recon, version=v4.0.0, description=EMQ X Recon Plugin, active=true)
+Plugin (emqx_reloader, version=v4.0.0, description=EMQ X Reloader Plugin, active=false)
+Plugin (emqx_retainer, version=v4.0.0, description=EMQ X Retainer, active=true)
+Plugin (emqx_rule_engine, version=v4.0.0, description=EMQ X Rule Engine, active=true)
+Plugin (emqx_sn, version=v4.0.0, description=EMQ X MQTT SN Plugin, active=false)
+Plugin (emqx_statsd, version=v4.0.0, description=Statsd for EMQ X, active=false)
+Plugin (emqx_stomp, version=v4.0.0, description=EMQ X Stomp Protocol Plugin, active=false)
+Plugin (emqx_web_hook, version=v4.0.0, description=EMQ X Webhook Plugin, active=false)
 ```
 
 Plugin properties:
@@ -508,7 +516,7 @@ Plugin properties:
 | description | Plugin description |
 | active      | Whether loaded     |
 
-### plugins load <Plugin> {#load_plugin}
+### plugins load <Plugin>
 
 Load plugin:
 
@@ -691,7 +699,7 @@ Query the mnesia database system status.
 
 ## log command
 
-The log command is used to set the log level. Visit [Documentation of logger](http://erlang.org/doc/apps/kernel/logger_chapter.html) for more information in detail.
+The log command is used to set the log level. Visit [Documentation of logger](http://erlang.org/doc/apps/kernel/logger_chapter.html) for more information in detail. 
 
 | Command                                      | Description                                           |
 | -------------------------------------------- | ----------------------------------------------------- |
@@ -754,13 +762,13 @@ error
 
 The trace command is used to trace a client or topic, and print log information to a file. For details, see [Log and Trace](../getting-started/log.md).
 
-| Command                                          | Description                                                    |
-| ------------------------------------------------ | -------------------------------------------------------------- |
-| `trace list                                    ` | List all started traces                                        |
+| Command                                          | Description                                                  |
+| ------------------------------------------------ | ------------------------------------------------------------ |
+| `trace list                                    ` | List all started traces                                      |
 | `trace start client <ClientId> <File> [<Level>]` | Start client trace and store logs of specified level to a file |
-| `trace stop client <ClientId>                  ` | Stop Client trace                                              |
-| `trace start topic <Topic> <File> [<Level>]    ` | Start Topic trace and store logs of specified level to a file  |
-| `trace stop topic <Topic>                      ` | Stop Topic trace                                               |
+| `trace stop client <ClientId>                  ` | Stop Client trace                                            |
+| `trace start topic <Topic> <File> [<Level>]    ` | Start Topic trace and store logs of specified level to a file |
+| `trace stop topic <Topic>                      ` | Stop Topic trace                                             |
 
 ### trace start client <ClientId> <File> [ <Level> ]
 
@@ -769,10 +777,10 @@ Start client trace:
 ```bash
 $ ./bin/emqx_ctl log primary-level debug
 debug
- 
+    
 $ ./bin/emqx_ctl trace start client clientid log/clientid_trace.log
 trace clientid clientid successfully
-
+    
 $ ./bin/emqx_ctl trace start client clientid2 log/clientid2_trace.log error
 trace clientid clientid2 successfully
 ```
@@ -824,12 +832,10 @@ Trace (topic=topic2, level=error, destination="log/topic2_trace.log")
 
 The listeners command is used to query the active TCP service listeners.
 
-| Command                          | Description          |
-| -------------------------------- | -------------------- |
-| listeners                        | # List listeners     |
-| listeners stop    <Identifier>   | # Stop a listener    |
-| listeners stop    <Proto> <Port> | # Stop a listener    |
-| listeners restart <Identifier>   | # Restart a listener |
+| Command                          | Description                                                  |
+| -------------------------------- | ------------------------------------------------------------ |
+| `listeners                     ` | Query active TCP Service Listeners                           |
+| `listeners stop <Proto> <Port> ` | Stop listener port, support `mqtt: ssl`,` mqtt: tcp`, `http: dashboard`,` http: management`, `mqtt: ws`,` mqtt: wss` protocol |
 
 ### listeners list
 
@@ -837,103 +843,84 @@ Query the active TCP service listeners
 
 ```bash
 $ ./bin/emqx_ctl listeners
-mqtt:ssl:external
-  listen_on       : 0.0.0.0:8883
-  acceptors       : 16
-  max_conns       : 102400
-  current_conn    : 0
-  shutdown_count  : []
-mqtt:tcp:external
-  listen_on       : 0.0.0.0:1883
-  acceptors       : 8
-  max_conns       : 1024000
-  current_conn    : 0
-  shutdown_count  : []
-mqtt:tcp:internal
-  listen_on       : 127.0.0.1:11883
-  acceptors       : 4
-  max_conns       : 1024000
-  current_conn    : 0
-  shutdown_count  : []
-http:dashboard
-  listen_on       : 0.0.0.0:18083
-  acceptors       : 4
-  max_conns       : 512
-  current_conn    : 0
-  shutdown_count  : []
-http:management
-  listen_on       : 0.0.0.0:8081
-  acceptors       : 2
-  max_conns       : 512
-  current_conn    : 0
-  shutdown_count  : []
-mqtt:ws:external
-  listen_on       : 0.0.0.0:8083
-  acceptors       : 4
-  max_conns       : 102400
-  current_conn    : 0
-  shutdown_count  : []
-mqtt:wss:external
-  listen_on       : 0.0.0.0:8084
-  acceptors       : 4
-  max_conns       : 16
-  current_conn    : 0
-  shutdown_count  : []
+listener on mqtt:ssl:8883
+    acceptors       : 16
+    max_conns       : 102400
+    current_conn    : 0
+    shutdown_count  : []
+listener on mqtt:tcp:0.0.0.0:1883
+    acceptors       : 8
+    max_conns       : 1024000
+    current_conn    : 0
+    shutdown_count  : []
+listener on mqtt:tcp:127.0.0.1:11883
+    acceptors       : 4
+    max_conns       : 1024000
+    current_conn    : 2
+    shutdown_count  : []
+listener on http:dashboard:18083
+    acceptors       : 2
+    max_conns       : 512
+    current_conn    : 0
+    shutdown_count  : []
+listener on http:management:8081
+    acceptors       : 2
+    max_conns       : 512
+    current_conn    : 0
+    shutdown_count  : []
+listener on mqtt:ws:8083
+    acceptors       : 2
+    max_conns       : 102400
+    current_conn    : 0
+    shutdown_count  : []
+listener on mqtt:wss:8084
+    acceptors       : 2
+    max_conns       : 16
+    current_conn    : 0
+    shutdown_count  : []
 ```
 
 listener parameter description:
 
-| Name            | Description                               |
-| --------------- | ----------------------------------------- |
-| acceptors       | TCP Acceptor pool                         |
-| max\_conns      | Maximum allowed connections               |
-| current\_conns  | Current connections                       |
+| Name            | Description |
+| --------------- | ------------------- |
+| acceptors       | TCP Acceptor pool  |
+| max\_conns      | Maximum allowed connections |
+| current\_conns  | Current connections |
 | shutdown\_count | Statistics of connection shutdown reasons |
 
-### listeners stop <Identifier>
+### listeners stop <Proto> <Port>
 
-Stop listener:
-
-```bash
-$ ./bin/emqx_ctl listeners stop mqtt:tcp:external
-Stop listener mqtt:tcp:external successfully.
-```
-
-### listeners restart <Identifier>
-
-
-### listeners restart
+Stop listener port:
 
 ```bash
-$ ./bin/emqx_ctl listeners restart http:dashboard
-Stop http:dashboard listener on 0.0.0.0:18083 successfully.
-Start http:dashboard listener on 0.0.0.0:18083 successfully.
-
+$ ./bin/emqx_ctl listeners stop mqtt:tcp 0.0.0.0:1883
+Stop mqtt:tcp listener on 0.0.0.0:1883 successfully.
 ```
 
 ## recon command
 
 The recon command of EMQ X Broker is based on the Erlang Recon library, which is used to help DevOps staff to diagnose problems in the production node, and ordinary users do not need to care. The recon command will consume some performance, so, please use it with caution.
 
-| Command                    | Description                                                                                                  |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `recon memory            ` | [recon\_alloc:memory/2](http://ferd.github.io/recon/recon_alloc.html#memory-2)                               |
-| `recon allocated         ` | [recon\_alloc:memory (allocated\_types, current/max)](http://ferd.github.io/recon/recon_alloc.html#memory-2) |
-| `recon bin_leak         `  | [recon:bin\_leak (100)](http://ferd.github.io/recon/recon.html#bin_leak-1)                                   |
-| `recon node_stats       `  | [recon:node\_stats_print(10, 1000)](http://ferd.github.io/recon/recon.html#node_stats_print-2)               |
-| `recon remote_load Mod  `  | [recon:remote\_load (Mod)](http://ferd.github.io/recon/recon.html#remote_load-1)                             |
-| `recon proc_count Attr N ` | [recon:proc_count(Attr, N)](http://ferd.github.io/recon/recon.html#proc_count-2)                             |
+| Command              | Description                                               |
+| ----------------------- | ------------------------------------------------------------ |
+| `recon memory            `| [recon\_alloc:memory/2](http://ferd.github.io/recon/recon_alloc.html#memory-2) |
+| `recon allocated         `| [recon\_alloc:memory (allocated\_types, current/max)](http://ferd.github.io/recon/recon_alloc.html#memory-2) |
+| `recon bin_leak         `| [recon:bin\_leak (100)](http://ferd.github.io/recon/recon.html#bin_leak-1) |
+| `recon node_stats       `| [recon:node\_stats_print(10, 1000)](http://ferd.github.io/recon/recon.html#node_stats_print-2) |
+| `recon remote_load Mod  `| [recon:remote\_load (Mod)](http://ferd.github.io/recon/recon.html#remote_load-1) |
+| `recon proc_count Attr N `| [recon:proc_count(Attr, N)](http://ferd.github.io/recon/recon.html#proc_count-2) |
 
 Visit [Documentation for recon](http://ferd.github.io/recon/) for more information.
 
 ## retainer command
 
-| Command                  | Description                                              |
-| ------------------------ | -------------------------------------------------------- |
-| `retainer info         ` | Show the number of retained messages                     |
+| Command               | Description               |
+| ------------------------ | ---------------------------- |
+| `retainer info         ` | Show the number of retained messages |
 | `retainer topics       ` | Display all topics of currently stored retained messages |
-| `retainer clean        ` | Clean all retained messages                              |
-| `retainer clean <Topic>` | Clean retained messages with the specified topic         |
+| `retainer clean        ` | Clean all retained messages |
+| `retainer clean <Topic>` | Clean retained messages with the specified topic |
 
 ### retainer info
 
@@ -1014,8 +1001,8 @@ ok
 
 ### rules command
 
-| Command                                       | Description    |
-| --------------------------------------------- | -------------- |
+| Command                                    | Description  |
+| --------------------------------------------- | --------------- |
 | `rules list`                                  | List all rules |
 | `rules show <RuleId>`                         | Show a rule    |
 | `rules create <sql> <actions> [-d [<descr>]]` | Create a rule  |
@@ -1036,7 +1023,7 @@ $ ./bin/emqx_ctl rules create \
     'select * from "t/a"' \
     '[{"name":"inspect", "params": {"a": 1}}]' \
     -d 'Rule for debug'
-
+    
 Rule rule:9a6a725d created
 ```
 The above example creates a rule with the ID `rule:9a6a725d`. There is only one action in the action list with the name inspect, and the action parameters are `{" a ": 1}`.
@@ -1046,7 +1033,7 @@ The above example creates a rule with the ID `rule:9a6a725d`. There is only one 
 List all current rules:
 ```bash
 $ ./bin/emqx_ctl rules list
- 
+    
 rule(id='rule:9a6a725d', for='['t/a']', rawsql='select * from "t/a"', actions=[{"metrics":...,"name":"inspect","params":...}], metrics=..., enabled='true', description='Rule for debug')
 ```
 #### rules show
@@ -1055,7 +1042,7 @@ Query rules:
 ```bash
 ## Query rule with RuleID 'rule:9a6a725d'
 $ ./bin/emqx_ctl rules show 'rule:9a6a725d'
- 
+    
 rule(id='rule:9a6a725d', for='['t/a']', rawsql='select * from "t/a"', actions=[{"metrics":...,"name":"inspect","params":...}], metrics=..., enabled='true', description='Rule for debug')
 ```
 #### rules delete
@@ -1064,14 +1051,14 @@ Delete rule:
 ```bash
 ## Delete rule with RuleID 'rule:9a6a725d'
 $ ./bin/emqx_ctl rules delete 'rule:9a6a725d'
- 
+    
 ok
 ```
 ### rule-actions command
 
-| Command                        | Description        |
-| ------------------------------ | ------------------ |
-| `rule-actions list`            | List actions       |
+| Command                     | Description  |
+| ------------------------------ | --------------- |
+| `rule-actions list`            | List actions |
 | `rule-actions show <ActionId>` | Show a rule action |
 
 ::: tip
@@ -1084,7 +1071,7 @@ Query action:
 ```bash
 ## Query action named 'inspect'
 $ ./bin/emqx_ctl rule-actions show 'inspect'
-
+    
 action(name='inspect', app='emqx_rule_engine', types=[], title ='Inspect (debug)', description='Inspect the details of action params for debug purpose')
 ```
 #### rule-actions list
@@ -1093,19 +1080,19 @@ List eligible actions:
 ```bash
 ## List all current actions
 $ ./bin/emqx_ctl rule-actions list
-
+    
 action(name='data_to_rabbit', app='emqx_bridge_rabbit', types=[bridge_rabbit], title ='Data bridge to RabbitMQ', description='Store Data to Kafka')
 action(name='data_to_timescaledb', app='emqx_backend_pgsql', types=[timescaledb], title ='Data to TimescaleDB', description='Store data to TimescaleDB')
 ...
 ```
 ### resources command
 
-| Command                                                  | Description       |
-| -------------------------------------------------------- | ----------------- |
-| `resources create <type> [-c [<config>]] [-d [<descr>]]` | Create a resource |
-| `resources list [-t <ResourceType>]`                     | List resources    |
-| `resources show <ResourceId>`                            | Show a resource   |
-| `resources delete <ResourceId>`                          | Delete a resource |
+| Command                                                    | Description  |
+| ------------------------------------------------------------ | --------------- |
+| `resources create <type> [-c [<config>]] [-d [<descr>]]`     | Create a resource |
+| `resources list [-t <ResourceType>]`                         | List resources    |
+| `resources show <ResourceId>`                                | Show a resource   |
+| `resources delete <ResourceId>`                              | Delete a resource |
 
 #### resources create
 
@@ -1124,13 +1111,13 @@ Create a new resource with the following parameters:
 List all current resources:
 ```bash
 $ ./bin/emqx_ctl resources list
-
+    
 resource(id='resource:a7a38187', type='web_hook', config=#{<<"url">> => <<"http://host-name/chats">>}, status=#{is_alive => false}, description='forward msgs to host-name/chats')
 ```
 List resources of a certain type:
 ```bash
 $ ./bin/emqx_ctl resources list --type='web_hook'
- 
+    
 resource(id='resource:a7a38187', type='web_hook', config=#{<<"url">> => <<"http://host-name/chats">>}, status=#{is_alive => false}, description='forward msgs to host-name/chats')
 ```
 #### resources show
@@ -1138,7 +1125,7 @@ resource(id='resource:a7a38187', type='web_hook', config=#{<<"url">> => <<"http:
 Query resource:
 ```bash
 $ ./bin/emqx_ctl resources show 'resource:a7a38187'
- 
+    
 resource(id='resource:a7a38187', type='web_hook', config=#{<<"url">> => <<"http://host-name/chats">>}, status=#{is_alive => false}, description='forward msgs to host-name/chats')
 ```
 #### resources delete
@@ -1146,13 +1133,13 @@ resource(id='resource:a7a38187', type='web_hook', config=#{<<"url">> => <<"http:
 Delete resource:
 ```bash
 $ ./bin/emqx_ctl resources delete 'resource:a7a38187'
- 
+    
 ok
 ```
 ### resource-types command
 
-| Command                      | Description             |
-| ---------------------------- | ----------------------- |
+| Command                    | Description  |
+| ---------------------------- | --------------- |
 | resource-types list          | List all resource-types |
 | resource-types show `<Type>` | Show a resource-type    |
 
@@ -1165,7 +1152,7 @@ Resource type can be built-in by EMQ X Broker (called system built-in resource t
 List all current resource types:
 ```bash
 ./bin/emqx_ctl resource-types list
- 
+    
 resource_type(name='backend_mongo_rs', provider='emqx_backend_mongo', title ='MongoDB Replica Set Mode', description='MongoDB Replica Set Mode')
 resource_type(name='backend_cassa', provider='emqx_backend_cassa', title ='Cassandra', description='Cassandra Database')
 ...
@@ -1175,7 +1162,7 @@ resource_type(name='backend_cassa', provider='emqx_backend_cassa', title ='Cassa
 Query resource type:
 ```bash
 $ ./bin/emqx_ctl resource-types show backend_mysql
- 
+    
 resource_type(name='backend_mysql', provider='emqx_backend_mysql', title ='MySQL', description='MySQL Database')
 ```
 ## Status, statistical indicators and alerts related to the rules engine
@@ -1200,220 +1187,3 @@ resource_type(name='backend_mysql', provider='emqx_backend_mysql', title ='MySQL
 
 - Available: Resources available
 - Unavailable: resources unavailable (e.g. database connection shutdown)
-
-## EMQ X Internal DB Auth/ACL
-
-This command will only take effect when the emqx_auth_mnesia plug-in is turned on
-
-### clientid command
-
-| Command                      | Description            |
-| ---------------------------- | ----------------------- |
-| clientid list                | List clientid auth rules |
-| clientid add `<ClientID>` `<Password>` | Add clientid auth rule |
-| clientid update `<ClientID>` `<Password>` | Update clientid auth rule |
-| clientid del `<ClientID>` `<Password>` | Delete clientid auth rule |
-
-#### clientid list
-
-List clientid auth rules
-
-```bash
-./bin/emqx_ctl clientid list
-emqx
-```
-
-#### clientid add `<ClientID>` `<Password>`
-
-Add clientid auth rule
-
-```bash
-./bin/emqx_ctl clientid add emqx public
-ok
-```
-
-#### clientid update `<ClientID>` `<Password>`
-
-Update clientid auth rule
-
-```bash
-./bin/emqx_ctl clientid update emqx new_password
-ok
-```
-
-#### clientid del `<ClientID>` `<Password>`
-
-Delete clientid auth rule
-
-```bash
-./bin/emqx_ctl clientid del emqx new_password
-ok
-```
-
-### user command
-
-| Command                      | Description            |
-| ---------------------------- | ----------------------- |
-| user list                    | List username auth rules |
-| user add `<Username>` `<Password>` | Add username auth rule |
-| user update `<Username>` `<Password>` | Update username auth rule |
-| user del `<Username>` `<Password>` | Delete username auth rule |
-
-#### user list
-
-List username auth rules
-
-```bash
-./bin/emqx_ctl user list
-emqx
-```
-
-#### user add `<Username>` `<Password>`
-
-Add username auth rule
-
-```bash
-./bin/emqx_ctl user add emqx public
-ok
-```
-
-#### user update `<Username>` `<Password>`
-
-Update username auth rule
-
-```bash
-./bin/emqx_ctl user update emqx new_password
-ok
-```
-
-#### user del `<Username>` `<Password>`
-
-Delete username auth rule
-
-```bash
-./bin/emqx_ctl user del emqx new_password
-ok
-```
-
-### acl command
-
-| Command                      | Description            |
-| ---------------------------- | ----------------------- |
-| acl list clientid                                    | List clientid acls|
-| acl list username                                    | List username acls|
-| acl list _all                                        | List $all acls|
-| acl show clientid <Clientid>                         | Lookup clientid acl detail|
-| acl show username <Username>                         | Lookup username acl detail|
-| acl aad clientid <Clientid> <Topic> <Action> <Access>| Add clientid acl|
-| acl add Username <Username> <Topic> <Action> <Access>| Add username acl|
-| acl add _all <Topic> <Action> <Access>               | Add $all acl|
-| acl del clientid <Clientid> <Topic>                  | Delete clientid acl|
-| acl del username <Username> <Topic>                  | Delete username acl|
-| acl del _all <Topic>                                 | Delete $all acl|
-
-#### acl list
-
-+ acl list clientid
-
-  List clientid acls
-
-  ```bash
-  ./bin/emqx_ctl acl list clientid
-  Acl(clientid = <<"emqx_clientid">> topic = <<"Topic/A">> action = pub access = allow)
-  ```
-
-+ acl list username
-
-  List username acls
-
-  ```bash
-  ./bin/emqx_ctl acl list username
-  Acl(username = <<"emqx_username">> topic = <<"Topic/B">> action = sub access = deny)
-  ```
-
-+ acl list _all
-
-  List $all acls
-
-  ```bash
-  ./bin/emqx_ctl acl list _all
-  Acl($all topic = <<"Topic/C">> action = pubsub access = allow)
-  ```
-
-#### acl show
-
-+ acl show clientid `<Clientid>`
-
-  Lookup clientid acl detail
-
-  ```bash
-  ./bin/emqx_ctl acl show clientid emqx_clientid
-  Acl(clientid = <<"emqx_clientid">> topic = <<"Topic/A">> action = pub access = allow)
-  ```
-
-+ acl show username `<Username>`
-
-  Lookup username acl detail
-
-  ```bash
-  ./bin/emqx_ctl acl show username emqx_username
-  Acl(username = <<"emqx_username">> topic = <<"Topic/B">> action = sub access = deny)
-  ```
-
-#### acl add
-
-+ acl aad clientid `<Clientid>` `<Topic>` `<Action>` `<Access>`
-
-  Add clientid acl
-
-  ```bash
-  ./bin/emqx_ctl acl add clientid emqx_clientid Topic/A pub allow
-  ok
-  ```
-
-+ acl aad username `<Username>` `<Topic>` `<Action>` `<Access>`
-
-  Add username acl
-
-  ```bash
-  ./bin/emqx_ctl acl add username emqx_username Topic/B sub deny
-  ok
-  ```
-
-+ acl aad _all `<Topic>` `<Action>` `<Access>`
-
-  Add $all acl
-
-  ```bash
-  ./bin/emqx_ctl acl add _all Topic/C pubsub allow
-  ok
-  ```
-
-#### acl del
-
-+ acl del clientid `<Clientid>` `<Topic>`
-
-  Delete clientid acl
-
-  ```bash
-  ./bin/emqx_ctl acl del clientid emqx_clientid Topic/A
-  ok
-  ```
-
-+ acl del username `<Username>` `<Topic>`
-
-  Delete username acl
-
-  ```bash
-  ./bin/emqx_ctl acl del clientid emqx_username Topic/B
-  ok
-  ```
-
-+ acl del _all `<Topic>`
-
-  Delete $all acl
-
-  ```bash
-  ./bin/emqx_ctl acl del _all Topic/C
-  ok
-  ```

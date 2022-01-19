@@ -15,7 +15,7 @@ ref: undefined
 
 # Configuration
 
-## Cluster
+## cluster
 
 ### cluster.name
 
@@ -618,22 +618,9 @@ RPC mode. Synchronous or asynchronous mode is optional.
 
 The maximum number of batch messages sent in asynchronous mode. Note that this configuration does not work in synchronous mode.
 
-### rpc.port_discovery
 
-| Type | Optional Value Default |
-| ---- | --------------------- |
-| enum | `manual`, `stateless` |
 
-#### Description
-
-`manual`: discover ports by `tcp_server_port` and `tcp_client_port`.
-`stateless`: discover ports in a stateless manner. If node name is `emqx<N>@127.0.0.1`, where the `<N>` is an integer,
-then the listening port will be `5370 + <N>`
-
-Default is `manual` when started from docker (environment variable override from docker-entrypoint)
-otherwise `stateless`.
-
-### rpc.tcp_server_port
+### node.tcp_server_port
 
 | Type    | Optional Value | Default |
 | ------- | -------------- | ------- |
@@ -642,9 +629,22 @@ otherwise `stateless`.
 #### Description
 
 Set the listening port used by RPC local service
-NOTE: this config only takes effect when `rpc.port_discovery` is set to `manual`
 
-### rpc.tcp_client_num
+
+
+### node.tcp_client_port
+
+| Type    | Optional Value | Default |
+| ------- | -------------- | ------- |
+| integer | 1024-65535     | 5369    |
+
+#### Description
+
+Set the port of the remote RPC service.
+
+
+
+### node.tcp_client_num
 
 | Type    | Optional Value | Default         |
 | ------- | -------------- | --------------- |
@@ -780,7 +780,7 @@ TCP tuning parameters. Socket buffer size in user mode.
 
 | Type | Optional Value                   | Default |
 | ---- | -------------------------------- | ------- |
-| enum | `off`, `file`, `console`, `both` | `file`  |
+| enum | `off`, `file`, `console`, `both` | `both`  |
 
 #### Description
 
@@ -839,16 +839,7 @@ The prefix of the log file. For example, if you use the default value (`log.file
 
 Set the maximum length of a single log message. If this length is exceeded, the log message will be truncated. `-1` means no limit.
 
-### log.max_depth
 
-| Type                        | Default |
-| --------------------------- | ------- |
-| union(integer, 'unlimited') | 20      |
-
-#### Description
-
-Maximum depth for Erlang term log formatting and Erlang process message queue inspection.
-Set 'unlimited' (without quotes) to print Erlang terms without depth limit.
 
 ### log.rotation.size
 
@@ -898,39 +889,7 @@ Output error and error logs separately to the `error.log.N` file
 log.error.file = error.log
 ```
 
-### log.max_depth
 
-| Type    | Default |
-| ------- | ------- |
-| integer | 20      |
-
-#### Description
-
-Max depth when printing large data blob to log.
-Exceeding parts will be logge as '...'.
-
-### log.single_line
-
-| Type    | Default |
-| ------- | ------- |
-| boolean | true    |
-
-#### Description
-
-Print logs in a single line if set to `true`.
-If set to `false`, information like stacktraces in crash logs may span multiple lines.
-
-### log.formatter
-
-| Type | Optional Value  | Default |
-| ---- | --------------- | ------- |
-| enum | `text`, `json`  | `text`  |
-
-#### Description
-
-Choose log format. `text` for free text, and `json` for structured logging.
-
-## authacl
 
 ### allow_anonymous
 
@@ -1067,15 +1026,11 @@ The maximum allowed length of  Client ID  string.
 
 | Type    | Default |
 | ------- | ------- |
-| integer | 128     |
+| integer | 0       |
 
 #### Description
 
 The maximum allowed level of topics for client subscription. 0 means no limit.
-
-::: warning Warning
-Too many topic levels may cause performance problems during subscription.
-:::
 
 
 
@@ -1293,10 +1248,6 @@ The maximum length of Client ID string.
 #### Description
 
 The maximum allowed level of topics for client subscription. 0 means no limit.
-
-::: warning Warning
-Too many topic levels may cause performance problems during subscription.
-:::
 
 
 
@@ -1975,40 +1926,6 @@ Set the timeout for Proxy Protocol parsing. If no Proxy Protocol packet is recei
 
 
 
-### listener.tcp.external.peer_cert_as_username
-
-| Type | Optional Value                  | Default |
-| ---- | ------------------------------- | ------- |
-| enum | `cn`, `dn`, `crt`, `pem`, `md5` | `cn`    |
-
-#### Description
-
-Use the client certificate to override the value of the Username field. The optional values are:
-- cn: the Common Name of the client certificate
-- dn: the Subject Name of the client certificate
-- crt: the DER-encoded binary of the client certificate
-- pem: base64 encoded string based on the DER-encoded binary
-- md5: MD5 hash of the DER-encoded binary
-
-Note: Under TCP listener, this configuration is only available if the load balancing server terminates the SSL deployment;
-and the load balancing server needs to be configured to send the content of the certificate domain to EMQ X.
-For example, for HAProxy, see
-[send-proxy-v2-ssl](http://cbonte.github.io/haproxy-dconv/1.7/configuration.html#5.2-send-proxy-v2-ssl)
-
-<br />
-
-### listener.tcp.external.peer_cert_as_clientid
-
-| Type | Optional Value                  | Default |
-| ---- | ------------------------------- | ------- |
-| enum | `cn`, `dn`, `crt`, `pem`, `md5` | `cn`    |
-
-#### Description
-
-Use the client certificate to override the value of the ClientID field. The meaning of the optional values is the same as above.
-
-
-
 ### listener.tcp.external.backlog
 
 | Type    | Default |
@@ -2466,7 +2383,7 @@ Set the timeout for Proxy Protocol parsing. If no Proxy Protocol packet is recei
 
 | Type   | Default                 |
 | ------ | ----------------------- |
-| string | `tlsv1.3,tlsv1.2,tlsv1.1,tlsv1` |
+| string | `tlsv1.2,tlsv1.1,tlsv1` |
 
 #### Description
 
@@ -2486,30 +2403,6 @@ Specify the timeout period for the SSL handshake process.
 
 
 
-### listener.ssl.external.depth
-
-| Type     | Default |
-| -------- | ------- |
-| number   | `10`    |
-
-#### Description
-
-Maximum number of non-self-issued intermediate certificates that can follow the peer certificate in a valid certification path.
-
-
-
-### listener.ssl.external.key_password
-
-| Type     | Default |
-| -------- | ------- |
-| string   | -       |
-
-#### Description
-
-String containing the user's password. Only used if the private keyfile is password-protected.
-
-
-
 ### listener.ssl.external.keyfile
 
 | Type   | Default             |
@@ -2518,7 +2411,7 @@ String containing the user's password. Only used if the private keyfile is passw
 
 #### Description
 
-File path to the server's private key.
+Specify SSL private key file (PEM).
 
 
 
@@ -2530,7 +2423,7 @@ File path to the server's private key.
 
 #### Description
 
-File path to the server's certificate.
+Specify SSL certificate file(PEM).
 
 
 
@@ -2542,10 +2435,7 @@ File path to the server's certificate.
 
 #### Description
 
-File path to the CA certificates.
-It should include all intermediate CA certificates and root CA certificate of the
-server certificate. It should also include trusted CAs to validate client certificates
-when `verify` configuration is set to `verify_peer`.
+Specify the CA certificate file for SSL (PEM).
 
 
 
@@ -2647,32 +2537,14 @@ Specify whether to use the server's preferences to select Ciphers.
 
 ### listener.ssl.external.peer_cert_as_username
 
-| Type | Optional Value                  | Default |
-| ---- | ------------------------------- | ------- |
-| enum | `cn`, `dn`, `crt`, `pem`, `md5` | `cn`    |
+| Type | Optional Value    | Default |
+| ---- | ----------------- | ------- |
+| enum | `cn`, `dn`, `crt` | `cn`    |
 
 #### Description
 
-Use the client certificate to override the value of the Username field. The optional values are:
-- cn: the Common Name of the client certificate
-- dn: the Subject Name of the client certificate
-- crt: the DER-encoded binary of the client certificate
-- pem: base64 encoded string based on the DER-encoded binary
-- md5: MD5 hash of the DER-encoded binary
-
+Use the value of the CN, DN, or CRT field in the client certificate as the value of the Username field in the MQTT CONNECT packet.
 Note that `listener.ssl.external.verify` should be set to `verify_peer`.
-
-
-
-### listener.tcp.external.peer_cert_as_clientid
-
-| Type | Optional Value                  | Default |
-| ---- | ------------------------------- | ------- |
-| enum | `cn`, `dn`, `crt`, `pem`, `md5` | `cn`    |
-
-#### Description
-
-Use the client certificate to override the value of the ClientID field. The meaning of the optional values is the same as above.
 
 
 
@@ -2818,7 +2690,7 @@ Configure the listening address of the MQTT/WS listener named `external`.
 
 #### Description
 
-WebSocket's MQTT protocol path. So the address of EMQ X Broker's WebSocket is: `ws://{ip}:{port}/mqtt`.
+WebSocket's MQTT protocol path. So the address of EMQ X Broker's WebSocket is: `ws://<ip>:<port>/mqtt`.
 
 
 
@@ -2919,27 +2791,6 @@ List of ACL rules of the listener. It is used to set the white/black list of the
 #### Description
 
 Whether to verify that the HTTP header carried by WebSocket is correct. **WeChat applet needs to disable this verification.**
-
-
-### listener.ws.external.fail_if_no_subprotocol
-
-| Type    | Optional Value  | Default |
-| ------- | --------------- | ------- |
-| enum    | `true`, `false` | `true`  |
-
-#### Description
-
-If set to true, the server will return an error when the client does not carry the Sec-WebSocket-Protocol field. **WeChat applet needs to disable this verification.**
-
-### listener.ws.external.supported_subprotocols
-
-| Type    | Default                               |
-| ------- | ------------------------------------- |
-| string  | `mqtt, mqtt-v3, mqtt-v3.1.1, mqtt-v5` |
-
-#### Description
-
-Specify the supported subprotocols, separated by commas.
 
 
 
@@ -3345,25 +3196,15 @@ listener.wss.external.access.2 = allow all
 
 
 
-### listener.wss.external.fail_if_no_subprotocol
+### listener.wss.external.verify_protocol_header
 
-| Type    | Optional Value  | Default |
-| ------- | --------------- | ------- |
-| enum    | `true`, `false` | `true`  |
-
-#### Description
-
-If set to true, the server will return an error when the client does not carry the Sec-WebSocket-Protocol field. **WeChat applet needs to disable this verification.**
-
-### listener.wss.external.supported_subprotocols
-
-| Type    | Default                               |
-| ------- | ------------------------------------- |
-| string  | `mqtt, mqtt-v3, mqtt-v3.1.1, mqtt-v5` |
+| Type    | Optional Value | Default |
+| ------- | -------------- | ------- |
+| enum    | `on`, `off`    | `on`    |
 
 #### Description
 
-Specify the supported subprotocols, separated by commas.
+Whether to verify that the HTTP header carried by WebSocket is correct. **WeChat applet needs to disable this verification.**
 
 
 
@@ -3407,42 +3248,11 @@ Set the timeout for Proxy Protocol parsing. If no Proxy Protocol packet is recei
 
 
 
-### listener.wss.external.peer_cert_as_username
-
-| Type | Optional Value                  | Default |
-| ---- | ------------------------------- | ------- |
-| enum | `cn`, `dn`, `crt`, `pem`, `md5` | `cn`    |
-
-#### Description
-
-Use the client certificate to override the value of the Username field. The optional values are:
-- cn: the Common Name of the client certificate
-- dn: the Subject Name of the client certificate
-- crt: the DER-encoded binary of the client certificate
-- pem: base64 encoded string based on the DER-encoded binary
-- md5: MD5 hash of the DER-encoded binary
-
-Note that `listener.wss.external.verify` should be set to `verify_peer`.
-
-
-
-### listener.wss.external.peer_cert_as_clientid
-
-| Type | Optional Value                  | Default |
-| ---- | ------------------------------- | ------- |
-| enum | `cn`, `dn`, `crt`, `pem`, `md5` | `cn`    |
-
-#### Description
-
-Use the client certificate to override the value of the ClientID field. The meaning of the optional values is the same as above.
-
-
-
 ### listener.wss.external.tls_versions
 
 | Type   | Default                |
 | ------ | ----------------------- |
-| string | `tlsv1.3,tlsv1.2,tlsv1.1,tlsv1` |
+| string | `tlsv1.2,tlsv1.1,tlsv1` |
 
 #### Description
 
@@ -3458,7 +3268,7 @@ Specify the SSL version list supported by the server. For details, see [http://e
 
 #### Description
 
-File path to server's private key.
+Specify SSL private key file (PEM).
 
 
 
@@ -3470,7 +3280,7 @@ File path to server's private key.
 
 #### Description
 
-File path to the server's certificate.
+Specify SSL certificate file(PEM).
 
 
 
@@ -3482,34 +3292,7 @@ File path to the server's certificate.
 
 #### Description
 
-File path to the CA certificates.
-It should include all intermediate CA certificates and root CA certificate of the
-server certificate. It should also include trusted CAs to validate client certificates
-when `verify` configuration is set to `verify_peer`.
-
-
-
-### listener.wss.external.depth
-
-| Type     | Default |
-| -------- | ------- |
-| number   | `10`    |
-
-#### Description
-
-Maximum number of non-self-issued intermediate certificates that can follow the peer certificate in a valid certification path.
-
-
-
-### listener.wss.external.key_password
-
-| Type     | Default |
-| -------- | ------- |
-| string   | -       |
-
-#### Description
-
-String containing the user's password. Only used if the private keyfile is password-protected.
+If using SSL, specify the CA certificate file for SSL (PEM).
 
 
 
@@ -3935,9 +3718,9 @@ Enable or disable global session registration.
 
 ### broker.session_locking_strategy
 
-| Type | Optional Value                     | Default  |
-| ---- | ---------------------------------- | -------- |
-| enum | `local`, `leader`, `quorum`, `all` | `quorum` |
+| Type | Optional Value                  | Default  |
+| ---- | ------------------------------- | -------- |
+| enum | `local`, `one`, `quorum`, `all` | `quorum` |
 
 #### Description
 
@@ -3984,40 +3767,6 @@ Enable or disable the ACK check function for qos1/qos2 messages in shared subscr
 Enable or disable batch cleanup routing information. Batch cleanup routing can be used in a short period of time when a large number of clients go offline to improve cleanup efficiency.
 
 
-## broker.perf.route_lock_type = key
-
-| Type    | Optional Value         | Default |
-| ------- | ---------------------- | ------- |
-| enum    | `key`, `tab`, `global` | `key`   |
-
-### Description
-
-Choose the granularity of the database lock when updating the routing information for whildcard subscriptions.
-
-- `key` (default) is to take a lock for each key representing prefixes of a wildcard topic;
-- `tab` is to take the lock for the entire table which stores prefixes of wildcard topics;
-- `global` is to take a global lock.
-
-Options `tab` and `global` are recommended for large scale clusters (e.g. more than 7 nodes) especially
-when network latency between the nodes is at milliseconds level.
-NOTE: It requires entire cluster to be stopped before changing this config.
-
-## broker.perf.trie_compaction = true
-
-| Type    | Optional Value  | Default |
-| ------- | --------------- | ------- |
-| enum    | `true`, `false` | `true`  |
-
-### Description
-
-Set to `true` (default) to compact the routing information table for wildcard topics.
-Compaction is optimized for writes, handles high rate subscription requests quicker,
-it also requires half of the RAM comparing to non-compacted.
-Non-compaction is optimized for reads (e.g. large number of topic levels in publish requests).
-
-NOTE: Changing from `false` to `true` can be done by rolling-restart the nodes in a cluster.
-The safe way of changing from `true` to `false` is to stop all nodes in the cluster, otherwise
-some message may not get routed before all nodes have restarted.
 
 ### sysmon.long_gc
 
@@ -4029,7 +3778,7 @@ some message may not get routed before all nodes have restarted.
 
 Enable garbage collection time monitoring and trigger an alarm when the collection time exceeds the set value, 0 means disabling this monitoring.
 
-## monitor
+
 
 ### sysmon.long_schedule
 
@@ -4186,13 +3935,56 @@ When the current process number as a percentage of the maximum process number ex
 When the percentage of the current number of processes in the maximum number of processes falls below `vm_mon.process_low_watermark`, an alarm will be triggered. The maximum number of processes is determined by the `node.process_limit` configuration item.
 
 
-## Plugin `emqx_auth_http`
 
-### auth.http.auth_req.url
+## [emqx-auth-clientid](https://github.com/emqx/emqx-auth-clientid)
+
+### auth.client.<Number>.clientid` & `auth.client.<Number>.password
+
+| Type   | Default |
+| ------ | ------- |
+| string | -       |
+
+#### Description
+
+The authentication data of the client, where  `auth.client.<Number>.password` is the clear text password. `auth.client.<Number>.clientid` and `auth.client.<Number>.password` for the same `<Number>`  must appear in pairs. `<Number> `is an integer number used to distinguish authentication data of multiple clients.
+
+
+
+### auth.client.password_hash
+
+| Type | Optional Value                  | Default  |
+| ---- | ------------------------------- | -------- |
+| enum | `plain`, `md5`, `sha`, `sha256` | `sha256` |
+
+#### Description
+
+Hash algorithm is used when the password is stored in the database. The following options are available:
+
+`plain`
+
+The password is stored in clear text.
+
+`md5`
+
+The password is encrypted and stored using the MD5 algorithm.
+
+`sha`
+
+The password is encrypted and stored using the SHA-1 algorithm.
+
+`sha256`
+
+The password is encrypted and stored using the SHA-256 algorithm.
+
+
+
+## [emqx-auth-http](https://github.com/emqx/emqx-auth-http)
+
+### auth.http.auth_req
 
 | Type   | Default                           |
 | ------ | --------------------------------- |
-| string | `http://127.0.0.1:80/mqtt/auth` |
+| string | `http://127.0.0.1:8991/mqtt/auth` |
 
 #### Description
 
@@ -4209,20 +4001,6 @@ Specify the target URL of the authentication request.
 #### Description
 
 Specify the request method of the authentication request.
-
-
-### auth.http.auth_req.headers.\<Any\>
-
-#### Example
-
-```
-auth.http.auth_req.headers.content-type = application/x-www-form-urlencoded
-auth.http.auth_req.headers.accept = */*
-```
-
-#### Description
-
-Specify the data in the HTTP request header. `<Key>` Specify the field name in the HTTP request header, and the value of this configuration item is the corresponding field value. `<Key>` can be the standard HTTP request header field. User can also customize the field to configure multiple different request header fields.
 
 
 
@@ -4249,11 +4027,11 @@ Specify the data carried in the authentication request. When using the GET metho
 
 
 
-### auth.http.super_req.url
+### auth.http.super_req
 
 | Type   | Default                                |
 | ------ | -------------------------------------- |
-| string | `http://127.0.0.1:80/mqtt/superuser` |
+| string | `http://127.0.0.1:8991/mqtt/superuser` |
 
 #### Description
 
@@ -4269,23 +4047,6 @@ Specify the target URL for the superuser authentication request.
 
 Specifies the request method of the super user authentication request.
 
-
-
-### auth.http.super_req.headers.\<Any\>
-
-#### Example
-
-```
-auth.http.super_req.headers.content-type = application/x-www-form-urlencoded
-auth.http.super_req.headers.accept = */*
-```
-
-#### Description
-
-Specify the data in the HTTP request header. `<Key>` Specify the field name in the HTTP request header, and the value of this configuration item is the corresponding field value. `<Key>` can be the standard HTTP request header field. User can also customize the field to configure multiple different request header fields.
-
-
-
 ### auth.http.super_req.params
 
 | Type   | Format                                                       | Default                   |
@@ -4298,11 +4059,11 @@ Specify the data carried in the authentication request. When using the GET metho
 
 
 
-### auth.http.acl_req.url
+### auth.http.acl_req
 
 | Type   | Default                          |
 | ------ | -------------------------------- |
-| string | `http://127.0.0.1:80/mqtt/acl` |
+| string | `http://127.0.0.1:8991/mqtt/acl` |
 
 #### Description
 
@@ -4320,19 +4081,6 @@ Specify the target URL for ACL verification requests.
 
 Specifies the request method for ACL verification requests.
 
-
-### auth.http.acl_req.headers.\<Any\>
-
-#### Example
-
-```
-auth.http.acl_req.headers.content-type = application/x-www-form-urlencoded
-auth.http.acl_req.headers.accept = */*
-```
-
-#### Description
-
-Specify the data in the HTTP request header. `<Key>` Specify the field name in the HTTP request header, and the value of this configuration item is the corresponding field value. `<Key>` can be the standard HTTP request header field. User can also customize the field to configure multiple different request header fields.
 
 
 ### auth.http.acl_req.params
@@ -4357,11 +4105,11 @@ Specify the data carried in the authentication request. When using the GET metho
 
 
 
-### auth.http.timeout
+### auth.http.request.timeout
 
 | Type     | Default |
 | -------- | ------- |
-| duration | `5s`    |
+| duration | `0s`    |
 
 #### Description
 
@@ -4369,11 +4117,11 @@ HTTP request timeout. Any setting equivalent to `0s` means never timeout.
 
 
 
-### auth.http.connect_timeout
+### auth.http.request.connect_timeout
 
 | Type     | Default |
 | -------- | ------- |
-| duration | `5s`    |
+| duration | `0s`    |
 
 #### Description
 
@@ -4381,16 +4129,58 @@ Connection timeout for HTTP requests. Any setting value equivalent to `0s` means
 
 
 
-### auth.http.pool_size
+### auth.http.request.retry_times
 
 | Type    | Default |
 | ------- | ------- |
-| integer | 32       |
+| integer | 3       |
 
 #### Description
 
-HTTP client connection process pool size.
+The number of retries when an HTTP request fails.
 
+
+
+### auth.http.request.retry_interval
+
+| Type     | Default |
+| -------- | ------- |
+| duration | `1s`    |
+
+#### Description
+
+Retry interval when HTTP request fails.
+
+
+
+### auth.http.request.retry_backoff
+
+| Type  | Default |
+| ----- | ------- |
+| float | 2.0     |
+
+#### Description
+
+When the HTTP request fails, the retry interval uses the exponential backoff algorithm. This configuration item is used to specify the backoff coefficient of the exponential backoff algorithm.
+
+
+
+### auth.http.header.<Key>
+
+| Type   | Default |
+| ------ | ------- |
+| string | -       |
+
+#### Description
+
+Specify the data in the HTTP request header. `<Key>` Specify the field name in the HTTP request header, and the value of this configuration item is the corresponding field value. `<Key>` can be the standard HTTP request header field. User can also customize the field to configure multiple different request header fields.
+
+#### Example
+
+```
+auth.http.header.Accept = */*
+auth.http.header.Accept-Encoding = *
+```
 
 
 
@@ -4430,7 +4220,7 @@ Client private key file path.
 
 
 
-## Plugin `emqx_auth_jwt`
+## [emqx-auth-jwt](https://github.com/emqx/emqx-auth-jwt)
 
 ### auth.jwt.secret
 
@@ -4512,7 +4302,7 @@ auth.jwt.verify_claims.sub = %u
 
 
 
-## Plugin `emqx_auth_ldap`
+## [emqx-auth-ldap](https://github.com/emqx/emqx-auth-ldap)
 
 ### auth.ldap.servers
 
@@ -4709,7 +4499,7 @@ If the client does not provide an SSL certificate, disconnect it.
 
 
 
-## Plugin `emqx_auth_mongo`
+## [emqx-auth-mongo](https://github.com/emqx/emqx-auth-mongo)
 
 ### auth.mongo.type
 
@@ -5132,7 +4922,7 @@ MongoDB topology parameter, that means MongoDB message sending timeout period, u
 
 #### Description
 
-Specifies how long (in milliseconds) to block for server selection.
+MongoDB topology parameter, select the timeout period of MongoDB Server, unit: ms.
 
 
 
@@ -5144,7 +4934,8 @@ Specifies how long (in milliseconds) to block for server selection.
 
 #### Description
 
-The maximum time in milliseconds for a worker to wait for a connection to become available.
+MongoDB topology parameters, that selects the worker's waiting timeout period from the thread pool, unit: ms.
+
 
 
 ### auth.mongo.topology.heartbeat_frequency_ms
@@ -5171,7 +4962,7 @@ MongoDB topology parameter, the minimum allowed value of `heartbeat_frequency_ms
 
 
 
-## Plugin `emqx_auth_mysql`
+## [emqx-auth-mysql](https://github.com/emqx/emqx-auth-mysql)
 
 ### auth.mysql.server
 
@@ -5314,7 +5105,7 @@ The SQL selection statement used in ACL verification. All table names and field 
 
 
 
-## Plugin `emqx_auth_pgsql`
+## [emqx-auth-pgsql](https://github.com/emqx/emqx-auth-pgsql)
 
 ### auth.pgsql.server
 
@@ -5484,7 +5275,7 @@ The SQL selection statement used in ACL verification,  the same as `auth.mysql.a
 
 
 
-## Plugin `emqx_auth_redis`
+## [emqx-auth-redis](https://github.com/emqx/emqx-auth-redis)
 
 ### auth.redis.type
 
@@ -5631,7 +5422,50 @@ ACL query commands. Available placeholders are:
  - `%c`: client ID.
 
 
-## Plugin `emqx_bridge_mqtt`
+
+## [emqx-auth-username](https://github.com/emqx/emqx-auth-username)
+
+### auth.user.<Number>.username` & `auth.user.<Number>.password
+
+| Type   | Default |
+| ------ | ------- |
+| string | -       |
+
+#### Description
+
+The authentication data of the client, where `auth.user.<Number>.password` is the clear text password.  `auth.user.<Number>.username` and `auth.user.<Number>.password` of the same `<Number>` must appear in pairs. `<Number> `is an integer number used to distinguish authentication data of multiple clients.
+
+
+
+### auth.user.password_hash
+
+| Type | Optional Value                  | Default  |
+| ---- | ------------------------------- | -------- |
+| enum | `plain`, `md5`, `sha`, `sha256` | `sha256` |
+
+#### Description
+
+Hash algorithm used when the password is stored in the database. The following options are available:
+
+`plain`
+
+The password is stored in clear text.
+
+`md5`
+
+The password is encrypted and stored using the MD5 algorithm.
+
+`sha`
+
+The password is encrypted and stored using the SHA-1 algorithm.
+
+`sha256`
+
+The password is encrypted and stored using the SHA-256 algorithm.
+
+
+
+## [emqx-bridge-mqtt](https://github.com/emqx/emqx-bridge-mqtt)
 
 ### bridge.mqtt.aws.address
 
@@ -5886,7 +5720,7 @@ Heartbeat interval of the MQTT bridge client.
 
 | Type     | Default                 |
 | -------- | ----------------------- |
-| string   | `tslv1.3,tlsv1.2,tlsv1.1,tlsv1` |
+| string   | `tlsv1.2,tlsv1.1,tlsv1` |
 
 #### Description
 
@@ -5978,7 +5812,7 @@ The maximum allowed message queue storage.
 
 
 
-## Plugin `emqx_coap`
+## [emqx-coap](https://github.com/emqx/emqx-coap)
 
 ### coap.port
 
@@ -6088,7 +5922,7 @@ When using DTLS, specify the Cipher list supported by the DTLS server.
 
 
 
-## Plugin `emqx_dashboard`
+## [emqx-dashboard](https://github.com/emqx/emqx-dashboard)
 
 ### dashboard.default_user.login` & `dashboard.default_user.password
 
@@ -6230,7 +6064,7 @@ Same as `dashboard.listener.http.ipv6_v6only`.
 
 #### Description
 
-File path to the server's private key.
+Server private key file path.
 
 
 
@@ -6242,7 +6076,7 @@ File path to the server's private key.
 
 #### Description
 
-File path to the server's certificate.
+Server certificate file path.
 
 
 
@@ -6254,10 +6088,7 @@ File path to the server's certificate.
 
 #### Description
 
-File path to the CA certificates.
-It should include all intermediate CA certificates and root CA certificate of the
-server certificate. It should also include trusted CAs to validate client certificates
-when `verify` configuration is set to `verify_peer`.
+CA certificate file path.
 
 
 
@@ -6301,7 +6132,7 @@ It should be used together with `dashboard.listener.https.verify`. If set to `tr
 
 | Type   | Default                 |
 | ------ | ----------------------- |
-| string | `tlsv1.3,tlsv1.2,tlsv1.1,tlsv1` |
+| string | `tlsv1.2,tlsv1.1,tlsv1` |
 
 #### Description
 
@@ -6356,7 +6187,8 @@ Specifies whether to enable the session resuing mechanism.
 If set to `on`, use the server ’s preferences for password selection. If set to `off`, use the client ’s preferences.
 
 
-## Plugin `emqx_lwm2m`
+
+## [emqx-lwm2m](https://github.com/emqx/emqx-lwm2m)
 
 ### lwm2m.port
 
@@ -6506,20 +6338,6 @@ Which topic the device's upstream registration message (register) needs to be pu
 Which topic the device's upstream update message (update) needs to be published to.
 
 
-### lwm2m.update_msg_publish_condition
-
-| Type | Optional Value                   | Default                |
-|------|----------------------------------|------------------------|
-| enum | `contains_object_list`, `always` | `contains_object_list` |
-
-#### Description
-
-When to publish the update message. Can be one of:
-
-- contains_object_list: only if the update message contains object list
-
-- always: always publish the update message
-
 
 ### lwm2m.opts.buffer
 
@@ -6605,7 +6423,7 @@ Specify the directory where the LwM2M Object definition file is stored.
 
 
 
-## Plugin `emqx_management`
+## [emqx-management](https://github.com/emqx/emqx-management)
 
 ### management.max_row_limit
 
@@ -6817,7 +6635,7 @@ Whether to close the connection after the HTTPS packet sending is timeout.
 
 #### Description
 
-File path to server's private key.
+Server private key file path.
 
 
 
@@ -6829,7 +6647,7 @@ File path to server's private key.
 
 #### Description
 
-File path to server's certificate.
+Server certificate file path.
 
 
 
@@ -6841,10 +6659,7 @@ File path to server's certificate.
 
 #### Description
 
-File path to the CA certificates.
-It should include all intermediate CA certificates and root CA certificate of the
-server certificate. It should also include trusted CAs to validate client certificates
-when `verify` configuration is set to `verify_peer`.
+CA certificate file path.
 
 
 
@@ -6895,7 +6710,34 @@ Whether to set the socket to allow IPv6 connections.
 Whether to restrict the socket that only IPv6 can be ued, and prohibit any IPv4 connections. Only applicable to IPv6 sockets, that is, the value of this configuration item has practical significance only when `dashboard.listener.http.inet6` is set to `true`. It should be noted that on some operating systems, such as Windows, the only allowed value for this configuration item is `true`.
 
 
-## Plugin `emqx_retainer`
+
+## [emqx-reloader](https://github.com/emqx/emqx-reloader)
+
+### reloader.interval
+
+| Type     | Default |
+| -------- | ------- |
+| duration | `60s`   |
+
+#### Description
+
+How often do hot update all code.
+
+
+
+### reloader.logfile
+
+| Type   | Default        |
+| ------ | -------------- |
+| string | `reloader.log` |
+
+#### Description
+
+Log files for hot updates of code.
+
+
+
+## [emqx-retainer](https://github.com/emqx/emqx-retainer)
 
 ### retainer.storage_type
 
@@ -6957,7 +6799,7 @@ The expiration interval of retained messages which is only valid for clients wit
 
 
 
-## Plugin `emqx_rule_engine`
+## [emqx-rule-engine](https://github.com/emqx/emqx-rule-engine)
 
 ### rule_engine.ignore_sys_message
 
@@ -7004,7 +6846,7 @@ SELECT * FROM "$events/client_connected"
 
 
 
-## Plugin `emqx_sn`
+## [emqx-sn](https://github.com/emqx/emqx-sn)
 
 ### mqtt.sn.port
 
@@ -7118,7 +6960,7 @@ mqtt.sn.predefined.topic.1 = foo/bar
 
 
 
-## Plugin `emqx_statsd`
+## [emqx-statsd](https://github.com/emqx/emqx-statsd)
 
 ### statsd.push.gateway.server
 
@@ -7156,7 +6998,7 @@ Specify Prometheus Collector.
 
 
 
-## Plugin `emqx_stomp`
+## [emqx-stomp](https://github.com/emqx/emqx-stomp)
 
 ### stomp.listener
 
@@ -7422,48 +7264,9 @@ Specify Stomp maximum message body length.
 
 
 
-## Plugin `emqx_web_hook`
+## [emqx-web-hook](https://github.com/emqx/emqx-web-hook)
 
-### web.hook.url
-
-| Type   | Default             |
-| ------ | ------------------- |
-| string | http://127.0.0.1:80 |
-
-#### Description
-
-The web server address to which the webhook request is forwarded.
-
-<br />
-
-### web.hook.headers.\<Any\>
-
-#### Example
-
-```
-web.hook.headers.content-type = application/json
-web.hook.headers.accept = */*
-```
-
-#### Description
-
-Specify the data in the HTTP request header. `<Key>` Specify the field name in the HTTP request header, and the value of this configuration item is the corresponding field value. `<Key>` can be the standard HTTP request header field. User can also customize the field to configure multiple different request header fields.
-
-<br />
-
-### web.hook.encoding_of_payload_field
-
-| Type     | Optional Value              | Default |
-| -------- | --------------------------- | ------- |
-| enum     | `plain`, `base62`, `base64` | -       |
-
-#### Description
-
-The encoding format of the Payload field in the PUBLISH packet.
-
-<br />
-
-### web.hook.ssl.cacertfile
+### web.hook.api.url
 
 | Type   | Default |
 | ------ | ------- |
@@ -7471,57 +7274,21 @@ The encoding format of the Payload field in the PUBLISH packet.
 
 #### Description
 
-CA certificate file path.
+`emqx_web_hook` Forwarding web server address.
 
-<br />
 
-### web.hook.ssl.certfile
 
-| Type   | Default |
-| ------ | ------- |
-| string | -       |
+### web.hook.encode_payload
 
-#### Description
-
-Client certificate file path.
-
-<br />
-
-### web.hook.ssl.keyfile
-
-| Type   | Default |
-| ------ | ------- |
-| string | -       |
+| Type     | Optional Value      | Default |
+| -------- | ------------------- | ------- |
+| enum     | `base62`, `base64`  | -       |
 
 #### Description
 
-Client private key file path.
+The encoding format of the Payload field in the PUBLISH message.
 
-<br />
 
-### web.hook.ssl.verify
-
-| Type | Optional Value  | Default |
-| ---- | --------------- | ------- |
-| enum | `true`, `false` | `false`  |
-
-#### Description
-
-Specify whether to verify the peer certificate.
-
-<br />
-
-### web.hook.ssl.pool_size
-
-| Type    | Default |
-| ------- | ------- |
-| integer | 32      |
-
-#### Description
-
-HTTP connection process pool size.
-
-<br />
 
 ### web.hook.rule.client.connect.1
 
@@ -7533,7 +7300,7 @@ HTTP connection process pool size.
 
 Forward the `on_client_connect` event.
 
-<br />
+
 
 ### web.hook.rule.client.connack.1
 
@@ -7545,7 +7312,7 @@ Forward the `on_client_connect` event.
 
 Forward the `on_client_connack` event.
 
-<br />
+
 
 ### web.hook.rule.client.connected.1
 
@@ -7557,7 +7324,7 @@ Forward the `on_client_connack` event.
 
 Forward the `on_client_connected` event.
 
-<br />
+
 
 ### web.hook.rule.client.disconnected.1
 
@@ -7569,7 +7336,7 @@ Forward the `on_client_connected` event.
 
 Forward the `on_client_disconnected` event.
 
-<br />
+
 
 ### web.hook.rule.client.subscribe.1
 
@@ -7581,7 +7348,7 @@ Forward the `on_client_disconnected` event.
 
 Forward the `on_client_subscribe` event.
 
-<br />
+
 
 ### web.hook.rule.client.unsubscribe.1
 
@@ -7593,7 +7360,7 @@ Forward the `on_client_subscribe` event.
 
 Forward the `on_client_unsubscribe` event.
 
-<br />
+
 
 ### web.hook.rule.session.subscribed.1
 
@@ -7605,7 +7372,7 @@ Forward the `on_client_unsubscribe` event.
 
 Forward the `on_client_subscribe` event.
 
-<br />
+
 
 ### web.hook.rule.session.unsubscribed.1
 
@@ -7617,7 +7384,7 @@ Forward the `on_client_subscribe` event.
 
 Forward the `on_session_unsubscribe` event.
 
-<br />
+
 
 ### web.hook.rule.session.terminated.1
 
@@ -7629,7 +7396,7 @@ Forward the `on_session_unsubscribe` event.
 
 Forward the `on_session_terminated` event.
 
-<br />
+
 
 ### web.hook.rule.message.publish.1
 
@@ -7641,7 +7408,7 @@ Forward the `on_session_terminated` event.
 
 Forward the `on_client_publish` event.
 
-<br />
+
 
 ### web.hook.rule.message.delivered.1
 
@@ -7653,7 +7420,7 @@ Forward the `on_client_publish` event.
 
 Forward the `on_message_delivered` event.
 
-<br />
+
 
 ### web.hook.rule.message.acked.1
 

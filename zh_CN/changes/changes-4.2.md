@@ -15,6 +15,50 @@ ref:
 
 # 版本发布
 
+## 4.2.14 版本
+
+*发布日期: 2021-08-02*
+
+EMQ X 4.2.14 现已发布，主要包含以下改动:
+
+**错误修复:**
+
+- 修复热升级不可用的问题
+
+## 4.2.13 版本
+
+*发布日期: 2021-06-28*
+
+EMQ X 4.2.13 现已发布，主要包含以下改动:
+
+### emqx
+
+**错误修复:**
+
+- 修复同一客户端建立多个共享订阅时可能在取消订阅后出现消息丢失的问题
+
+  GitHub PR: [emqx#5104](https://github.com/emqx/emqx/pull/5104)
+
+### emqx-auth-http
+
+**错误修复:**
+
+- 修复请求超时后打印 crash 日志的问题
+
+  GitHub PR: [emqx-auth-http#263](https://github.com/emqx/emqx-auth-http/pull/263)
+
+- 支持查询字符串参数
+
+  GitHub PR: [emqx-auth-http#264](https://github.com/emqx/emqx-auth-http/pull/264)
+
+### emqx-web-hook
+
+**错误修复:**
+
+- 支持查询字符串参数
+
+  GitHub PR: [emqx-web-hook#284](https://github.com/emqx/emqx-web-hook/pull/284)
+
 ## 4.2.12 版本
 
 *发布日期: 2021-05-07*

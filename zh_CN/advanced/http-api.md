@@ -372,6 +372,30 @@ $ curl -i --basic -u admin:public -X GET "http://localhost:8081/api/v4/nodes/emq
 {"data":[{"recv_cnt":4,"max_subscriptions":0,"node":"emqx@127.0.0.1","proto_ver":4,"recv_pkt":1,"inflight":0,"max_mqueue":1000,"heap_size":2586,"username":"test","proto_name":"MQTT","subscriptions_cnt":0,"send_pkt":3,"created_at":"2020-02-20 13:38:51","reductions":5994,"ip_address":"127.0.0.1","send_msg":0,"send_cnt":3,"expiry_interval":0,"keepalive":60,"mqueue_dropped":0,"is_bridge":false,"max_inflight":32,"recv_msg":0,"max_awaiting_rel":100,"awaiting_rel":0,"mailbox_len":0,"mqueue_len":0,"recv_oct":33,"connected_at":"2020-02-20 13:38:51","clean_start":true,"clientid":"example","connected":true,"port":54889,"send_oct":8,"zone":"external"}],"code":0}
 ```
 
+### DELETE /api/v4/nodes/{node}/clients/{clientid}
+
+类似 [DELETE /api/v4/clients/{clientid}](#endpoint-delete-a-client)，踢除指定节点下的指定客户端。
+
+**Path Parameters:**
+
+| Name   | Type | Required | Description |
+| ------ | --------- | -------- |  ---- |
+| clientid  | String | True | ClientID |
+
+**Success Response Body (JSON):**
+
+| Name | Type | Description |
+| ---- | --------- | ----------- |
+| code | Integer   | 0         |
+
+**Examples:**
+
+```bash
+$ curl -i --basic -u admin:public -X DELETE "http://localhost:8081/api/v4/nodes/emqx@127.0.0.1/clients/example"
+
+{"code":0}
+```
+
 ### GET /api/v4/clients/username/{username}
 
 通过 Username 查询客户端的信息。由于可能存在多个客户端使用相同的用户名的情况，所以可能同时返回多个客户端信息。
@@ -475,38 +499,6 @@ $ curl -i --basic -u admin:public -X GET "http://localhost:8081/api/v4/clients/e
 
 ```bash
 $ curl -i --basic -u admin:public -X DELETE "http://localhost:8081/api/v4/clients/example/acl_cache"
-
-{"code":0}
-```
-
-### PUT /api/v4/clients/{clientid}/keepalive
-
-设置指定客户端的keepalive时间（秒）。
-
-**Path Parameters:**
-
-| Name     | Type   | Required | Description |
-| -------- | ------ | -------- | ----------- |
-| clientid | String | True     | ClientID    |
-
-**Query String Parameters:**
-
-| Name     | Type    | Required | Description                            |
-| -------- | ------- | :------: | -------------------------------------- |
-| interval | Integer |   True   | 秒：0～65535，0表示不启动keepalive检查 |
-
-**Success Response Body (JSON):**
-
-| Name | Type    | Description |
-| ---- | ------- | ----------- |
-| code | Integer | 0           |
-
-**Examples:**
-
-更新指定客户端（example）keepalive为10秒
-
-```bash
-$ curl -i --basic -u admin:public -X PUT "http://localhost:8081/api/v4/clients/example/keepalive?interval\=10"
 
 {"code":0}
 ```
@@ -1184,8 +1176,8 @@ $ curl -i --basic -u admin:public -X PUT "http://localhost:8081/api/v4/modules/e
 
 | Name | Type | Description |
 | ----------------| --------- | -------------------- |
-| actions.failure                 | Integer   | 规则引擎 action 执行失败次数 |
-| actions.success                 | Integer   | 规则引擎 action 执行成功次数 |
+| actions.failure                 | Integer   | 规则引擎 action 成功失败次数 |
+| actions.success                 | Integer   | 规则引擎 action 执行失败次数 |
 | bytes.received                  | Integer   | EMQ X 接收的字节数 |
 | bytes.sent                      | Integer   | EMQ X 在此连接上发送的字节数 |
 | client.authenticate             | Integer   | 客户端认证次数 |
@@ -1671,52 +1663,6 @@ $ curl -i --basic -u admin:public -X DELETE "http://localhost:8081/api/v4/nodes/
 {"code":0}
 ```
 
-## ACL 缓存
-### DELETE /api/v4/acl-cache
-
-清除集群中所有的 ACL 缓存
-
-**Query String Parameters:** 无
-
-
-**Success Response Body (JSON):**
-
-| Name    | Type | Description                                  |
-| ------- | --------- | -------------------------------------------- |
-| code    | Integer   | 0   |
-| message | String    | 仅在发生错误时返回，用于提供更详细的错误信息 |
-
-
-**Examples:**
-
-```bash
-$ curl -i --basic -u admin:public -X DELETE "http://localhost:8081/api/v4/acl-cache"
-
-{"code":0}
-```
-
-#### DELETE /api/v4/node/{node}/acl-cache
-
-清除指定节点的 ACL 缓存
-
-**Query String Parameters:** 无
-
-
-**Success Response Body (JSON):**
-
-| Name    | Type | Description                                  |
-| ------- | --------- | -------------------------------------------- |
-| code    | Integer   | 0   |
-| message | String    | 仅在发生错误时返回，用于提供更详细的错误信息 |
-
-**Examples:**
-
-```bash
-$ curl -i --basic -u admin:public -X DELETE "http://localhost:8081/api/v4/node/emqx@127.0.0.1/acl-cache"
-
-{"code":0}
-```
-
 ## 黑名单
 ### GET /api/v4/banned
 获取黑名单
@@ -1752,7 +1698,6 @@ $ curl -i --basic -u admin:public -vX GET "http://localhost:8081/api/v4/banned"
 | ----- | --------- | -------- | ----------| -------------------------------- |
 | who   | String    | Required |    | 添加至黑名单的对象，可以是客户端标识符、用户名和 IP 地址 |
 | as    | String    | Required |      | 用于区分黑名单对象类型，可以是 `clientid`，`username`，`peerhost` |
-| reason | String    | Required |      | 详细信息 |
 | by    | String    | Optional | user | 指示该对象被谁添加至黑名单 |
 | at    | Integer   | Optional | 当前系统时间          | 添加至黑名单的时间，单位：秒 |
 | until | Integer   | Optional | 当前系统时间 + 5 分钟 | 何时从黑名单中解除，单位：秒 |
@@ -1769,7 +1714,7 @@ $ curl -i --basic -u admin:public -vX GET "http://localhost:8081/api/v4/banned"
 将 client 添加到黑名单:
 
 ```bash
-$ curl -i --basic -u admin:public -vX POST "http://localhost:8081/api/v4/banned" -d '{"who":"example","as":"clientid","reason":"example"}'
+$ curl -i --basic -u admin:public -vX POST "http://localhost:8081/api/v4/banned" -d '{"who":"example","as":"clientid"}'
 
 {"data":{"who":"example","as":"clientid"},"code":0}
 ```

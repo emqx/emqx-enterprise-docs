@@ -22,7 +22,7 @@ Select MongoDB Authentication/ACL module
 
 Configure MongoDB related parameters
 
-![image-20211214110937457](./assets/auth_mongo3.png)
+![image-20200928114832162](./assets/auth_mongo3.png)
 
 After clicking Add, the module is added:
 
@@ -120,7 +120,7 @@ MongoDB supports the configuration of collection names, authentication fields, a
 | Super user query field name | Field to be queried from the collection                      |
 | Super user condition field  | Super user query conditions, if you need to query more than one, use commas to separate them. For example username=%u,clientid=%c |
 
-::: tip
+::: danger
 
 MongoDB ACL rules must strictly use the above data structure. All the rules added in MongoDB ACL are allowed rules and can be used with ʻacl_nomatch = deny` in ʻetc/emqx.conf`.
 

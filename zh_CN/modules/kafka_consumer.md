@@ -5,19 +5,19 @@ Kafka 消费组使用外部 Kafka 作为消息队列，可以从 Kafka 中消费
 搭建 Kafka 环境，以 MacOS X 为例:
 
 ```bash
-wget http://apache.claz.org/kafka/2.8.0/kafka_2.13-2.8.0.tgz
+$ wget http://apache.claz.org/kafka/2.3.1/kafka_2.12-2.3.1.tgz
 
-tar -xzf  kafka_2.13-2.8.0.tgz
+$ tar -xzf  kafka_2.12-2.3.1.tgz
 
-cd kafka_2.13-2.8.0
+$ cd kafka_2.12-2.3.1
 
 # 启动 Zookeeper
-./bin/zookeeper-server-start.sh config/zookeeper.properties
+$ ./bin/zookeeper-server-start.sh config/zookeeper.properties
 # 启动 Kafka
-./bin/kafka-server-start.sh config/server.properties
+$ ./bin/kafka-server-start.sh config/server.properties
 ```
 
-::: tip
+::: danger
 
 Kafka消费组不支持Kafka0.9以下版本
 

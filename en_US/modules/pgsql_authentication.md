@@ -32,13 +32,12 @@ Finally click the "Add" button, the module can be added successfully
 
 ```sql
 CREATE TABLE mqtt_user (
-  id SERIAL PRIMARY KEY,
-  username CHARACTER VARYING(100),
-  password CHARACTER VARYING(100),
-  salt CHARACTER VARYING(40),
-  is_superuser BOOLEAN,
-  UNIQUE (username)
-)
+  id SERIAL primary key,
+  is_superuser boolean,
+  username character varying(100),
+  password character varying(100),
+  salt character varying(40)
+);
 ```
 
 Field description:
@@ -84,27 +83,18 @@ You can use AS syntax in SQL to specify a password for field renaming, or set th
 
 :::
 
-#### Advanced
-
-In the default table structure, we set the username field as a unique index (UNIQUE), and use it with the default query statement (`select password from mqtt_user where username ='%u' limit 1`) to get very good query performance.
-
-If the default query conditions do not meet your needs, for example, you need to query the corresponding `Password Hash` and `Salt` based on the `Client ID`, please make sure to set the `Client ID` as an index; Or you want to perform multi-condition queries on `Username`, `Client ID`, or other fields. It is recommended to set the correct single-column index or multiple-column index. In short, set the correct table structure and query statement, and try not to let the index fail and affect the query performance.
-
 ### Access Control List
 
 ```sql
 CREATE TABLE mqtt_acl (
-  id SERIAL PRIMARY KEY,
-  allow INTEGER,
-  ipaddr CHARACTER VARYING(60),
-  username CHARACTER VARYING(100),
-  clientid CHARACTER VARYING(100),
-  access  INTEGER,
-  topic CHARACTER VARYING(100)
+  id SERIAL primary key,
+  allow integer,
+  ipaddr character varying(60),
+  username character varying(100),
+  clientid character varying(100),
+  access integer,
+  topic character varying(100)
 );
-CREATE INDEX ipaddr ON mqtt_acl (ipaddr);
-CREATE INDEX username ON mqtt_acl (username);
-CREATE INDEX clientid ON mqtt_acl (clientid);
 ```
 
 Field description:
@@ -141,10 +131,10 @@ INSERT INTO mqtt_acl (allow, ipaddr, username, clientid, access, topic) VALUES (
 INSERT INTO mqtt_acl (allow, ipaddr, username, clientid, access, topic) VALUES (1, '10.59.1.100', NULL, NULL, 1,'$SYS/#');
 
 - Disallow clients from subscribing to the /smarthome/+/temperature topic
-INSERT INTO mqtt_acl (allow, ipaddr, username, clientid, access, topic) VALUES (0, NULL, '$all', NULL, 1,'/smarthome/+/temperature');
+INSERT INTO mqtt_acl (allow, ipaddr, username, clientid, access, topic) VALUES (0, NULL, NULL, NULL, 1,'/smarthome/+/temperature');
 
 - Allow clients to subscribe to the topic /smarthome/${clientid}/temperature containing their Client ID
-INSERT INTO mqtt_acl (allow, ipaddr, username, clientid, access, topic) VALUES (1, NULL, '$all', NULL, 1,'/smarthome/%c/temperature');
+INSERT INTO mqtt_acl (allow, ipaddr, username, clientid, access, topic) VALUES (1, NULL, NULL, NULL, 1,'/smarthome/%c/temperature');
 ```
 
 ## root

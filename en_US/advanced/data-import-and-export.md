@@ -4,19 +4,18 @@ EMQ X provides users with data import and export function to meet the needs of s
 
 EMQ X Broker provides [Command Line Interface](./cli.md#endpoint-data-import-and-export), [HTTP API](./http-api.md#endpoint-data- import-and-export) and Dashboard's visual interface (Enterprise Edition) for data import and export functions. The data currently supported for import and export are as follows:
 
-
-
-
 - Rule engine configuration data (resources, rules)
 - Blacklist data
+- Application data
 - Dashboard user data
 - MQTT user data and ACL data added through the emqx-auth-mnesia plugin
-- MQTT user data and ACL data added through the emqx-auth-clientid plugin (exported from EMQ X 4.2)
-- MQTT user data and ACL data added through the emqx-auth-username plugin (exported from EMQ X 4.2)
-- Rule engine resources and rule
-- Modules configuration
-- Configurations updated from HTTP API (or dashboard GUI)
+- MQTT user data and ACL data added through the emqx-auth-clientid plugin
+- MQTT user data and ACL data added through the emqx-auth-username plugin
 
+
+- Rule engine schema data
+- Modules data
+- Hot Configuration data
 
 
 ## Example
@@ -29,7 +28,7 @@ EMQ X Broker provides [Command Line Interface](./cli.md#endpoint-data-import-and
     $ ./emqx_ctl data export
     The emqx data has been successfully exported to /var/lib/emqx/data/emqx-export-2020-5-15-17-39-0.json.
     ```
-
+    
 2. Save the exported file, and we save the exported file to the tmp directory here.
 
    ```
@@ -50,16 +49,9 @@ EMQ X Broker provides [Command Line Interface](./cli.md#endpoint-data-import-and
     The emqx data has been imported successfully.
     ```
 
-5. Overrides. Sometimes it is necessary to add or override some data in the import file. This can be achieved using `--env` parameter, that allows to pass additional data in JSON format:
-
-    ```
-    $ ./emqx_ctl data import /tmp/emqx-export-2020-5-15-17-39-0.json --env '{"auth.mnesia.as":"username"}'
-    The emqx data has been imported successfully.
-    ```
-
 ### HTTP API
 
-1. Export data.
+1. Import data.
 
    ```
    $ curl -i --basic -u admin:public -X POST "http://localhost:8081/api/v4/data/export"
@@ -67,15 +59,15 @@ EMQ X Broker provides [Command Line Interface](./cli.md#endpoint-data-import-and
    {"data":{"size":388,"filename":"emqx-export-2020-9-4-10-24-16.json","created_at":"2020-9-4 10:24:16"},"code":0}
    ```
 
-   > The exported data file is located at the directory of `.../emqx/data` or `/var/lib/emqx/data`
+   > The exported data file is located at the directory of `.../emqx/data` or `/var/lib/emqx/data` 
 
 2. Download data file
 
    ```
-   $ curl --basic -u admin:public -X GET http://localhost:8081/api/v4/data/file/emqx-export-2020-9-4-10-24-16.json -o /tmp/emqx-export-2020-9-4-10-24-16.json
+   $ curl --basic -u admin:public -X GET http://localhost:8081/api/v4/data/file/emqx-export-2020-9-4-10-24-16.json -o /tmp/emqx-export-2020-9-4-10-24-16.json   
    ```
 
-3. Import data
+3. Upload data file
 
    ```
    $ curl -i --basic -u admin:public -X POST "http://localhost:8081/api/v4/data/import" -d @/tmp/emqx-export-2020-9-4-10-24-16.json
@@ -84,3 +76,13 @@ EMQ X Broker provides [Command Line Interface](./cli.md#endpoint-data-import-and
    ```
 
    > Steps 2 and 3 are suitable for migrating emqx on different devices
+
+4. Import Data
+
+    ```
+    $ curl -i --basic -u admin:public -X POST "http://localhost:8081/api/v4/data/import" -d '{"filename":"emqx-export-2020-9-4-10-24-16.json"}'
+
+    {"code",0}
+    ```
+    
+    

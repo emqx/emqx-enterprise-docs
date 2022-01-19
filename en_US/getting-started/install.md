@@ -312,7 +312,7 @@ curl https://repos.emqx.io/install_emqx.sh | bash
 
 ## Binary package installation (Linux)
 
-1.  Use [emqx.io](https://www.emqx.com/en/downloads/broker?osType=Linux) or [Github](https://github.com/emqx/emqx/releases) for download EMQ X Broker packages。
+1.  Use [emqx.io](https://www.emqx.io/downloads/broker?osType=Linux) or [Github](https://github.com/emqx/emqx/releases) for download EMQ X Broker packages。
 
 2. Install EMQ X Broker:
 
@@ -321,6 +321,7 @@ curl https://repos.emqx.io/install_emqx.sh | bash
     	```shell
     	$ sudo yum install emqx-cenots7-v4.0.0.x86_64.rpm
     	```
+
     + DEB package:
 
       ```bash
@@ -377,7 +378,7 @@ curl https://repos.emqx.io/install_emqx.sh | bash
 
 ## ZIP (Linux、MaxOS、Windows)
 
-1.  Download the zip package of the EMQ X Broker version to be installed from [emqx.io](https://www.emqx.com/en/downloads/broker?osType=Linux) or [Github](https://github.com/emqx/emqx/releases).
+1.  Download the zip package of the EMQ X Broker version to be installed from [emqx.io](https://www.emqx.io/downloads/broker?osType=Linux) or [Github](https://github.com/emqx/emqx/releases).
 
 2.   Unzip the installation file:
 
@@ -457,10 +458,10 @@ curl https://repos.emqx.io/install_emqx.sh | bash
         $ docker pull emqx/emqx:v4.0.0
         ```
 
-      - Download the Docker image from [emqx.io](https://www.emqx.com/en/downloads/broker?osType=Linux) or [Github](https://github.com/emqx/emqx/releases) and load it manually
+      - Download the Docker image from [emqx.io](https://www.emqx.io/downloads/broker?osType=Linux) or [Github](https://github.com/emqx/emqx/releases) and load it manually
 
         ```bash
-        $ wget -O emqx-docker.zip https://www.emqx.com/en/downloads/broker/v4.0.0/emqx-docker-v4.0.0-alpine3.10-amd64.zip
+        $ wget -O emqx-docker.zip https://www.emqx.io/downloads/broker/v4.0.0/emqx-docker-v4.0.0-alpine3.10-amd64.zip
         $ unzip emqx-docker.zip
         $ docker load < emqx-docker-v4.0.0
         ```
@@ -599,20 +600,19 @@ For more information about EMQ X Broker Docker, please visit [Docker Hub](https:
 1. Get the source code
 
 ```bash
-$ git clone https://github.com/emqx/emqx.git
+$ git clone -b v4.0.0 https://github.com/emqx/emqx-rel.git
 ```
 
-2. Checkout to latest tag
+2. Set environment variables
 
 ```bash
-$ cd emqx
-$ git checkout $(git describe --abbrev=0 --tags)
+$ export EMQX_DEPS_DEFAULT_VSN=v4.0.0
 ```
 
 3. Compile
 
 ```bash
-$ make
+$ cd emqx-rel && make
 ```
 
 4. Start EMQ X Broker
@@ -621,9 +621,9 @@ $ make
 $ cd _build/emqx/rel/emqx
 
 $ ./bin/emqx start
-EMQ X Broker 4.3-beta.1 is started successfully!
+emqx 4.0.0 is started successfully!
 
 $ ./bin/emqx_ctl status
 Node 'emqx@127.0.0.1' is started
-emqx 4.3-beta.1 is running
+emqx v4.0.0 is running
 ```

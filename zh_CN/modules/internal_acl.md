@@ -4,11 +4,11 @@
 
 ## 创建模块
 
-内置访问控制模块默认启动，可以通过dashboard页面进行停止和更新，但不可以删除。
+内置访问控制模块默认启动，可以通过dashboard页面进行停止和更新。
 
 ![image-20200927213049265](./assets/modules.png)
 
-直接编辑ACL文件，或选择具体配置文件进行替换
+配置相关参数
 
 ![image-20200927213049265](./assets/acl_file3.png)
 
@@ -66,7 +66,7 @@
 
 ​    * `{user, "dashboard"}`：表明规则仅对 *用户名 (Username)* 为 "dashboard" 的用户生效
 
-​    * `{client, "dashboard"}`：表明规则仅对 *客户端标识 (ClientId)* 为 "dashboard" 的用户生效
+​    * `{clientid, "dashboard"}`：表明规则仅对 *客户端标识 (ClientId)* 为 "dashboard" 的用户生效
 
 ​    * `{ipaddr, "127.0.0.1"}`：表明规则仅对 *源地址* 为 "127.0.0.1" 的用户生效
 
@@ -97,3 +97,10 @@
 acl.conf 中应只包含一些简单而通用的规则，使其成为系统基础的 ACL 原则。如果需要支持复杂、大量的 ACL 内容可以选择外部资源去实现它。
 
 :::
+
+
+
+
+
+
+

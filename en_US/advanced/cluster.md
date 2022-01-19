@@ -1,7 +1,7 @@
 # Cluster
 
-## Distributed Erlang
-Erlang / OTP was originally a programming language platform designed by Ericsson for the development of telecommunication equipment systems. Telecommunication equipment (routers, access gateways) is typically a distributed system that connects the main control board and multiple business boards through the backplane.
+## Distributed Erlang 
+Erlang / OTP was originally a programming language platform designed by Ericsson for the development of telecommunication equipment systems. Telecommunication equipment (routers, access gateways) is typically a distributed system that connects the main control board and multiple business boards through the backplane. 
 
 ### Nodes and distributed Erlang
 The distributed programs of the Erlang / OTP language platform are composed of distributed interconnected Erlang runtime systems. Each Erlang runtime system is called a node. Nodes are interconnected by TCP to form a network structure.
@@ -286,12 +286,6 @@ Or remove the emqx@s2.emqx.io node from the cluster on s1.emqx.io:
 $ ./bin/emqx_ctl cluster force-leave emqx@s2.emqx.io
 ```
 
-#### Start a cluster on single machine
-
-For users who only have one server, the pseudo-distributed starting mode can be used. Please notice that if we want to start two or more nodes on one machine, we must adjust the listening port of the other node to avoid the port conflicts.
-
-The basic process is to copy another emqx folder and name it emqx2. After that, we let all the listening ports of the original emqx to be added by an offset as the listening ports of the emqx2 node. For example, we can change the MQTT/TCP listening port from the default 1883 to 2883 as the MQTT/TCP listening port for emqx2. Please refer to [Cluster Script](https://github.com/terry-xiaoyu/one_more_emqx) regarding to the above operations and also refer to [Configuration Instructions](../getting-started/config.md) and  [Configuration Items](../configuration/configuration.md) for details.
-
 ## Network Partition Autoheal 
 *EMQ X* supports Network Partition Autoheal, which can be configure in `etc/emqx.conf`:
 
@@ -340,7 +334,7 @@ where `BasePort` is 4370 (which is not made configurable), and `Offset` is the n
 For example, having `node.name = emqx@192.168.0.12` in `emqx.conf` should make the
 node listen on port `4370`, and port  `4371` for `emqx1` (or `emqx-1`), and so on.
 
-### The Cluster RPC Port
+### The Cluster PRC Port
 
 Each emqx node also listens on a (conventional) port for the RPC channels, which should
 also be allowed by the firewall. The port mapping rule is similar to the node discovery

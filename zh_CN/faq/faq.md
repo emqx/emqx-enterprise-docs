@@ -57,9 +57,9 @@ EMQ X 与别的 MQTT 服务器相比，有以下的优点：
 **标签:** [*企业版*](tags.md#企业版)
 
 
-EMQ X 公司主要提供[三个产品](https://www.emqx.com/zh/products/emqx)，主要体现在支持的连接数量、产品功能和商业服务等方面的区别：
+EMQ X 公司主要提供[三个产品](https://www.emqx.io/products)，主要体现在支持的连接数量、产品功能和商业服务等方面的区别：
 
-- EMQ X Broker：EMQ X 开源版，提供 MQTT 协议、CoAP 和 LwM2M 等常见物联网协议的支持；
+- EMQ X Broker：EMQ X 开源版，提供 MQTT 协议、CoAP 和 LwM2M 等常见物联网协议的支持；支持 10 万级的并发连接；
 
 - EMQ X Enterprise：EMQ X 企业版，在开源版基础上，增加了数据持久化 Redis、MySQL、MongoDB 或 PostgreSQL，数据桥接转发 Kafka，LoRaWAN 支持，监控管理，Kubernates 部署等方面的支持；支持百万级并发连接；
 
@@ -216,12 +216,3 @@ WebSocket 是一种在基于 HTTP 协议上支持全双工通讯的协议，通�
 - \$SYS/brokers/\${node}/clients/${clientid}/connected: 当客户端连接时发送的客户端信息
 - \$SYS/broker/${node}/stats/connections/count: 当前客户端总数
 - \$SYS/broker/${node}/stats/sessions/count: 当前会话总数
-
-
-## 为什么开启认证后，客户端还是可以不需要用户名密码就能连接？
-
-**标签:** [*认证鉴权*](tags.md#认证鉴权)
-
-EMQ X 支持匿名认证，并默认启用。开启认证后，未指定用户名密码的客户端将以匿名认证的方式成功登录。想要更改这一行为，需要修改 emqx.conf 文件中的 `allow_anonymous` 配置项，将其设为 false，然后重启 EMQ X 即可。
-
-注：如果您的客户端连接的是 11883 端口，则需要修改 `zone.internal.allow_anonymous`，Zone 与 Listener 的相关知识可参阅 [配置说明](../getting-started/config.md)。

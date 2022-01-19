@@ -8,7 +8,7 @@ keywords:
 # 描述
 description:
 # 分类
-category:
+category: 
 # 引用
 ref:
 ---
@@ -19,11 +19,12 @@ EMQ X 发行包中，包含了大量的官方插件，提供了一些基础的�
 
 它们依赖于 [emqx](https://github.com/emqx/emqx) 的代码 API 或者 [钩子](hooks.md) 进行实现其特殊的功能。
 
-然后通过打包编译工具 [emqx-rel](https://github.com/emqx/emqx-rel) 将其与 [emqx](https://github.com/emqx/emqx) 核心项目一起编译并打包至一个可运行的软件包中。
+然后通过打包编译工具 [emqx-rel](https://github.com/emqx/emqx-rel) 将其与 [emqx](https:://github.com/emqx/emqx) 核心项目一起编译并打包至一个可运行的软件包中。
 
-::: tip
+::: danger
 EMQ X Enteprise 商业销售时不提供源代码，不支持客户自行开发、编译插件。
 :::
+
 
 ## 插件列表
 
@@ -31,28 +32,31 @@ EMQ X Enteprise 商业销售时不提供源代码，不支持客户自行开发�
 
 | 插件                                                                 | 配置文件                              | 说明                      |
 | -------------------------------------------------------------------- | ------------------------------------- | ------------------------- |
-| [emqx_dashboard](https://github.com/emqx/emqx/tree/main-v4.3/lib-ce/emqx_dashboard)   | etc/plugins/emqx_dashbord.conf        | Web 控制台插件 (默认加载) |
-| [emqx_management](https://github.com/emqx/emqx/tree/main-v4.3/apps/emqx_management)   | etc/plugins/emqx_management.conf      | HTTP API and CLI  管理插件|
-| [emqx_auth_mnesia](https://github.com/emqx/emqx/tree/main-v4.3/apps/emqx_auth_mnesia) | etc/plugins/emqx_auth_mnesia.conf     | Mnesia 认证 / 访问控制    |
-| [emqx_auth_jwt](https://github.com/emqx/emqx/tree/main-v4.3/apps/emqx_auth_jwt)       | etc/plugins/emqx_auth_jwt.conf        | JWT 认证 / 访问控制       |
-| [emqx_auth_ldap](https://github.com/emqx/emqx/tree/main-v4.3/apps/emqx_auth_ldap)     | etc/plugins/emqx_auth_ldap.conf       | LDAP 认证 / 访问控制      |
-| [emqx_auth_http](https://github.com/emqx/emqx/tree/main-v4.3/apps/emqx_auth_http)     | etc/plugins/emqx_auth_http.conf       | HTTP API 与 CLI 管理插件  |
-| [emqx_auth_mongo](https://github.com/emqx/emqx/tree/main-v4.3/apps/emqx_auth_mongo)   | etc/plugins/emqx_auth_mongo.conf      | MongoDB 认证 / 访问控制   |
-| [emqx_auth_mysql](https://github.com/emqx/emqx/tree/main-v4.3/apps/emqx_auth_mysql)   | etc/plugins/emqx_auth_mysql.conf      | MySQL 认证 / 访问控制     |
-| [emqx_auth_pgsql](https://github.com/emqx/emqx/tree/main-v4.3/apps/emqx_auth_pgsql)   | etc/plugins/emqx_auth_pgsql.conf      | PostgreSQL 认证 / 访问控制|
-| [emqx_auth_redis](https://github.com/emqx/emqx/tree/main-v4.3/apps/emqx_auth_redis)   | etc/plugins/emqx_auth_redis.conf      | Redis 认证 / 访问控制     |
-| [emqx_psk_file](https://github.com/emqx/emqx/tree/main-v4.3/apps/emqx_psk_file)       | etc/plugins/emqx_psk_file.conf        | PSK 支持                  |
-| [emqx_web_hook](https://github.com/emqx/emqx/tree/main-v4.3/apps/emqx_web_hook)       | etc/plugins/emqx_web_hook.conf        | Web Hook 插件             |
-| [emqx_lua_hook](https://github.com/emqx/emqx/tree/main-v4.3/apps/emqx_lua_hook)       | etc/plugins/emqx_lua_hook.conf        | Lua Hook 插件             |
-| [emqx_retainer](https://github.com/emqx/emqx/tree/main-v4.3/apps/emqx_retainer)       | etc/plugins/emqx_retainer.conf        | Retain 消息存储模块       |
-| [emqx_rule_engine](https://github.com/emqx/emqx/tree/main-v4.3/apps/emqx_rule_engine) | etc/plugins/emqx_rule_engine.conf     | 规则引擎                  |
-| [emqx_bridge_mqtt](https://github.com/emqx/emqx/tree/main-v4.3/apps/emqx_bridge_mqtt) | etc/plugins/emqx_bridge_mqtt.conf     | MQTT 消息桥接插件         |
-| [emqx_coap](https://github.com/emqx/emqx/tree/main-v4.3/apps/emqx_coap)               | etc/plugins/emqx_coap.conf            | CoAP 协议支持             |
-| [emqx_lwm2m](https://github.com/emqx/emqx/tree/main-v4.3/apps/emqx_lwm2m)             | etc/plugins/emqx_lwm2m.conf           | LwM2M 协议支持            |
-| [emqx_sn](https://github.com/emqx/emqx/tree/main-v4.3/apps/emqx_sn)                   | etc/plugins/emqx_sn.conf              | MQTT-SN 协议支持          |
-| [emqx_stomp](https://github.com/emqx/emqx/tree/main-v4.3/apps/emqx_stomp)             | etc/plugins/emqx_stomp.conf           | Stomp 协议支持            |
-| [emqx_recon](https://github.com/emqx/emqx/tree/main-v4.3/apps/emqx_recon)             | etc/plugins/emqx_recon.conf           | Recon 性能调试            |
-| [emqx_plugin_template](https://github.com/emqx/emqx-plugin-template)               | etc/plugins/emqx_plugin_template.conf | 代码热加载插件            |
+| [emqx_dashboard](https://github.com/emqx/emqx-dashboard)             | etc/plugins/emqx_dashbord.conf        | Web 控制台插件 (默认加载) |
+| [emqx_management](https://github.com/emqx/emqx-management)           | etc/plugins/emqx_management.conf      | HTTP API 与 CLI 管理插件  |
+| [emqx_auth_clientid](https://github.com/emqx/emqx-auth-clientid)     | etc/plugins/emqx_auth_clientid.conf   | ClientId 认证插件         |
+| [emqx_auth_username](https://github.com/emqx/emqx-auth-username)     | etc/plugins/emqx_auth_username.conf   | 用户名、密码认证插件      |
+| [emqx_auth_jwt](https://github.com/emqx/emqx-auth-jwt)               | etc/plugins/emqx_auth_jwt.conf        | JWT 认证 / 访问控制       |
+| [emqx_auth_ldap](https://github.com/emqx/emqx-auth-ldap)             | etc/plugins/emqx_auth_ldap.conf       | LDAP 认证 / 访问控制      |
+| [emqx_auth_http](https://github.com/emqx/emqx-auth-http)             | etc/plugins/emqx_auth_http.conf       | HTTP 认证 / 访问控制      |
+| [emqx_auth_mongo](https://github.com/emqx/emqx-auth-mongo)           | etc/plugins/emqx_auth_mongo.conf      | MongoDB 认证 / 访问控制   |
+| [emqx_auth_mysql](https://github.com/emqx/emqx-auth-mysql)           | etc/plugins/emqx_auth_mysql.conf      | MySQL 认证 / 访问控制     |
+| [emqx_auth_pgsql](https://github.com/emqx/emqx-auth-pgsql)           | etc/plugins/emqx_auth_pgsql.conf      | PostgreSQL 认证 / 访问控制|
+| [emqx_auth_redis](https://github.com/emqx/emqx-auth-redis)           | etc/plugins/emqx_auth_redis.conf      | Redis 认证 / 访问控制     |
+| [emqx_psk_file](https://github.com/emqx/emqx-psk-file)               | etc/plugins/emqx_psk_file.conf        | PSK 支持                  |
+| [emqx_web_hook](https://github.com/emqx/emqx-web-hook)               | etc/plugins/emqx_web_hook.conf        | Web Hook 插件             |
+| [emqx_lua_hook](https://github.com/emqx/emqx-lua-hook)               | etc/plugins/emqx_lua_hook.conf        | Lua Hook 插件             |
+| [emqx_retainer](https://github.com/emqx/emqx-retainer)               | etc/plugins/emqx_retainer.conf        | Retain 消息存储模块       |
+| [emqx_rule_engine](https://github.com/emqx/emqx-rule-engine)         | etc/plugins/emqx_rule_engine.conf     | 规则引擎                  |
+| [emqx_bridge_mqtt](https://github.com/emqx/emqx-bridge-mqtt)         | etc/plugins/emqx_bridge_mqtt.conf     | MQTT 消息桥接插件         |
+| [emqx_delayed_publish](https://github.com/emqx/emqx-delayed-publish) | etc/plugins/emqx_delayed_publish.conf | 客户端延时发布消息支持    |
+| [emqx_coap](https://github.com/emqx/emqx-coap)                       | etc/plugins/emqx_coap.conf            | CoAP 协议支持             |
+| [emqx_lwm2m](https://github.com/emqx/emqx-lwm2m)                     | etc/plugins/emqx_lwm2m.conf           | LwM2M 协议支持            |
+| [emqx_sn](https://github.com/emqx/emqx-sn)                           | etc/plugins/emqx_sn.conf              | MQTT-SN 协议支持          |
+| [emqx_stomp](https://github.com/emqx/emqx-stomp)                     | etc/plugins/emqx_stomp.conf           | Stomp 协议支持            |
+| [emqx_recon](https://github.com/emqx/emqx-recon)                     | etc/plugins/emqx_recon.conf           | Recon 性能调试            |
+| [emqx_reloader](https://github.com/emqx/emqx-reloader)               | etc/plugins/emqx_reloader.conf        | 代码热加载插件            |
+| [emqx_plugin_template](https://github.com/emqx/emqx-plugin-template) | etc/plugins/emqx_plugin_template.conf | 插件开发模版              |
 
 ## 启停插件
 
@@ -90,7 +94,7 @@ EMQ X Enteprise 商业销售时不提供源代码，不支持客户自行开发�
 
 **使用管理 API 启停插件**
 
-在 EMQ X 运行过程中，可通过 [管理监控 API - Load Plugin](./http-api.md#load_plugin) 的方式查看、和启停某插件。
+在 EMQ X 运行过程中，可通过 [管理监控 API - Load Plugin](http-api.md#load_plugin) 的方式查看、和启停某插件。
 
 
 ## 插件开发
@@ -224,7 +228,7 @@ ok = emqx_ctl:register_command(cmd, {emqx_cli_demo, cmd}, []),
 插件自带配置文件放置在 `etc/${plugin_name}.conf|config`。 EMQ X 支持两种插件配置格式：
 
 1. Erlang 原生配置文件格式 - `${plugin_name}.config`：
-
+   
 ```erlang
 [
     {plugin_name, [
@@ -232,7 +236,7 @@ ok = emqx_ctl:register_command(cmd, {emqx_cli_demo, cmd}, []),
     ]}
 ].
 ```
-
+   
 2. sysctl 的 `k = v` 通用格式 - `${plugin_name}.conf`：
 
 ```erlang

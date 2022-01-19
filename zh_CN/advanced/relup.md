@@ -22,7 +22,7 @@ ref:
 目前 EMQ X Broker 仅支持 Patch 版本（Patch 版本是版本号的第三位）的热升级。
 即，目前支持 4.2.0 -> 4.2.1，4.2.0 -> 4.2.2，... 等的热升级，但 4.2.x 无法热升级到 4.3.0 或者 5.0。
 
-目前 Windows、MacOSX 暂不支持热升级功能。
+目前 EMQ X for Windows 暂不支持热升级功能。
 
 ## 热升级步骤
 
@@ -38,7 +38,7 @@ Installed versions:
 
 2. 从 EMQ X 官网下载要升级的软件包。
 
-访问 [https://www.emqx.com/en/downloads?product=broker](https://www.emqx.com/en/downloads?product=broker) 选择对应的版本和操作系统类型，然后选择 **"zip"** 包类型。
+访问 [https://www.emqx.io/downloads#broker](https://www.emqx.io/downloads#broker) 选择对应的版本和操作系统类型，然后选择 **"zip"** 包类型。
 
 3. 找到 EMQ X 的安装目录：
 

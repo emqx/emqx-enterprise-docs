@@ -354,6 +354,29 @@ $ curl -i --basic -u admin:public -X GET "http://localhost:8081/api/v4/nodes/emq
 {"data":[{"recv_cnt":4,"max_subscriptions":0,"node":"emqx@127.0.0.1","proto_ver":4,"recv_pkt":1,"inflight":0,"max_mqueue":1000,"heap_size":2586,"username":"test","proto_name":"MQTT","subscriptions_cnt":0,"send_pkt":3,"created_at":"2020-02-20 13:38:51","reductions":5994,"ip_address":"127.0.0.1","send_msg":0,"send_cnt":3,"expiry_interval":0,"keepalive":60,"mqueue_dropped":0,"is_bridge":false,"max_inflight":32,"recv_msg":0,"max_awaiting_rel":100,"awaiting_rel":0,"mailbox_len":0,"mqueue_len":0,"recv_oct":33,"connected_at":"2020-02-20 13:38:51","clean_start":true,"clientid":"example","connected":true,"port":54889,"send_oct":8,"zone":"external"}],"code":0}
 ```
 
+#### DELETE /api/v4/nodes/{node}/clients/{clientid} 
+Similar with [DELETE /api/v4/clients/{clientid}](#endpoint-delete-a-client)，kick out the specified client under the specified node.
+
+**Path Parameters:**
+
+| Name   | Type | Required | Description |
+| ------ | --------- | -------- |  ---- |
+| clientid  | String | True | ClientID |
+
+**Success Response Body (JSON):**
+
+| Name | Type | Description |
+| ---- | --------- | ----------- |
+| code | Integer   | 0         |
+
+**Examples:**
+
+```bash
+$ curl -i --basic -u admin:public -X DELETE "http://localhost:8081/api/v4/nodes/emqx@127.0.0.1/clients/example"
+
+{"code":0}
+```
+
 #### GET /api/v4/clients/username/{username} 
 Query client information by Username. Since there may be multiple clients using the same user name, multiple client information may be returned at the same time.
 
@@ -457,40 +480,7 @@ $ curl -i --basic -u admin:public -X DELETE "http://localhost:8081/api/v4/client
 {"code":0}
 ```
 
-### PUT /api/v4/clients/{clientid}/keepalive
-
-Set the keepalive time (in seconds) for the specified client.
-
-**Path Parameters:**
-
-| Name     | Type   | Required | Description |
-| -------- | ------ | -------- | ----------- |
-| clientid | String | True     | ClientID    |
-
-**Query String Parameters:**
-
-| Name     | Type    | Required | Description                                           |
-| -------- | ------- | :------: | ----------------------------------------------------- |
-| interval | Integer |   True   | seconds：0～65535，0 means keepalive check is disable |
-
-**Success Response Body (JSON):**
-
-| Name | Type    | Description |
-| ---- | ------- | ----------- |
-| code | Integer | 0           |
-
-**Examples:**
-
-Update the specified client(example) Keepalive to 10 seconds
-
-```bash
-$ curl -i --basic -u admin:public -X PUT "http://localhost:8081/api/v4/clients/example/keepalive?interval\=10"
-
-{"code":0}
-```
-
 ### Subscription Information
-
 #### GET /api/v4/subscriptions 
 Returns all subscription information under the cluster, and supports paging mechanism
 
@@ -900,7 +890,7 @@ $ curl -i --basic -u admin:public -X GET "http://localhost:8081/api/v4/nodes/emq
 {"data":[{"version":"develop","type":"auth","name":"emqx_auth_clientid","description":"EMQ X Broker Authentication with ClientId/Password","active":false}, ...],"code":0}
 ```
 
-#### PUT /api/v4/nodes/{node}/plugins/{plugin}/load {#load_plugin}
+#### PUT /api/v4/nodes/{node}/plugins/{plugin}/load 
 Load the specified plugin under the specified node.
 
 **Parameters:** None
@@ -973,7 +963,6 @@ Returns information about all listeners in the cluster.
 | data[0].listeners | Array of Objects   | Listener list |
 | data[0].listeners[0].acceptors      | Integer   | Number of Acceptor process |
 | data[0].listeners[0].listen_on      | String    | Listening port |
-| data[0].listeners[0].identifier     | String    | Identifier |
 | data[0].listeners[0].protocol       | String    | Plugin description |
 | data[0].listeners[0].current_conns  | Integer   | Whether plugin is enabled |
 | data[0].listeners[0].max_conns      | Integer   | Maximum number of allowed connections |
@@ -993,26 +982,7 @@ Normal shutdown_count*
 ```bash
 $ curl -i --basic -u admin:public -X GET "http://localhost:8081/api/v4/listeners"
 
-{"data":[{"node":"emqx@127.0.0.1","listeners":[{"shutdown_count":[],"protocol":"mqtt:ssl","max_conns":102400,"listen_on":"8883","identifier":"mqtt:ssl:external","current_conns":1,"acceptors":32},{"shutdown_count":[],"protocol":"mqtt:tcp","max_conns":1024000,"listen_on":"0.0.0.0:1883","identifier":"mqtt:tcp:external","current_conns":1,"acceptors":64},{"shutdown_count":[],"protocol":"mqtt:tcp","max_conns":1024000,"listen_on":"127.0.0.1:11883","identifier":"mqtt:tcp:internal","current_conns":0,"acceptors":4},{"shutdown_count":[],"protocol":"http:dashboard","max_conns":512,"listen_on":"18083","current_conns":0,"acceptors":4},{"shutdown_count":[],"protocol":"http:management","max_conns":512,"listen_on":"8081","current_conns":1,"acceptors":2},{"shutdown_count":[],"protocol":"mqtt:ws:8083","max_conns":102400,"listen_on":"8083","current_conns":0,"acceptors":16},{"shutdown_count":[],"protocol":"mqtt:wss:8084","max_conns":102400,"listen_on":"8084","current_conns":0,"acceptors":16}]}],"code":0}
-```
-
-#### PUT /api/v4/listeners/{identifier}/restart
-Restarts a listener in the cluster
-
-**Path Parameters:** 无
-
-**Success **Response Body (JSON):**
-
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| code | Integer   | 0           |
-
-**Examples:**
-
-```bash
-$ curl -i --basic -u admin:public -X PUT "http://localhost:8081/api/v4/listeners/mqtt:tcp:external/restart"
-
-{"code":0}
+{"data":[{"node":"emqx@127.0.0.1","listeners":[{"shutdown_count":[],"protocol":"mqtt:ssl","max_conns":102400,"listen_on":"8883","current_conns":0,"acceptors":16},{"shutdown_count":[],"protocol":"mqtt:tcp","max_conns":1024000,"listen_on":"0.0.0.0:1883","current_conns":13,"acceptors":8},{"shutdown_count":[],"protocol":"mqtt:tcp","max_conns":1024000,"listen_on":"127.0.0.1:11883","current_conns":0,"acceptors":4},{"shutdown_count":[],"protocol":"http:dashboard","max_conns":512,"listen_on":"18083","current_conns":0,"acceptors":4},{"shutdown_count":[],"protocol":"http:management","max_conns":512,"listen_on":"8081","current_conns":1,"acceptors":2},{"shutdown_count":[],"protocol":"https:dashboard","max_conns":512,"listen_on":"18084","current_conns":0,"acceptors":2},{"shutdown_count":[],"protocol":"mqtt:ws:8083","max_conns":102400,"listen_on":"8083","current_conns":1,"acceptors":4},{"shutdown_count":[],"protocol":"mqtt:wss:8084","max_conns":16,"listen_on":"8084","current_conns":0,"acceptors":4}]}],"code":0}
 ```
 
 #### GET /api/v4/nodes/{node}/listeners 
@@ -1026,7 +996,6 @@ Similar with [GET /api/v4/listeners](#endpoint-get-listeners), returns the liste
 | data | Array of Objects | List of listeners for each node |
 | data[0].acceptors      | Integer   | Number of Acceptor process |
 | data[0].listen_on      | String    | Listening port |
-| data[0].identifier     | String    | Identifier |
 | data[0].protocol       | String    | Plugin description |
 | data[0].current_conns  | Integer   | Whether the plugin is enabled |
 | data[0].max_conns      | Integer   | Maximum number of allowed connections |
@@ -1037,28 +1006,8 @@ Similar with [GET /api/v4/listeners](#endpoint-get-listeners), returns the liste
 ```bash
 $ curl -i --basic -u admin:public -X GET "http://localhost:8081/api/v4/nodes/emqx@127.0.0.1/listeners"
 
-{"data":[{"shutdown_count":[],"protocol":"mqtt:ssl","max_conns":102400,"listen_on":"8883","identifier":"mqtt:ssl:external","current_conns":1,"acceptors":32},{"shutdown_count":[],"protocol":"mqtt:tcp","max_conns":1024000,"listen_on":"0.0.0.0:1883","identifier":"mqtt:tcp:external","current_conns":1,"acceptors":64},{"shutdown_count":[],"protocol":"mqtt:tcp","max_conns":1024000,"listen_on":"127.0.0.1:11883","identifier":"mqtt:tcp:internal","current_conns":0,"acceptors":4},{"shutdown_count":[],"protocol":"http:dashboard","max_conns":512,"listen_on":"18083","current_conns":0,"acceptors":4},{"shutdown_count":[],"protocol":"http:management","max_conns":512,"listen_on":"8081","current_conns":1,"acceptors":2},{"shutdown_count":[],"protocol":"mqtt:ws:8083","max_conns":102400,"listen_on":"8083","current_conns":0,"acceptors":16},{"shutdown_count":[],"protocol":"mqtt:wss:8084","max_conns":102400,"listen_on":"8084","current_conns":0,"acceptors":16}],"code":0}
+{"data":[{"shutdown_count":[],"protocol":"mqtt:ssl","max_conns":102400,"listen_on":"8883","current_conns":0,"acceptors":16},{"shutdown_count":[],"protocol":"mqtt:tcp","max_conns":1024000,"listen_on":"0.0.0.0:1883","current_conns":13,"acceptors":8},{"shutdown_count":[],"protocol":"mqtt:tcp","max_conns":1024000,"listen_on":"127.0.0.1:11883","current_conns":0,"acceptors":4},{"shutdown_count":[],"protocol":"http:dashboard","max_conns":512,"listen_on":"18083","current_conns":0,"acceptors":4},{"shutdown_count":[],"protocol":"http:management","max_conns":512,"listen_on":"8081","current_conns":1,"acceptors":2},{"shutdown_count":[],"protocol":"https:dashboard","max_conns":512,"listen_on":"18084","current_conns":0,"acceptors":2},{"shutdown_count":[],"protocol":"mqtt:ws:8083","max_conns":102400,"listen_on":"8083","current_conns":1,"acceptors":4},{"shutdown_count":[],"protocol":"mqtt:wss:8084","max_conns":16,"listen_on":"8084","current_conns":0,"acceptors":4}],"code":0}
 ```
-
-#### PUT /api/v4/nodes/{node}/listeners/{identifier}/restart
-Restarts a listener in the cluster
-
-**Path Parameters:** 无
-
-**Success **Response Body (JSON):**
-
-| Name | Type      | Description |
-| ---- | --------- | ----------- |
-| code | Integer   | 0           |
-
-**Examples:**
-
-```bash
-$ curl -i --basic -u admin:public -X PUT "http://localhost:8081/api/v4/listeners/mqtt:tcp:external/restart"
-
-{"code":0}
-```
-
 
 ### Metrics 
 #### GET /api/v4/metrics 
@@ -1330,51 +1279,6 @@ $ curl -i --basic -u admin:public -X GET "http://localhost:8081/api/v4/alarms/hi
 {"data":[{"id":"cpu_high_watermark","desc":"93.27055293970582","clear_at":"2020-02-21 13:50:10"}],"code":0}
 ```
 
-### ACL Cache
-#### DELETE /api/v4/acl-cache
-
-Clean acl cache on all nodes
-
-**Query String Parameters:** None
-
-
-**Success Response Body (JSON):**
-
-| Name    | Type | Description                                  |
-| ------- | --------- | -------------------------------------------- |
-| code    | Integer   | 0   |
-| message | String    | Return only when an error occurs to provide more detailed error information |
-
-**Examples:**
-
-```bash
-$ curl -i --basic -u admin:public -X DELETE "http://localhost:8081/api/v4/acl-cache"
-
-{"code":0}
-```
-
-#### DELETE /api/v4/node/{node}/acl-cache
-
-Clean acl cache for specific node
-
-**Query String Parameters:** None
-
-
-**Success Response Body (JSON):**
-
-| Name    | Type | Description                                  |
-| ------- | --------- | -------------------------------------------- |
-| code    | Integer   | 0   |
-| message | String    | Return only when an error occurs to provide more detailed error information |
-
-**Examples:**
-
-```bash
-$ curl -i --basic -u admin:public -X DELETE "http://localhost:8081/api/v4/node/emqx@127.0.0.1/acl-cache"
-
-{"code":0}
-```
-
 ### Blacklist 
 #### GET /api/v4/banned 
 Get the blacklist
@@ -1410,7 +1314,6 @@ Add object to blacklist
 | ----- | --------- | -------- | ----------| -------------------------------- |
 | who   | String    | Required |    | Objects added to the blacklist, which can be client identifiers, usernames, and IP addresses |
 | as    | String    | Required |      | Used to distinguish the types of blacklist objects, which can be `clientid`，`username`，`peerhost` |
-| reason | String    | Required |      | Detailed information |
 | by    | String    | Optional | user | Indicate which object was added to the blacklist |
 | at    | Integer   | Optional | Current system time | Time added to blacklist, unit: second |
 | until | Integer   | Optional | Current system time+ 5 minutes | When to remove from blacklist, unit: second |
@@ -1427,12 +1330,12 @@ Add object to blacklist
 Add client to blacklist:
 
 ```bash
-$ curl -i --basic -u admin:public -vX POST "http://localhost:8081/api/v4/banned" -d '{"who":"example","as":"clientid","reason":"example"}'
+$ curl -i --basic -u admin:public -vX POST "http://localhost:8081/api/v4/banned" -d '{"who":"example","as":"clientid"}'
 
 {"data":{"who":"example","as":"clientid"},"code":0}
 ```
 
-#### DELETE /api/v4/banned/{as}/{who}
+#### DELETE /api/v4/banned/{as}/{who} 
 Delete object from blacklist
 
 **Parameters:** None

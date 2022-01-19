@@ -8,7 +8,7 @@ keywords:
 # 描述
 description:
 # 分类
-category:
+category: 
 # 引用
 ref:
 ---
@@ -27,8 +27,7 @@ emqx_auth_mnesia
 
 ```json
 {
-	"username":"emqx",
-	"clientid":"client1",
+	"clientid":"emqx",
 	"topic":"testtopic/1",
 	"action":"pub",
 	"access": "allow"
@@ -37,23 +36,21 @@ emqx_auth_mnesia
 
 规则字段说明：
 
-- clientid：客户端的 Client ID.
-- username: 客户端的 Username.
+- clientid / username：客户端的 Username 或 Client ID.
 - topic：控制的主题，可以使用通配符，并且可以在主题中加入占位符来匹配客户端信息，例如 `t/%c` 则在匹配时主题将会替换为当前客户端的 Client ID
   - %u：用户名
   - %c：Client ID
 - action：操作行为，可选值：pub | sub | pubsub
 - Access：是否允许，可选值：allow | deny
+  
 
-`username`和`clientid`是可选的，当两个都没有提供时，该规则适用于所有的客户端
-
-Mnesia ACL 默认不设规则，你可以使用 HTTP API 和 `emqx_ctl` 管理 ACL 规则。
+Mnesia ACL 默认不设规则，你可以使用 HTTP API 和 `emqx_ct`l 管理 ACL 规则。
 
 ## 使用 HTTP API 管理 ACL 规则
 
 ### 添加 ACL 规则
 
-+ Clientid ACL：
++ Clinetid ACL：
 
   ```bash
   # Request
@@ -180,11 +177,11 @@ POST api/v4/acl
 
 ### 查看已经添加的 ACL 规则
 
-+ Clientid ACL：
++ Clinetid ACL：
 
   ```bash
   # Request
-  GET api/v4/acl/clientid
+  GET api/v4/acl/clinetid
 
   # Response
   {
@@ -216,7 +213,7 @@ POST api/v4/acl
     "code": 0
   }
   ```
-
+  
 + Username ACL：
 
   ```bash
@@ -253,7 +250,7 @@ POST api/v4/acl
     "code": 0
   }
   ```
-
+  
 + $all ACL：
 
   ```bash
@@ -284,68 +281,52 @@ POST api/v4/acl
     "code": 0
   }
   ```
-
+  
 ### 查看指定 ACL 规则
 
-+ Clientid ACL:
++ Clientid ACL
 
   ```bash
   # Request
-  GET api/v4/acl/clientid/emqx_c
+  GET api/v4/acl/clientid/${clientid}
 
   # Response
   {
-      "data": [
-        {
+      "data": {
           "topic": "Topic/A",
           "clientid": "emqx_c",
-          "access": "allow",
+          "allow": true,
           "action": "pub"
-        },
-        {
-          "topic": "Topic/B",
-          "clientid": "emqx_c",
-          "access": "allow",
-          "action": "pub"
-        }
-      ],
+      },
       "code": 0
   }
   ```
-+ Username ACL:
++ Username ACL
 
   ```bash
   # Request
-  GET api/v4/acl/username/emqx_u
+  GET api/v4/acl/username/${username}
 
   # Response
   {
-      "data": [
-        {
+      "data": {
           "topic": "Topic/A",
           "username": "emqx_u",
-          "access": "allow",
+          "allow": true,
           "action": "pub"
-        },
-        {
-          "topic": "Topic/B",
-          "username": "emqx_u",
-          "access": "allow",
-          "action": "pub"
-        }
-      ],
+      },
       "code": 0
   }
   ```
-
+  
 ### 删除 ACL 规则
 
-+ Client ACL
++ Clinet ACL
 
   ```bash
   # Request
   # 请注意 ${topic} 需要使用 UrlEncode 编码
-  DELETE api/v4/acl/clientid/${clientid}/topic/${topic}
+  DELETE api/v4/acl/clinetid/${clientid}/topic/${topic}
 
   # Response
   {

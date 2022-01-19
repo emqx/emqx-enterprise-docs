@@ -16,9 +16,8 @@ $ docker run -d --name opentsdb -p 4242:4242 petergrace/opentsdb-docker
 
 ```sql
 SELECT
-    payload.metric as metric,
-    payload.tags as tags,
-    payload.value as value
+    payload as p,
+    p.metric as metric, p.tags as tags, p.value as value
 FROM
     "#"
 ```

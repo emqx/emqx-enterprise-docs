@@ -37,9 +37,17 @@ CREATE TABLE mqtt_msg (
   payload text,
   arrived timestamp without time zone
 );
+CREATE TABLE mqtt_acked (
+  id SERIAL8 primary key,
+  clientid character varying(64),
+  topic character varying(64),
+  mid integer,
+  created timestamp without time zone,
+  UNIQUE (clientid, topic)
+);
 ```
 
-::: tip
+::: danger
 
 The message table structure cannot be modified. Please use the above SQL statement to create
 
