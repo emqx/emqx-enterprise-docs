@@ -43,41 +43,41 @@ FROM description
 SELECT * FROM "t/#", "$events/session_subscribed", "$events/message_acked" WHERE topic =~ 't/#'
 ```
 
-![image-20211214151125535](./assets/rule-engine/mongo_offline_msg_01.png)
+![](./assets/rule-engine/mongo_offline_msg_01.png)
 
 Related actions:
 
-Select "Add Action" on the "Action" interface, and then select "Offline messages" and "Offline Msg to MongoDB" in the "Action Type" drop-down box
+Select "Add Action" on the "Response Action" interface, and then select "Save offline messages to MongoDB" in the "Add Action" drop-down box
 
-![image-20211214151154689](./assets/rule-engine/mongo_offline_msg_02.png)
+![](./assets/rule-engine/mongo_offline_msg_02.png)
 
-Now that the resource drop-down box is empty, and you can click "Create" in the upper right corner to create a MongoDB resource:
+Now that the resource drop-down box is empty, and you can click "New" in the upper right corner to create a MongoDB resource:
 
-![image-20211214151834553](./assets/rule-engine/mongo_offline_msg_03.png)
+![](./assets/rule-engine/mongo_offline_msg_03.png)
 
-The "Create" dialog box pops up:
+The "Create Resource" dialog box pops up
 
-![image-20211214151326446](./assets/rule-engine/mongo_offline_msg_04.png)
+![](./assets/rule-engine/mongo_offline_msg_04.png)
 
 Fill in the resource configuration:
 
 Fill in the real MongoDB server address and the values corresponding to other configurations, and then click the "Test Connection" button to ensure that the connection test is successful.
 
-Finally click the "Confirm" button.
+Finally click the "OK" button.
 
-![image-20211214151354243](./assets/rule-engine/mongo_offline_msg_05.png)
+![](./assets/rule-engine/mongo_offline_msg_05.png)
 
-Return to the action interface and click "Confirm".
+Return to the response action interface and click "OK".
 
-![image-20211214151425343](./assets/rule-engine/mongo_offline_msg_06.png)
+![](./assets/rule-engine/mongo_offline_msg_06.png)
 
 Return to the rule creation interface and click "Create".
 
-![image-20211214151455755](./assets/rule-engine/mongo_offline_msg_07.png)
+![](./assets/rule-engine/mongo_offline_msg_07.png)
 
 The rule has been created, and you can send a piece of data through the WebSocket client of Dashboard **(The QoS of the published message must be greater than 0):**
 
-![image-20211214151531162](./assets/rule-engine/mongo_offline_msg_08.png)
+![](./assets/rule-engine/mongo_offline_msg_08.png)
 
 After the message is sent, you can see the message is saved in MongoDB through mongo:
 

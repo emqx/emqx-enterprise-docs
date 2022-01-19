@@ -22,9 +22,7 @@ MongoDB 认证/访问控制使⽤外部 MongoBD 数据库作为数据源，可�
 
 配置 MongoDB 相关参数
 
-![image-20211129165339766](./assets/auth_mongo3.png)
-
-> SRV 记录的相关说明和使用方式请参考 [规则引擎 - 保存数据到 MongoDB](../rule/backend_mongodb.md)。
+![image-20200928114832162](./assets/auth_mongo3.png)
 
 点击添加后，模块添加完成:
 
@@ -118,7 +116,7 @@ MongoDB 支持配置集合名称、认证字段、认证占位符等等参数。
 | 超级用户查询字段名 | 需要从集合里面查询出来的字段 |
 | 超级用户条件字段 | 超级用户查询的条件，如果需要查询多个，使用逗号分隔。例如 username=%u,clientid=%c |
 
-::: tip
+::: danger
 
 MongoDB ACL 规则需严格使用上述数据结构。 MongoDB ACL 中添加的所有规则都是 允许 规则，可以搭配 `etc/emqx.conf` 中 `acl_nomatch = deny` 使用。
 

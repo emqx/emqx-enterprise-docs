@@ -245,15 +245,9 @@ SELECT clientid FROM "$events/session_subscribed" WHERE topic = 't/#' and qos = 
 SELECT clientid FROM "$events/session_subscribed" WHERE topic =~ 't/#' and qos = 1
 ```
 
-- 对于一个 MQTT 5.0 PUBLISH 消息，筛选出 Key 为 "foo" 的 User Property:
-
-```sql
-SELECT pub_props.'User-Property'.foo as foo FROM "t/#"
-```
-
 ::: tip
 
-- FROM 子句后面的主题需要用双引号 `""`，或者单引号 `''` 引起来。
+- FROM 子句后面的主题需要用双引号 `""` 引起来。
 - WHERE 子句后面接筛选条件，如果使用到字符串需要用单引号 `''` 引起来。
 - FROM 子句里如有多个主题，需要用逗号 `","` 分隔。例如 SELECT * FROM "t/1", "t/2" 。
 - 可以使用使用 `"."` 符号对 payload 进行嵌套选择。
@@ -591,8 +585,7 @@ SELECT 和 WHERE 子句可用的字段与事件的类型相关。其中 `clienti
 | topic               | MQTT 主题                             |
 | qos                 | MQTT 消息的 QoS                       |
 | flags               | MQTT 消息的 Flags                     |
-| headers             | MQTT 消息内部与流程处理相关的额外数据     |
-| pub_props           | PUBLISH Properties (仅适用于 MQTT 5.0) |
+| headers             | MQTT 消息内部与流程处理相关的额外数据 |
 | timestamp           | 事件触发时间 (ms)                     |
 | publish_received_at | PUBLISH 消息到达 Broker 的时间 (ms)   |
 | node                | 事件触发所在节点                      |
@@ -611,7 +604,6 @@ SELECT 和 WHERE 子句可用的字段与事件的类型相关。其中 `clienti
 | topic               | MQTT 主题                            |
 | qos                 | MQTT 消息的 QoS                      |
 | flags               | MQTT 消息的 Flags                    |
-| pub_props           | PUBLISH Properties (仅适用于 MQTT 5.0) |
 | timestamp           | 事件触发时间 (ms)                    |
 | publish_received_at | PUBLISH 消息到达 Broker 的时间 (ms)  |
 | node                | 事件触发所在节点                     |
@@ -630,8 +622,6 @@ SELECT 和 WHERE 子句可用的字段与事件的类型相关。其中 `clienti
 | topic               | MQTT 主题                           |
 | qos                 | MQTT 消息的 QoS                     |
 | flags               | MQTT 消息的 Flags                   |
-| pub_props           | PUBLISH Properties (仅适用于 MQTT 5.0) |
-| puback_props        | PUBACK Properties (仅适用于 MQTT 5.0) |
 | timestamp           | 事件触发时间 (ms)                   |
 | publish_received_at | PUBLISH 消息到达 Broker 的时间 (ms) |
 | node                | 事件触发所在节点                    |
@@ -649,7 +639,6 @@ SELECT 和 WHERE 子句可用的字段与事件的类型相关。其中 `clienti
 | topic               | MQTT 主题                           |
 | qos                 | MQTT 消息的 QoS                     |
 | flags               | MQTT 消息的 Flags                   |
-| pub_props           | PUBLISH Properties (仅适用于 MQTT 5.0) |
 | timestamp           | 事件触发时间 (ms)                   |
 | publish_received_at | PUBLISH 消息到达 Broker 的时间 (ms) |
 | node                | 事件触发所在节点                    |
@@ -670,7 +659,6 @@ SELECT 和 WHERE 子句可用的字段与事件的类型相关。其中 `clienti
 | expiry_interval | MQTT Session 过期时间               |
 | is_bridge       | 是否为 MQTT bridge 连接             |
 | connected_at    | 终端连接完成时间 (s)                |
-| conn_props      | CONNECT Properties (仅适用于 MQTT 5.0) |
 | timestamp       | 事件触发时间 (ms)                   |
 | node            | 事件触发所在节点                    |
 
@@ -684,7 +672,6 @@ SELECT 和 WHERE 子句可用的字段与事件的类型相关。其中 `clienti
 | peername        | 终端的 IPAddress 和 Port                                     |
 | sockname        | emqx 监听的 IPAddress 和 Port                                |
 | disconnected_at | 终端连接断开时间 (s)                                         |
-| disconn_props   | DISCONNECT Properties (仅适用于 MQTT 5.0)                    |
 | timestamp       | 事件触发时间 (ms)                                            |
 | node            | 事件触发所在节点                                             |
 
@@ -697,7 +684,6 @@ SELECT 和 WHERE 子句可用的字段与事件的类型相关。其中 `clienti
 | peerhost  | 客户端的 IPAddress                    |
 | topic     | MQTT 主题                             |
 | qos       | MQTT 消息的 QoS                       |
-| sub_props | SUBSCRIBE Properties (仅适用于 5.0)  |
 | timestamp | 事件触发时间 (ms)                     |
 | node      | 事件触发所在节点                      |
 
@@ -710,7 +696,6 @@ SELECT 和 WHERE 子句可用的字段与事件的类型相关。其中 `clienti
 | peerhost  | 客户端的 IPAddress                      |
 | topic     | MQTT 主题                               |
 | qos       | MQTT 消息的 QoS                         |
-| unsub_props | UNSUBSCRIBE Properties (仅适用于 5.0)  |
 | timestamp | 事件触发时间 (ms)                       |
 | node      | 事件触发所在节点                        |
 
