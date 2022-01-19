@@ -1,10 +1,36 @@
-# EMQ X Broker
+# EMQ X Enterprise Documentation(R2)
 
-*EMQ X* (Erlang/Enterprise/Elastic MQTT Broker) is an open source IoT MQTT message broker based on the Erlang/OTP platform. Erlang/OTP is an excellent Soft-Realtime, Low-Latency and Distributed development platform. MQTT is a lightweight message exchange protocol using publish-subscribe pattern.
+EMQ X is the enterprise version of EMQ MQTT message broker. It adopts Scalable RPC mechanism, provides more reliable clustering and higher performance of message routing.
 
-*EMQ X* is designed for massive clients access and realizes fast and low-latency message routing between massive physical network devices:
+EMQ X supports persistence MQTT messages to Redis , MySQL, PostgreSQL, MongoDB, Cassandra and other Database. It also supports bridging and forwarding messages to enterprise middleware like Kafka and RabbitMQ.
 
-1.  Stable to host large-scale MQTT client connections, and a single-server node supports millions of connections.
-2.  Distributed cluster, fast and low-latency message routing, and single-cluster supports tens of thousands of routes.
-3.  Extensible, support customized plugins, such as authentication and other functions.
-4.  Comprehensive IoT protocol support, including MQTT, MQTT-SN, CoAP, LwM2M, and other TCP/UDP based proprietary protocol.
+EMQ X can be used as access platform for smart hardware, smart home, IoT, automotive networking applications that serve millions end device.
+
+![emqx-enterprise](./_static/images/emqx_enterprise.png)
+
+
+## Content
+
+- [Overview](overview.md)
+- [Deployment](deploy.md)
+- [Installation](install.md)
+- [User Guide](guide.md)
+- [Configuration](config.md)
+- [EMQ X Dashboard](dashboard.md)
+- [Rule Engine](rule_engine.md)
+- [Rule Engine Tutorial](rule_tutorial.md)
+- [AuthN/AuthZ](auth.md)
+- [Backends](backends.md)
+- [Bridges](bridges.md)
+- [Clustering](cluster.md)
+- [Design](design.md)
+- [Commands](commands.md)
+- [Plugins](plugins.md)
+- [REST API](rest.md)
+- [Rate Limit](ratelimit.md)
+- [Tuning Guide](tune.md)
+- [MQTT Protocol](mqtt.md)
+
+## License
+
+Copyright (c) 2016-2019 EMQ Enterprise, Inc. All Rights Reserved.
