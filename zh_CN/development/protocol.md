@@ -1,4 +1,6 @@
 ---
+# 标题
+title: 协议介绍
 # 编写日期
 date: 2020-02-07 17:15:26
 # 作者 Github 名称
@@ -63,11 +65,11 @@ $SYS/broker/metrics/#
 ```
 
 主题(Topic)通过'/'分割层级，支持'+', '\#'通配符:
-```
-'+': 表示通配一个层级，例如a/+，匹配a/x, a/y
+
+    '+': 表示通配一个层级，例如a/+，匹配a/x, a/y
     
-'#': 表示通配多个层级，例如a/#，匹配a/x, a/b/c/d
-```
+    '#': 表示通配多个层级，例如a/#，匹配a/x, a/b/c/d
+
 订阅者与发布者之间通过主题路由消息进行通信，例如采用mosquitto命令行发布订阅消息:
 
 ```bash
@@ -88,8 +90,8 @@ mosquitto_pub -t a/b/c -m hello -q 1
 - 可变报头(Variable header)
 - 报文有效载荷(Payload)
 
-#### 固定报头
 
+#### 固定报头
 ```
 +----------+-----+-----+-----+-----+-----+-----+-----+-----+
 | Bit      |  7  |  6  |  5  |  4  |  3  |  2  |  1  |  0  |
@@ -132,7 +134,6 @@ PUBACK报文用于接收端确认QoS1报文，PUBREC/PUBREL/PUBCOMP报文用于Q
 ### MQTT消息QoS
 
 MQTT发布消息QoS保证不是端到端的，是客户端与服务器之间的。订阅者收到MQTT消息的QoS级别，最终取决于发布消息的QoS和主题订阅的QoS。
-
 | 发布消息的 QoS | 主题订阅的 QoS | 接收消息的 QoS |
 | -------------- | -------------- | -------------- |
 | 0              | 0              | 0              |
@@ -144,7 +145,6 @@ MQTT发布消息QoS保证不是端到端的，是客户端与服务器之间的�
 | 2              | 0              | 0              |
 | 2              | 1              | 1              |
 | 2              | 2              | 2              |
-
 
 #### Qos0消息发布订阅
 
@@ -218,9 +218,9 @@ mosquitto_pub -r -q 1 -t a/b/c -m ''
 MQTT协议除支持TCP传输层外，还支持WebSocket作为传输层。通过WebSocket浏览器可以直连MQTT消息服务器，发布订阅模式与其他MQTT客户端通信。
 
 MQTT协议的WebSocket连接，必须采用binary模式，并携带子协议Header:
-```
-Sec-WebSocket-Protocol: mqttv3.1 或 mqttv3.1.1
-```
+
+    Sec-WebSocket-Protocol: mqttv3.1 或 mqttv3.1.1
+
 ### MQTT 与 XMPP 协议对比
 
 MQTT协议设计简单轻量、路由灵活，将在移动互联网物联网消息领域，全面取代PC时代的XMPP协议:

@@ -1,4 +1,6 @@
 ---
+# 标题
+title: HTTP ACL
 # 编写日期
 date: 2020-02-07 17:15:26
 # 作者 Github 名称
@@ -115,7 +117,7 @@ You can use the following placeholders in the authentication request, and EMQ X 
 - %C:TLS certificate common name (the domain name or subdomain name of the certificate), valid only for TLS connections
 - %d:TLS certificate subject, valid only for TLS connections
 
-::: warning 
+::: danger 
 The POST and PUT methods are recommended. When using the GET method, the clear text password may be recorded with the URL in the server log during transmission.
 
 :::

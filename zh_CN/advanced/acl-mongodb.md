@@ -1,4 +1,6 @@
 ---
+# 标题
+title: MongoDB ACL
 # 编写日期
 date: 2020-02-07 17:15:26
 # 作者 Github 名称
@@ -10,7 +12,7 @@ description:
 # 分类
 category: 
 # 引用
-ref:
+ref: undefined
 ---
 
 # MongoDB ACL
@@ -35,33 +37,16 @@ MongoDB 基础连接信息，需要保证集群内所有节点均能访问。
 ```bash
 # etc/plugins/emqx_auth_mongo.conf
 
-## MongoDB 部署类型
+## MongoDB 架构类型
 ##
 ## Value: single | unknown | sharded | rs
 auth.mongo.type = single
 
-## 是否启用 SRV 和 TXT 记录解析
-auth.mongo.srv_record = false
-
-## 如果您的 MongoDB 以副本集方式部署，则需要指定相应的副本集名称
-##
-## 如果启用了 SRV 记录，即 auth.mongo.srv_record 设置为 true，
-## 且您的 MongoDB 服务器域名添加了包含 replicaSet 选项的 DNS TXT 记录，
-## 那么可以忽略此配置项
+## rs 模式需要设置 rs name
 ## auth.mongo.rs_set_name =
 
-## MongoDB 服务器地址列表
-##
-## 如果你的 URI 具有以下格式：
-## mongodb://[username:password@]host1[:port1][,...hostN[:portN]][/[defaultauthdb][?options]]
-## 请将 auth.mongo.server 配置为 host1[:port1][,...hostN[:portN]]
-##
-## 如果你的 URI 具有以下格式：
-## mongodb+srv://server.example.com
-## 请将 auth.mongo.server 配置为 server.example.com，并将 srv_record
-## 设置为 true，EMQ X 将自动查询 SRV 和 TXT 记录以获取服务列表和 replicaSet 等选项
-##
-## 现已支持 IPv6 和域名
+## 服务器列表，集群模式下使用逗号分隔每个服务器
+## Examples: 127.0.0.1:27017,127.0.0.2:27017...
 auth.mongo.server = 127.0.0.1:27017
 
 auth.mongo.pool = 8
@@ -70,11 +55,6 @@ auth.mongo.login =
 
 auth.mongo.password =
 
-## 指定用于授权的数据库，没有指定时默认为 admin
-##
-## 如果启用了 SRV 记录，即 auth.mongo.srv_record 设置为 true，
-## 且您的 MongoDB 服务器域名添加了包含 authSource 选项的 DNS TXT 记录，
-## 那么可以忽略此配置项
 ## auth.mongo.auth_source = admin
 
 auth.mongo.database = mqtt
@@ -90,15 +70,14 @@ auth.mongo.query_timeout = 5s
 
 ## auth.mongo.ssl_opts.cacertfile =
 
-## MongoDB 写模式
+## MongoDB write mode.
 ##
-## 可设置为 unsafe 或 safe。设置为 safe 时会等待 MongoDB Server 的响应并返回给调用者。未指定时将使用默认值 unsafe。
+## Value: unsafe | safe
 ## auth.mongo.w_mode =
 
-
-## MongoDB 读模式
+## Mongo read mode.
 ##
-## 可设置为 master 或 slave_ok，设置为 master 时表示每次查询都将从主节点读取最新数据。未指定时将使用默认值 master。
+## Value: master | slave_ok
 ## auth.mongo.r_mode =
 
 ## MongoDB 拓扑配置，一般情况下用不到，详见 MongoDB 官网文档
@@ -288,7 +267,7 @@ db.mqtt_acl.find({
 - %c：Client ID
 
 
-::: tip 
+::: danger 
 MongoDB ACL 规则需严格使用上述数据结构。
 MongoDB ACL 中添加的所有规则都是 允许 规则，可以搭配 `etc/emqx.conf` 中 `acl_nomatch = deny` 使用。
 :::

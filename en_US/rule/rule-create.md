@@ -10,7 +10,7 @@
 
 1. Create a rule: 
 
-   Go to [EMQ X Dashboard](http://127.0.0.1:18083/#/rules), select the “rule” tab on the menu to the left. 
+   Go to [emqx dashboard](http://127.0.0.1:18083/#/rules), select the “rule” tab on the menu to the left. 
 
     Select “message.publish”, then type in the following SQL: 
 
@@ -59,7 +59,7 @@
 
    ![image](../assets/webhook-rule-create.png)
 
-   We have finished, testing the rule by sending an MQTT message to emqx: 
+    We have finished, testing the rule by sending an MQTT message to emqx: 
 
    ![image](../assets/webhook-rulelist-1.png)
 

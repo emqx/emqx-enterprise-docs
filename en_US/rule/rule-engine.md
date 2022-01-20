@@ -1,3 +1,20 @@
+---
+# 标题
+title: 规则引擎
+# 编写日期
+date: 2020-02-20 17:46:13
+# 作者 Github 名称
+author: wivwiv, terry-xiaoyu
+# 关键字
+keywords:
+# 描述
+description:
+# 分类
+category:
+# 引用
+ref: undefined
+---
+
 # Rule Engine
 
 EMQ X Broker Rule Engine (Hereinafter referred to as rule engine) is used to configure EMQ X Broker message flow and device event processing and response rules. The rule engine not only provides a clear and flexible "configuration-style" business integration solution, simplifies the business development process, improves ease of use for user, and reduces the coupling between the business system and EMQ X Broker, but also provides a better infrastructure for the private function customization of EMQ X broker.
@@ -12,7 +29,7 @@ Applicable version:**EMQ X Broker v3.1.0+**
 Compatibility Tip: EMQ X Broker v4.0 makes major adjustments to the SQL syntax of the rule engine. For v3.x upgrade users, please refer to  [Migration Guide](./rule-engine.md#migration-guide) for compatibility.
 :::
 
-## Publish message
+### Publish message
 
 The rule engine can store the message processing results of a specific topic to the database with the response action, send it to the HTTP server, forward it to the message queue of Kafka or RabbitMQ, and republish to a new topic or even another Broker cluster. Each rule can be configured with multiple response actions.
 
@@ -28,7 +45,7 @@ Select the message posted to the t/a topic, and filter out the "x" field from th
 SELECT payload.x as x FROM "t/a"
 ```
 
-## Event trigger
+### Event trigger
 
 The rule engine uses a virtual topic beginning with **$events/** to process EMQ X Broker built-in events. The built-in events provide finer message control and client action processing capabilities, which can be used in the business of QoS 1 QoS 2 messages arrival recording, device online and offline recording.
 
@@ -38,7 +55,7 @@ Select the client connection event, filter the device whose Username is `emqx` a
 SELECT clientid, connected_at FROM "$events/client_connected" WHERE username = 'emqx'
 ```
 
-For rule engine data, SQL statement format and [event topic](#event-topics) list, please refer to [SQL manual](#sql-statement) for detailed tutorials.
+For rule engine data, SQL statement format and [event topic](#event-topics) list, please refer to[SQL manual](#rule-sql) for detailed tutorials.
 
 ## Minimum rule
 
@@ -64,7 +81,7 @@ The following figure is a simple rule, which is used to process the data at the 
 In version 4.0, the SQL syntax of the rule engine is easier to use. In version 3. X, the event name needs to be specified after the **FROM** clause. After 4.0 version, we introduce the concept of **event topic** . By default, the **message publish** event no longer needs to be specified. 
 
 ```sql
-## 3.x
+## 3.x 
 ## Event name needs to be specified for processing
 SELECT * FROM "message.publish" WHERE topic =~ 't/#'
 
@@ -89,27 +106,27 @@ EMQ X Broker's rule engine can be used to flexibly process messages and events. 
 The concepts related to the EMQ X Broker rule engine include: rules, actions, resources, and resource-types.
 
 The relationship between rules, actions and resources:
-```
-Rule: {
-    SQL statement
-    Action list: [
-        {
-            action 1,
-            Action parameters,
-            Bind resources: {
-                Resource configuration
-            }
-        },
-        {
-            action 2,
-            Action parameters,
-            Bind resources:  {
-                Resource configuration
-            }
+
+        Rule: {
+            SQL statement
+            Action list: [
+                {
+                    action 1,
+                    Action parameters,
+                    Bind resources: {
+                        Resource configuration
+                    }
+                },
+                {
+                    action 2,
+                    Action parameters,
+                    Bind resources:  {
+                        Resource configuration
+                    }
+                }
+            ]
         }
-    ]
-}
-```
+
 - Rule: Rule consists of SQL statements and action list. The action list contains one or more actions and their parameters.
 - SQL statements are used to filter or transform data in messages.
 - The action is the task performed after the SQL statement is matched, which defines an operation for data.
@@ -126,12 +143,12 @@ Actions and resource types are provided by emqx or plugin code and cannot be cre
 **FROM, SELECT, and WHERE clauses:**
 
 The basic format of the SQL statement of the rule engine is:
-```sql
-SELECT <fields> FROM <topic> [WHERE <any>]
-```
-- The `FROM` clause mounts rules to a topic
-- The `SELECT` clause is used to select fields in the output
-- The `WHERE` clause is used to filter messages based on conditions
+
+    SELECT <fields> FROM <topic> [WHERE <any>]
+
+- The `` FROM`` clause mounts rules to a topic
+- The `` SELECT`` clause is used to select fields in the output
+- The `` WHERE`` clause is used to filter messages based on conditions
 
 **FOREACH, DO and INCASE clauses:**
 
@@ -139,19 +156,19 @@ If you want to perform some operations and actions for each element of an array 
 
 ```sql
 FOREACH <Field name> [DO <Condition>] [INCASE <Condition>] FROM <Topic> [WHERE <Condition>]
-```
+````
 
-- The `FOREACH` clause is used to select the field that needs to perform foreach operation. Note that the selected field must be an array type
-- The `DO` clause is used to transform each element in the array selected by FOREACH and select the field of interest
-- The `INCASE` clause is used to apply conditional filtering to a field selected by DO
+- The `` FOREACH`` clause is used to select the field that needs to perform foreach operation. Note that the selected field must be an array type
+- The `` DO`` clause is used to transform each element in the array selected by FOREACH and select the field of interest
+- The `` INCASE`` clause is used to apply conditional filtering to a field selected by DO
 
 The DO and INCASE clauses are optional. DO is equivalent to the SELECT clause for objects in the current loop, while INCASE is equivalent to the WHERE statement for objects in the current loop.
 
 ### Events and event topics 
 The SQL statements of the rule engine can handle both messages (message publishing) and events (client online and offline, client subscription, etc.). For messages, the FROM clause is directly followed by the topic name; for events, the FROM clause is followed by the event topic.
 
-The topic of the event message starts with `"$events/"`, such as `"$events/client_connected",` `"$events/session_subscribed"`.
-If you want emqx to publish the event message, you can configure it in the `emqx_rule_engine.conf` file.
+The topic of the event message starts with `"$events/"`, such as `"$events/client_connected",` `"$events/session_subscribed".
+If you want emqx to publish the event message, you can configure it in the ``emqx_rule_engine.conf`` file.
 
 For all supported events and available fields, please see  [rule event](#rule-sql-events).
 
@@ -159,61 +176,51 @@ For all supported events and available fields, please see  [rule event](#rule-sq
 **Basic syntax examples**
 
 -  Extract all fields from the messages with a topic of "t/a": 
-    ```sql
+
     SELECT * FROM "t/a"
-    ```
+
 -  Extract all fields from the messages with a topic of "t/a" or "t/b": 
-    ```sql
+
     SELECT * FROM "t/a","t/b"
-    ```
+
 -  Extract all fields from the message with a topic that can match 't/#'. 
-    ```sql
+
     SELECT * FROM "t/#"
-    ```
+
 -  Extract the qos, username, and clientid fields from the message with a topic that can match 't/#' :
-    ```sql
+
     SELECT qos, username, clientid FROM "t/#"
-    ```
+
 -  Extract the username field from any topic message with the filter criteria of username = 'Steven':
-    ```sql
+
     SELECT username FROM "#" WHERE username='Steven'
-    ```
+
 - Extract the x field from the payload of message with any topic and create the alias x for use in the WHERE clause. The WHERE clause is restricted as x = 1. Note that the payload must be in JSON format. Example: This SQL statement can match the payload `{"x": 1}`, but can not match to the payload `{"x": 2}`:
-    ```sql
-  SELECT payload FROM "#" WHERE payload.x = 1
-  ```
+
+  SELECT payload as p FROM "#" WHERE p.x = 1
+
 - Similar to the SQL statement above, but nested extract the data in the payload, this SQL statement can match the payload{"x": {"y": 1}}`:
-    ```sql
-    SELECT payload FROM "#" WHERE payload.x.y = 1
-    ```
+
+  SELECT payload as a FROM "#" WHERE a.x.y = 1
+
 -  Try to connect when clientid = 'c1', extract its source IP address and port number:
-    ```sql
+
     SELECT peername as ip_port FROM "$events/client_connected" WHERE clientid = 'c1'
-    ```
-- Filter all clientids that subscribe to the 't/#' topic and have a subscription level of QoS1 :
-    ```sql
+
+- Filter all clientids that subscribe to the 't / #' topic and have a subscription level of QoS1 :
+
     SELECT clientid FROM "$events/session_subscribed" WHERE topic = 't/#' and qos = 1
-    ```
+
 - Filter all clientids that subscribe to the 't/#' topic and subscription level is QoS1. Note that the strict equality operator '=~' is used here, so it does not match subscription requests with the topic 't' or 't/+/a' :
-    ```sql
+
     SELECT clientid FROM "$events/session_subscribed" WHERE topic =~ 't/#' and qos = 1
-    ```
-- For an MQTT 5.0 PUBLISH message, select the User Property with Key "foo":
-    ```sql
-    SELECT pub_props.'User-Property'.foo as foo FROM "t/#"
-    ```
 
 ::: tip
-- Topic after the FROM clause need to be enclosed in double quotes `""` or single quotes `''`.
-- The WHERE clause is followed by the filter condition. If a string is used, it needs to be enclosed in single quotes `'' `.
-- If there are multiple topics in the FROM clause, they need to be separated by commas `","`. For example,
-    ```sql
-    SELECT * FROM "t/1", "t/2".
-    ```
-- You can use the `"." `Symbol to nest select payloads
-- If possible, don't create alias for payload, as this would cause performance degradations.
-  i.e. Do not use `SELECT payload as p`
-:::
+- Topic after the FROM clause need to be enclosed in double quotes `` "" ``.
+- The WHERE clause is followed by the filter condition. If a string is used, it needs to be enclosed in single quotes `` '' ``.
+- If there are multiple topics in the FROM clause, they need to be separated by commas `` "," ``. For example, SELECT * FROM "t / 1", "t / 2".
+- You can use the `` "." `` Symbol to nest select payloads
+- :::
 
 #### Examples of FOREACH-DO-INCASE
 
@@ -416,8 +423,8 @@ Then the above SQL output is:
 | $events/session\_subscribed   | Subscribe            |
 | $events/session\_unsubscribed | Unsubcribe           |
 
-### Available fields in SELECT and WHERE clauses
-The fields available in the SELECT and WHERE clauses are related to the type of event. Among them, `clientid`, `username` and ` event` are common fields that is contained by each type of event.
+### Available fields in SELECT and WHERE clauses 
+The fields available in the SELECT and WHERE clauses are related to the type of event. Among them, `` clientid``, `` username`` and `` event`` are common fields that is contained by each type of event.
 
 #### Message Publish
 
@@ -425,19 +432,18 @@ The fields available in the SELECT and WHERE clauses are related to the type of 
 | :------------------ | :-------------------------------------------------------- |
 | id                  | MQTT message ID                                           |
 | clientid            | Client ID                                                 |
-| username            | Username                                                  |
+| username            | username                                                  |
 | payload             | MQTT payload                                              |
-| peerhost            | Client IPAddress                                          |
+| peerhost            | client IPAddress                                          |
 | topic               | MQTT topic                                                |
 | qos                 | Enumeration of message QoS 0,1,2                          |
-| flags               | Flags                                                     |
-| headers             | Internal data related to the message processing           |
-| pub_props           | The PUBLISH Properties (MQTT 5.0 only)                    |
-| timestamp           | Timestamp (ms)                                            |
+| flags               | flags                                                     |
+| headers             | Additional data related to proces within the MQTT message |
+| timestamp           | timestamp (ms)                                            |
 | publish_received_at | Time when PUBLISH message reaches Broker (ms)             |
 | node                | Node name of the trigger event                            |
 
-#### $events/message\_delivered
+#### $events/message\_delivered 
 
 | event               | Event type, fixed at "message.delivered"      |
 | ------------------- | --------------------------------------------- |
@@ -451,12 +457,11 @@ The fields available in the SELECT and WHERE clauses are related to the type of 
 | topic               | MQTT topic                                    |
 | qos                 | Enumeration of message QoS 0,1,2              |
 | flags               | flags                                         |
-| pub_props           | The PUBLISH Properties (MQTT 5.0 only)        |
 | timestamp           | Event trigger time(millisecond)               |
 | publish_received_at | Time when PUBLISH message reaches Broker (ms) |
 | node                | Node name of the trigger event                |
 
-#### $events/message_acked
+#### $events/message_acked 
 | event               | Event type, fixed at "message.acked"          |
 | :------------------ | :-------------------------------------------- |
 | id                  | MQTT message id                               |
@@ -469,8 +474,6 @@ The fields available in the SELECT and WHERE clauses are related to the type of 
 | topic               | MQTT topic                                    |
 | qos                 | Enumeration of message QoS 0,1,2              |
 | flags               | flags                                         |
-| pub_props           | The PUBLISH Properties (MQTT 5.0 only)        |
-| puback_props        | The PUBACK Properties (MQTT 5.0 only)         |
 | timestamp           | Event trigger time(millisecond)               |
 | publish_received_at | Time when PUBLISH message reaches Broker (ms) |
 | node                | Node name of the trigger event                |
@@ -488,7 +491,6 @@ The fields available in the SELECT and WHERE clauses are related to the type of 
 | topic               | MQTT topic                                    |
 | qos                 | Enumeration of message QoS 0,1,2              |
 | flags               | flags                                         |
-| pub_props           | The PUBLISH Properties (MQTT 5.0 only)        |
 | timestamp           | Event trigger time(millisecond)               |
 | publish_received_at | Time when PUBLISH message reaches Broker (ms) |
 | node                | Node name of the trigger event                |
@@ -508,23 +510,21 @@ The fields available in the SELECT and WHERE clauses are related to the type of 
 | expiry\_interval | MQTT Session Expiration time            |
 | is\_bridge       | whether it is MQTT bridge connection    |
 | connected\_at    | Terminal connection completion time (s) |
-| conn_props       | The CONNECT Properties (MQTT 5.0 only)  |
 | timestamp        | Event trigger time(millisecond)         |
 | node             | Node name of the trigger event          |
 
-#### $events/client_disconnected
+#### $events/client_disconnected 
 
-| event            | Event type, fixed at "client.disconnected"                   |
-| ---------------- | :----------------------------------------------------------- |
-| reason           | Reason for disconnection of terminal<br/>normal：the client is actively disconnected <br/>kicked：the server kicks out, and it is kicked out through REST API<br/>keepalive_timeout: keepalive timeout<br/>not_authorized: auth failed，or `acl_nomatch = disconnect`, Pub/Sub without permission will disconnect the client<br/>tcp_closed: the peer has closed the network connection<br/>internal_error: malformed message or other unknown errors<br/> |
-| clientid         | client ID                                                    |
-| username         | Current MQTT username                                        |
-| peername         | IPAddress and Port of terminal                               |
-| sockname         | IPAddress and Port listened by emqx                          |
-| disconnected\_at | Terminal disconnection completion time (s)                   |
-| disconn_props    | The DISCONNECT Properties (MQTT 5.0 only)                    |
-| timestamp        | Event trigger time(millisecond)                              |
-| node             | Node name of the trigger event                               |
+| event            | Event type, fixed at "client.disconnected" |
+| ---------------- | :----------------------------------------- |
+| reason           | Reason for disconnection of terminal       |
+| clientid         | client ID                                  |
+| username         | Current MQTT username                      |
+| peername         | IPAddress and Port of terminal             |
+| sockname         | IPAddress and Port listened by emqx        |
+| disconnected\_at | Terminal disconnection completion time (s) |
+| timestamp        | Event trigger time(millisecond)            |
+| node             | Node name of the trigger event             |
 
 #### $events/session_subscribed
 | event     | Event type, fixed at "session.subscribed" |
@@ -534,11 +534,10 @@ The fields available in the SELECT and WHERE clauses are related to the type of 
 | peerhost  | client IPAddress                          |
 | topic     | MQTT topic                                |
 | qos       | Enumeration of message QoS 0,1,2          |
-| sub_props | The SUBSCRIBE Properties (MQTT 5.0 only)  |
 | timestamp | Event trigger time(millisecond)           |
 | node      | Node name of the trigger event            |
 
-#### $events/session_unsubscribed
+#### $events/session_unsubscribed 
 
 | event     | Event type, fixed at "session.unsubscribed" |
 | :-------- | :------------------------------------------ |
@@ -547,7 +546,6 @@ The fields available in the SELECT and WHERE clauses are related to the type of 
 | peerhost  | client IPAddress                            |
 | topic     | MQTT topic                                  |
 | qos       | Enumeration of message QoS 0,1,2            |
-| unsub_props | The UNSUBSCRIBE Properties (MQTT 5.0 only)  |
 | timestamp | Event trigger time(millisecond)             |
 | node      | Node name of the trigger event              |
 
@@ -585,7 +583,7 @@ SELECT clientid as cid FROM "#" WHERE xyz = 'abc'
 
 The FROM statement is used to select the source of the event. If the message is published, fill in the topic of the message, if it is an event, fill in the corresponding event topic.
 
-#### Operational symbol
+#### Operational symbol 
 | Function | Purpose                                                      | Returned value              |      |
 | -------- | ------------------------------------------------------------ | --------------------------- | ---- |
 | `+`      | addition, or string concatenation                            | Sum, or concatenated string |      |
@@ -1235,33 +1233,88 @@ The FROM statement is used to select the source of the event. If the message is 
 </tbody>
 </table>
 
-#### Bit functions
+#### Schema Registry function
 
-| Function  | Purpose                                                                                                                                                                  | Parameters                                                                                                                                                                                                                                                             | Returned value       | Example                                               |
-|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------|-------------------------------------------------------|
-| `subbits` | Get a given length of bits from the beginning of a binary, and then convert it to an unsigned integer (big-endian).                                                      | 1. The binary 2. The length of bits to get                                                                                                                                                                                                                             | The unsigned integer | `subbits(payload, 10)`                                |
-| `subbits` | Get a given length of bits start from the specified offset of a binary, and then convert it to an unsigned integer (big-endian). Offsets are start from 1.                | 1. The binary 2. The offset 3. The length of bits to get                                                                                                                                                                                                          | The unsigned integer | `subbits(payload, 1, 10)`                             |
-| `subbits` | Get a given length of bits start from the specified offset of a binary, and then convert it to a data type according to the arguments provided. Offsets are start from 1. | 1. The binary 2. The offset 3. The length of bits to get 4. Data Type, can be one of 'integer', 'float', 'bits' 5. Signedness, only works for integers, can be one of 'unsigned', 'signed', 6. Endianness, only works for integers, can be one of 'big', 'little' | The data got from the binary | `subbits(payload, 1, 10, 'integer', 'signed', 'big')` |
-
-#### Decoding and encoding functions
-
-
-
-
-
-
-| Function | Purpose                             |        Parameters         | Returned value |
-| -------- | ------------------------------------|------------------------- | --------------------------- |
-| `base64_encode` | BASE64 encode   | The binary to be encoded | The encoded base64-formatted string |
-| `base64_decode` | BASE64 decode   | The base64-formatted string to be decoded | The decoded binary |
-| `json_encode` | JSON encode   | The data to be encoded | The JSON string |
-| `json_decode` | JSON decode   | The JSON string to be decoded | The decoded data |
-| `schema_encode` | Encode according to schema. This requires the [schema registry](schema-registry.md) | 1. The Schema ID defined by schema registry 2. The data to be encoded 3..N. The remaining arguments according to the schema type | The encoded data |
-| `schema_decode` | Decode according to schema. This requires the [schema registry](schema-registry.md) | 1. The Schema ID defined by schema registry 2. The data to be decoded 3..N. The remaining arguments according to the schema type | The decoded data |
-| `bin2hexstr` | Binary to Hex String | The binary | The hex string |
-| `hexstr2bin` | Binary to Hex String | The hex string | The binary |
-
-
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 14%" />
+<col style="width: 52%" />
+<col style="width: 16%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>function name</td>
+<td>purpose</td>
+<td>parameter</td>
+<td>returned value</td>
+</tr>
+<tr class="even">
+<td>base64_encode</td>
+<td>BASE64 encode</td>
+<td><ol type="1">
+<li>data</li>
+</ol></td>
+<td>BASE64 string</td>
+</tr>
+<tr class="odd">
+<td>base64_decode</td>
+<td>BASE64 decode</td>
+<td><ol type="1">
+<li>BASE64 string</li>
+</ol></td>
+<td>data</td>
+</tr>
+<tr class="even">
+<td>json_encode</td>
+<td>JSON encode</td>
+<td><ol type="1">
+<li>JSON string</li>
+</ol></td>
+<td>internal Map</td>
+</tr>
+<tr class="odd">
+<td>json_decode</td>
+<td>JSON decode</td>
+<td><ol type="1">
+<li>internal Map</li>
+</ol></td>
+<td>JSON strubg</td>
+</tr>
+<tr class="even">
+<td>schema_encode</td>
+<td>Schema encode</td>
+<td><ol type="1">
+<li>Schema ID 2. internal Map</li>
+</ol></td>
+<td>data</td>
+</tr>
+<tr class="odd">
+<td>schema_encode</td>
+<td>Schema encode</td>
+<td><ol type="1">
+<li>Schema ID 2. internal Map 3. Protobuf Message name</li>
+</ol></td>
+<td>data</td>
+</tr>
+<tr class="even">
+<td>schema_decode</td>
+<td>Schema decode</td>
+<td><ol type="1">
+<li>Schema ID 2. data</li>
+</ol></td>
+<td>internal Map</td>
+</tr>
+<tr class="odd">
+<td>schema_decode</td>
+<td>Schema decode</td>
+<td><ol type="1">
+<li>Schema ID 2. data 3. Protobuf Message name</li>
+</ol></td>
+<td>internal Map</td>
+</tr>
+</tbody>
+</table>
 
 ### Test SQL statements in Dashboard
 The SQL statement test function is provided in the Dashboard interface, and the SQL test results are shown through the given SQL statement and event parameters.

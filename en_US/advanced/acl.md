@@ -1,3 +1,20 @@
+---
+# 标题
+title: 发布订阅 ACL
+# 编写日期
+date: 2020-02-19 09:15:26
+# 作者 Github 名称
+author: hjianbo
+# 关键字
+keywords:
+# 描述
+description:
+# 分类
+category: 
+# 引用
+ref: undefined
+---
+
 # Introduction
 
 **Publish/Subscribe ACL** refers to **permission control**  for  **PUBLISH/SUBSCRIBE** operations. For example, the user name with the name `Anna` is prohibited to publish messages to ` open / elsa / door`.
@@ -15,12 +32,9 @@ When a client subscribes to a topic or publishes a message, the plugin implement
 
 
 
-**Configuration file**
+**Configuration file **
 
-
-* [Built-in ACL](../modules/mnesia_authentication.md)
-
-
+* [Built-in ACL](./acl-file.md)
 
 The configuration file is used to provide an authentication data source, which is suitable for ACL management with less changes.
 
@@ -28,14 +42,10 @@ The configuration file is used to provide an authentication data source, which i
 
 **External Database**
 
-
-* [MySQL ACL](../modules/mysql_authentication.md)
-* [PostgreSQL ACL](../modules/pgsql_authentication.md)
-* [Redis ACL](../modules/redis_authentication.md)
-* [MongoDB ACL](../modules/mongo_authentication.md)
-* [LDAP ACL](../modules/ldap_authentication.md)
-
-
+* [MySQL ACL](./acl-mysql.md)
+* [PostgreSQL ACL](./acl-postgres.md)
+* [Redis ACL](./acl-redis.md)
+* [MongoDB ACL](./acl-mongodb.md)
 
 The external database can store a large amount of data and dynamically manage ACLs to facilitate integration with external device management systems.
 
@@ -43,19 +53,19 @@ The external database can store a large amount of data and dynamically manage AC
 
 **Else**
 
-
-* [HTTP ACL](../modules/http_authentication.md)
-
-
+* [HTTP ACL](./acl-http.md)
 
 HTTP ACL enables complex ACL management.
 
 
-::: tip
+
+::: tip 
 
 The ACL function is included in the authentication plugin. After changing the plugin configuration, you need to restart the plugin to take effect.
 
 :::
+
+
 
 
 ## Detailed Rules
@@ -68,15 +78,12 @@ ACL is a collection of allowing and denying conditions. The following elements a
 "Allow/Deny"  "Who"  "Subscribe/Publish" "Topics"
 ```
 
-
-When there are multiple ACL rules at the same time, EMQ X will merge them in order according to the rules. Taking the default ACL in ACL file as an example, it loads the rule from bottom to top:
-
-
+When there are multiple ACL rules at the same time, EMQ X will merge them in order according to the rules. Taking the default ACL in [ACL file](./acl-file.md) as an example, it loads the rule from bottom to top:
 
 1. The first rule allows clients to publish and subscribe to all topics
-2. The second rule prohibits all clients from subscribing to the topics `$SYS/#` and `#`
-3. The third rule allows clients with IP address `127.0.0.1` to publish/subscribe to the topics ` $SYS/# `and `# `, which makes a special case for the second rule
-4. The fourth rule allows clients with the username `dashboard` to subscribe to the topic ` $SYS/# `, which makes a special case for the second rule
+2. The second rule prohibits all clients from subscribing to the topics `$ SYS / #` and `#`
+3. The third rule allows clients with IP address `127.0.0.1` to publish / subscribe to the topics ` $ SYS / # `and ` # `, which makes a special case for the second rule
+4. The fourth rule allows clients with the username `dashboard` to subscribe to the topic ` $ SYS / # `, which makes a special case for the second rule
 
 ```erlang
 {allow, {user, "dashboard"}, subscribe, ["$SYS/#"]}.
@@ -114,10 +121,7 @@ This property can be changed through the ACL configuration in `etc / emqx.conf`:
 acl_nomatch = allow
 ```
 
-
-
-Configure the default, use the file to define the default ACL rule:
-
+Configure the default  [ACL file](./acl-file.md) and use the file to define the default ACL rule:
 
 ```bash
 # etc/emqx.conf
@@ -191,7 +195,7 @@ When multiple ACL plugins are enabled at the same time, EMQ X will perform chain
 
 <!-- replace -->
 
-::: tip
+::: tip 
 
 Enabling only one ACL plugin at the time can improve client ACL checking performance.
 

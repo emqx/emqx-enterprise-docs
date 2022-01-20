@@ -1,8 +1,25 @@
+---
+# 标题
+title: Introduction
+# 编写日期
+date: 2020-02-19 18:40:28
+# 作者 Github 名称
+author: terry-xiaoyu
+# 关键字
+keywords:
+# 描述
+description:
+# 分类
+category: 
+# 引用
+ref: undefined
+---
+
 # Introduction
 
 Authentication is an important part of most applications. MQTT protocol supports username/password authentication. Enabling authentication can effectively prevent illegal client connections.
 
-Authentication in EMQ X Broker means that when a client connects to EMQ X Broker, the server configuration  is used to control the client's permission to connect to the server.
+Authentication in EMQ X Broker means that when a client connects to EMQ X Broker, the server configuration  is used to controls the client's permission to connect to the server.
 
 EMQ X Broker's authentication support includes two levels:
 
@@ -23,10 +40,9 @@ Authentication methods supported by EMQ X:
 
 **Built-in data source**
 
-
-* [Built-in Auth](../modules/mnesia_authentication.md)
-
-
+* [Username authentication](./auth-username.md)
+* [Cliend ID authentication](./auth-clientid.md)
+* [Mnesia authentication](./auth-mnesia.md)
 
 The configuration file and the built-in database of EMQ X are used to provide an authenticated data source, which is managed through the HTTP API and is simple and lightweight.
 
@@ -34,14 +50,11 @@ The configuration file and the built-in database of EMQ X are used to provide an
 
 **External Database**
 
-
-* [MySQL authentication](../modules/mysql_authentication.md)
-* [PostgreSQL authentication](../modules/pgsql_authentication.md)
-* [Redis authentication](../modules/redis_authentication.md)
-* [MongoDB authentication](../modules/mongo_authentication.md)
-* [LDAP authentication](../modules/ldap_authentication.md)
-
-
+* [LDAP authentication](./auth-ldap.md)
+* [MySQL authentication](./auth-mysql.md)
+* [PostgreSQL authentication](./auth-postgresql.md)
+* [Redis authentication](./auth-redis.md)
+* [MongoDB authentication](./auth-mongodb.md)
 
 The external database can store a large amount of data, while facilitating integration with external device management systems.
 
@@ -49,17 +62,14 @@ The external database can store a large amount of data, while facilitating integ
 
 Others
 
-
-* [HTTP authentication](../modules/http_authentication.md)
-* [JWT authentication](../modules/jwt_authentication.md)
-
-
+* [HTTP authentication](./auth-http.md)
+* [JWT authentication](./auth-jwt.md)
 
 JWT authentication can issue authentication information in batches, and HTTP authentication can implement complex authentication logic.
 
 
 
-::: tip
+::: tip 
 
 After changing the plugin configuration, you need to restart the plugin to take effect. Some authentication plugins include [ACL function](./acl.md).
 
@@ -87,7 +97,7 @@ Configure the anonymous authentication:
 allow_anonymous = true
 ```
 
-::: danger
+::: danger 
 
 Disable anonymous authentication in production environments.
 
@@ -138,7 +148,7 @@ MySQL authentication function logic diagram:
 
 ![image-20200217154254202](./assets/image-20200217154254202.png)
 
-::: tip
+::: tip 
 The authentication can be performed normally when the salting rules and hash method of the written data are consistent with the configuration of the corresponding plugin. It will invalidate existing authentication data when changing the hashing method.
 :::
 
@@ -159,7 +169,7 @@ When multiple authentication methods are enabled at the same time, EMQ X will pe
 
 <!-- replace -->
 
-::: tip
+::: tip 
 
 It can improve client authentication efficiency when enabling only one authentication plugin at the same time
 

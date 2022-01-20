@@ -1,3 +1,20 @@
+---
+# 标题
+title: 配置说明
+# 编写日期
+date: 2020-02-25 17:15:26
+# 作者 Github 名称
+author: tigercl
+# 关键字
+keywords:
+# 描述
+description:
+# 分类
+category: 
+# 引用
+ref: undefined
+---
+
 # Configuration
 
 ## Introduction
@@ -17,7 +34,7 @@ It should be noted that for the EMQ X Broker installed by different methods, the
 - Use k = v common format like sysctl
 - All information for a single configuration item is on the same line, and a new line means creating a new configuration item
 - The key can be layered by `.`, support configuration items managed by tree structure
-- Value types can be `integer`, `float`, `percent`, `enum`, `ip`, `string`, `atom`, `flag`, `duration` and `bytesize`
+- Value types can be `integer`, `fload`, `percent`, `enum`, `ip`, `string`, `atom`, `flag`, `duration` and `bytesize`
 - Any line beginning with # is considered as a comment
 
 **Example:**
@@ -38,11 +55,11 @@ The percentage data ending in `%` , that will eventually be converted to `float`
 
 **enum**
 
-Usually we will list all its optional values near the configuration item of type `enum`. Of course, you can also search for  [configuration item](../configuration/configuration.md).
+Usually we will list all its optional values near the configuration item of type `enum`. Of course, you can also search for  [configuration item](../configuration/index.md#).
 
 **ip**
 
-When you see that the data type of a configuration item is `ip`, it means that you can set the configuration item in the form of `{ip}:{port}`, for example, `0.0.0.0:1883`.
+When you see that the data type of a configuration item is `ip`, it means that you can set the configuration item in the form of \<IP>: \<Port>`, for example, `0.0.0.0: 1883`.
 
 **string**
 
@@ -66,7 +83,7 @@ A value of type `atom` will eventually be converted into Erlang ’s `atom`, but
 
 **flag**
 
-`flag` is used for variables that have two possible values. The default available values of `flag` are `on` and `off`, which will be mapped to `true` and `false` for application. If we have established other mapping relationships for a configuration item, we will indicate it in the configuration file, and you can also find this information in [configuration item](../configuration/configuration.md).
+`flag` is used for variables that have two possible values. The default available values of `flag` are `on` and `off`, which will be mapped to `true` and `false` for application. If we have established other mapping relationships for a configuration item, we will indicate it in the configuration file, and you can also find this information in [configuration item](../configuration/index.md#).
 
 **duration**
 
@@ -127,6 +144,6 @@ Of course, in this case, we recommend that you copy the default Listener configu
 
 ### Zone
 
-A Zone defines a set of configuration items (such as the maximum number of connections), and the Listener can specify the Zone through the configuration item `listener.<Protocol>.<Listener Name>.zone` to use all the configurations under the Zone. Multiple Listeners can share the same Zone. The naming rule of Zone is `zone.<Zone Name>.xxx`. `Zone Name` can be named at will, but it is also recommended to be all lowercase. `xxx` is a specific configuration item, you can find it in [configuration item](../configuration/configuration.md) to view all configuration items supported by Zone.
+A Zone defines a set of configuration items (such as the maximum number of connections), and the Listener can specify the Zone through the configuration item `listener.<Protocol>.<Listener Name>.zone` to use all the configurations under the Zone. Multiple Listeners can share the same Zone. The naming rule of Zone is `zone.<Zone Name>.xxx`. `Zone Name` can be named at will, but it is also recommended to be all lowercase. `xxx` is a specific configuration item, you can find it in [configuration item](../configuration/index.md#) to view all configuration items supported by Zone.
 
 At this time, there are three available values for each of our configuration items, which are the global value, the value set in Zone and the default value, and their priority order is: Zone> Global> Default.

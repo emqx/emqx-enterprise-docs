@@ -1,4 +1,6 @@
 ---
+# 标题
+title: MongoDB ACL
 # 编写日期
 date: 2020-02-07 17:15:26
 # 作者 Github 名称
@@ -265,7 +267,7 @@ You can use the following placeholders in ACL queries, and EMQ X Broker will aut
 - %u：username
 - %c：Client ID
 
-::: tip 
+::: danger 
 MongoDB ACL rules need to use the above data structures strictly.
 All rules added in MongoDB ACL are **allow** rules, which can be used with `acl_nomatch=deny` in` etc/emqx.conf`.
 :::

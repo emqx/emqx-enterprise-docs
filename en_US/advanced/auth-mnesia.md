@@ -1,4 +1,6 @@
 ---
+# 标题
+title: Mnesia 认证
 # 编写日期
 date: 2020-02-07 17:15:26
 # 作者 Github 名称
@@ -9,12 +11,12 @@ keywords:
 
 description:
 # 分类
-category:
+category: 
 # 引用
 ref: undefined
 ---
 
-# Mnesia  Authentication
+# Mnesia  Authentication 
 
 Mnesia authentication uses the built-in Mnesia database of EMQ X to store client Client ID/Username and password, and supports management of authentication data through HTTP API.
 
@@ -28,6 +30,15 @@ emqx_auth_mnesia
 
 ## Authentication rules
 
+Mnesia authentication uses the username and password based on CONNECT packet for authentication by default, and can be changed to use the Client ID and password of CONNECT packet for authentication in  `etc/plugins/emqx_auth_mnesia.conf` :
+
+```bash
+## Auth as username or auth as clientid.
+##
+## Value: username | clientid
+auth.mnesia.as = username
+```
+
 ## Hash method
 
 Mnesia authentication uses sha256 for password hash encryption by default, which can be changed in `etc/plugins/emqx_auth_mnesia.conf`:
@@ -35,11 +46,11 @@ Mnesia authentication uses sha256 for password hash encryption by default, which
 ```bash
 # etc/plugins/emqx_auth_mnesia.conf
 
-## Value: plain | md5 | sha | sha256
+## Value: plain | md5 | sha | sha256 
 auth.mnesia.password_hash = sha256
 ```
 
-After configuring [Hash Method](./auth.md#Password salting rules and hash methods), the newly added preset authentication data and authentication data added through the HTTP API will be stored in the EMQ X built-in database in the format of hash ciphertext.
+After configuring [Hash Method](./auth.md#加盐规则与哈希方法), the newly added preset authentication data and authentication data added through the HTTP API will be stored in the EMQ X built-in database in the format of hash ciphertext.
 
 
 
@@ -51,19 +62,23 @@ You can preset authentication data through the configuration file and edit the c
 # etc/plugins/emqx_auth_mnesia.conf
 
 ## The first group of authentication data
-auth.client.1.clientid = admin
-auth.client.1.password = public
+auth.mnesia.1.login = admin
+auth.mnesia.1.password = public
+auth.mnesia.1.is_superuser = true
 
 ## The second group of authentication data
-auth.user.2.username = admin
-auth.user.2.password = public
+auth.mnesia.2.login = client
+auth.mnesia.2.password = public
+auth.mnesia.2.is_superuser = false
 ```
+
+In the authentication data, `login` will read the client's Username or Client ID based on the value of `auth.mnesia.as`.
 
 When the plugin starts, it will read the preset authentication data and load it into the EMQ X built-in database, and the authentication data on the node will be synchronized to the cluster at this stage.
 
 <!-- TODO 补充加载规则 -->
 
-::: tip
+::: danger 
 
 The preset authentication data uses a clear text password in the configuration file. For security and maintainability, this function should be avoided.
 
@@ -72,229 +87,137 @@ The preset authentication data cannot be modified or deleted through the API, pl
 
 ## Use the HTTP API to manage authentication data
 
-### Add authentication data
+#### Add authentication data
 
-+ Clientid
+API definition:
 
-  ```bash
-  # Request
-  POST api/v4/auth_clientid
-  {
-      "clientid": "emqx_c",
-      "password": "emqx_p"
-  }
-  # Response
-  {
-      "code": 0
-  }
-  ```
+```bash
+# Request
+POST api/v4/auth_user
+{
+    "login": "emqx_c",
+    "password": "emqx_p",
+    "is_superuser": false
+}
 
-+ Username
-
-  ```bash
-  # Request
-  POST api/v4/auth_username
-  {
-      "username": "emqx_u",
-      "password": "emqx_p"
-  }
-
-  # Response
-  {
-      "code": 0
-  }
-  ```
-
-### Add authentication data in batch
-
-+ Clientid
-
-  ```bash
-  # Request
-  POST api/v4/auth_clientid
-  [
-      {
-          "clientid": "emqx_c_1",
-          "password": "emqx_p"
-      },
-      {
-          "clientid": "emqx_c_2",
-          "password": "emqx_p"
-      }
-  ]
-
-  # Response
-  {
-      "data": {
-          "emqx_c_2": "ok",
-          "emqx_c_1": "ok"
-      },
-      "code": 0
-  }
-  ```
-
-+ Username
-
-  ```bash
-  # Request
-  POST api/v4/auth_username
-  [
-      {
-          "username": "emqx_u_1",
-          "password": "emqx_p"
-      },
-      {
-          "username": "emqx_u_2",
-          "password": "emqx_p"
-      }
-  ]
-
-  # Response
-  {
-      "data": {
-          "emqx_c_2": "ok",
-          "emqx_c_1": "ok"
-      },
-      "code": 0
-  }
-  ```
-
-### Check the added authentication data
-
-+ Clientid
-
-  ```bash
-  # Request
-  GET api/v4/auth_clientid
-
-  # Response
-  {
-    "meta": {
-      "page": 1,
-      "limit": 10,
-      "count": 1
+# Response
+{
+    "data": {
+        "emqx_c": "ok"
     },
-    "data": [
-                "clinetid": "emqx_c",
-                "clinetid": "emqx_c_1",
-                "clinetid": "emqx_c_2"
-            ],
     "code": 0
-  }
-  ```
+}
+```
 
-+ Username
+Use POST request to add login as `emqx_c`, password as `emqx_p`, which is an non-super user authentication information, and  “code = 0` in the returned message means success.
 
-  ```bash
-  # Request
-  GET api/v4/auth_username
+#### Add authentication data in batch
 
-  # Response
-  {
-    "meta": {
-      "page": 1,
-      "limit": 10,
-      "count": 1
+API definition:
+
+```bash
+# Request
+POST api/v4/auth_user
+[
+    {
+    "login": "emqx_c_1",
+    "password": "emqx_p",
+    "is_superuser": false
     },
-    "data": [
-                "username": "emqx_u",
-                "username": "emqx_u_1",
-                "username": "emqx_u_2"
-            ],
+    {
+        "login": "emqx_c_2",
+        "password": "emqx_p",
+        "is_superuser": false
+    }
+]
+
+# Response
+{
+    "data": {
+        "emqx_c_2": "ok",
+        "emqx_c_1": "ok"
+    },
     "code": 0
-  }
-  ```
+}
+```
 
-### Change the added authentication data
+#### Check the added authentication data
 
-+ Clientid
+API definition:
 
-  ```bash
-  # Request
-  PUT api/v4/auth_clientid/${clientid}
-  {
-      "password": "emqx_new_p"
-  }
+```bash
+# Request
+GET api/v4/auth_user
 
-  # Response
-  {
-      "code": 0
-  }
-  ```
+# Response
+{
+  "meta": {
+    "page": 1,
+    "limit": 10,
+    "count": 1
+  },
+  "data": [
+    {
+      "password": "ceb5e917f7930ae8f0dc3ceb496a428f7e644736eebca36a2b8f6bbac756171a",
+      "login": "emqx_c",
+      "is_superuser": false
+    }
+  ],
+  "code": 0
+}
+```
 
-+ Username
+#### Change the added authentication data
 
-  ```bash
-  # Request
-  PUT api/v4/auth_username/${username}
-  {
-      "password": "emqx_new_p"
-  }
+API definition:
 
-  # Response
-  {
-      "code": 0
-  }
-  ```
+```bash
+# Request
+PUT api/v4/auth_user/${login}
+{
+    "password": "emqx_new_p",
+    "is_superuser": false
+}
 
-### Check the specified authentication data
+# Response
+{
+    "code": 0
+}
+```
+
+#### Check the specified authentication data
 
 Note that the password returned here is the password encrypted using the hash method specified in the configuration file:
 
-+ Clientid
+API definition:
 
-  ```bash
-  # Request
-  GET api/v4/auth_clientid/${clientid}
+```bash
+# Request
+GET api/v4/auth_user/${login}
 
-  # Response
-  {
-      "code": 0,
-      "data": {
-          "clientid": "emqx_c",
-          "password": "091dc8753347e7dc5d348508fe6323735eecdb84fa800548870158117af8a0c0"
-      }
-  }
-  ```
+# Response
+{
+    "data": {
+        "password": "3b20ff0218af39d01252844ccaac8ce0160f969ad00c601e23f6e57cd26fad4e",
+        "login": "emqx_c",
+        "is_superuser": false
+    },
+    "code": 0
+}
+```
 
-+ Username
+#### Delete the authentication data
 
-  ```bash
-  # Request
-  GET api/v4/auth_username/${username}
+Delete the specified authentication data:
 
-  # Response
-  {
-      "code": 0,
-      "data": {
-          "username": "emqx_u",
-          "password": "091dc8753347e7dc5d348508fe6323735eecdb84fa800548870158117af8a0c0"
-      }
-  }
-  ```
+API definition:
 
-### Delete the authentication data
+```bash
+# Request
+DELETE api/v4/auth_user/${login}
 
-+ Clinetid
-
-  ```bash
-  # Request
-  DELETE api/v4/auth_clientid/${clientid}
-
-  # Response
-  {
-      "code": 0
-  }
-  ```
-
-+ Username
-
-  ```bash
-  # Request
-  DELETE api/v4/auth_username/${username}
-
-  # Response
-  {
-      "code": 0
-  }
-  ```
+# Response
+{
+    "code": 0
+}
+```

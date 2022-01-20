@@ -1,9 +1,9 @@
-# 创建规则
-## 使用 Dashboard 创建规则
-### 创建 WebHook 规则
+# 创建规则 
+## 使用 Dashboard 创建规则 
+### 创建 WebHook 规则 
 0. 搭建 Web 服务，这里使用 `nc` 命令做一个简单的Web 服务:
 
-::: tip 
+::: danger 
 nc 命令在部分 Linux 操作系统上有问题，无法与 EMQ X 发起的 HTTP 请求连接握手成功，第 7 步可能无法正常进行。
 :::
 
@@ -13,7 +13,7 @@ nc 命令在部分 Linux 操作系统上有问题，无法与 EMQ X 发起的 HT
 
 1. 创建规则:
 
-   打开 [EMQ X Dashboard](http://127.0.0.1:18083/#/rules)，选择左侧的 “规则” 选项卡。
+   打开 [emqx dashboard](http://127.0.0.1:18083/#/rules)，选择左侧的 “规则” 选项卡。
 
    填写用以处理 t/# 主题的规则 SQL:
 
@@ -78,8 +78,8 @@ nc 命令在部分 Linux 操作系统上有问题，无法与 EMQ X 发起的 HT
 
   ![image](../assets/webhook-result-1.png)
 
-## 通过 CLI 创建简单规则
-### 创建 Inspect 规则 
+## 通过 CLI 创建简单规则 
+### 创建 Inspect 规则  
 创建一个测试规则，当有消息发送到 't/a' 主题时，打印消息内容以及动作参数细节。
 
 - 规则的筛选 SQL 语句为: SELECT * FROM "t/a";
@@ -88,7 +88,7 @@ nc 命令在部分 Linux 操作系统上有问题，无法与 EMQ X 发起的 HT
 
 ```bash
 $ ./bin/emqx_ctl rules create \
-  "SELECT * FROM \"t/a\"" \
+  "SELECT * FROM \"t/a\" \
   '[{"name":"inspect", "params": {"a": 1}}]' \
   -d 'Rule for debug'
 
@@ -138,7 +138,7 @@ $ tail -f log/erlang.log.1
 - `Envs` 是动作内部可以使用的环境变量。
 - `Action Init Params` 是初始化动作的时候，我们传递给动作的参数。
 
-### 创建 WebHook 规则 
+### 创建 WebHook 规则  
 创建一个规则，将所有发送自 client\_id='Steven' 的消息，转发到地址为 '<http://127.0.0.1:9910>' 的
 Web 服务器:
 

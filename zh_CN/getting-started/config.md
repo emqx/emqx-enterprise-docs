@@ -1,4 +1,6 @@
 ---
+# 标题
+title: 配置说明
 # 编写日期
 date: 2020-02-25 17:15:26
 # 作者 Github 名称
@@ -10,7 +12,7 @@ description:
 # 分类
 category: 
 # 引用
-ref:
+ref: undefined
 ---
 
 # 配置说明
@@ -19,21 +21,11 @@ ref:
 
 EMQ X 的配置文件通常以 `.conf` 作为后缀名，你可以在 `etc` 目录找到这些配置文件，主要配置文件包括：
 
-
 | 配置文件           | 说明                      |
 | ------------------ | ------------------------- |
-| etc/emqx.conf      | EMQ X 基础配置文件  |
-| etc/cluster.conf      | EMQ X 集群相关配置文件  |
-| etc/rpc.conf      | EMQ X 远程调用配置文件  |
-| etc/logger.conf      | EMQ X 日志配置文件  |
-| etc/zones.conf      | EMQ X Zone配置文件  |
-| etc/listeners.conf      | EMQ X 监听端口配置文件  |
-| etc/sys_mon.conf      | EMQ X 告警监控配置文件  |
+| etc/emqx.conf      | EMQ X 配置文件  |
 | etc/acl.conf       | EMQ X 默认 ACL 规则配置文件 |
 | etc/plugins/*.conf | EMQ X 扩展插件配置文件      |
-
-
-
 
 需要注意的是，安装方式不同 `etc` 目录所处的路径可能不同，具体请参见 [目录结构](./directory.md#)。
 
@@ -42,7 +34,7 @@ EMQ X 的配置文件通常以 `.conf` 作为后缀名，你可以在 `etc` 目�
 - 采用类似 sysctl 的 k = v 通用格式
 - 单个配置项的所有信息都在同一行内，换行意味着创建一个新的配置项
 - 键可以通过 `.` 进行分层，支持按树形结构管理配置项
-- 值的类型可以是 `integer`, `float`, `percent`, `enum`, `ip`, `string`, `atom`, `flag`, `duration` and `bytesize`
+- 值的类型可以是 `integer`, `fload`, `percent`, `enum`, `ip`, `string`, `atom`, `flag`, `duration` and `bytesize`
 - 任何以＃开头的行均被视为注释
 
 **示例：**
@@ -71,7 +63,7 @@ mqtt.max_packet_size = 1MB
 
 **ip**
 
-当你看到某个配置项的数据类型为 `ip` 时，意味着你可以使用 `{ip}:{port}` 的形式来设置该配置项，例如 `0.0.0.0:1883`。
+当你看到某个配置项的数据类型为 `ip` 时，意味着你可以使用 `<IP>:<Port>` 的形式来设置该配置项，例如 `0.0.0.0:1883`。
 
 **string**
 

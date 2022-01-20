@@ -1,4 +1,6 @@
 ---
+# 标题
+title: Prometheus 监控告警
 # 编写日期
 date: 2020-02-25 09:15:26
 # 作者 Github 名称
@@ -10,7 +12,7 @@ description:
 # 分类
 category: 
 # 引用
-ref:
+ref: undefined
 ---
 
 
@@ -35,7 +37,7 @@ EMQ X 提供 [emqx_prometheus](https://github.com/emqx/emqx-prometheus) 插件�
 
 `emqx_prometheus` 插件内部会启动一个定时器，使其每间隔一段时间便采集 EMQ X 中的监控数据。
 
-`emqx_prometheus` 推送的监控数据包含的具体字段和含义，参见：[Metrics & Stats](../advanced/metrics-and-stats.md)
+`emqx_prometheus` 推送的监控数据包含的具体字段和含义，参见：[Metrics & Stats](metrics.md)
 
 配置文件位于 `etc/plugins/emqx_prometheus.conf`，其中：
 
@@ -49,4 +51,3 @@ EMQ X 提供 [emqx_prometheus](https://github.com/emqx/emqx-prometheus) 插件�
 `emqx_prometheus` 插件提供了 Grafana 的 Dashboard 的模板文件。这些模板包含了所有 EMQ X 监控数据的展示。用户可直接导入到 Grafana 中，进行显示 EMQ X 的监控状态的图标。
 
 模板文件位于：[emqx_prometheus/grafana_template](https://github.com/emqx/emqx-prometheus/tree/master/grafana_template)。
-
