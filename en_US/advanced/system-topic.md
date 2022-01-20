@@ -1,8 +1,25 @@
+---
+# 标题
+title: $SYS 系统主题
+# 编写日期
+date: 2020-02-07 17:15:26
+# 作者 Github 名称
+author: wivwiv
+# 关键字
+keywords:
+# 描述
+description:
+# 分类
+category: 
+# 引用
+ref: undefined
+---
+
 # $SYS - System Topic
 
-The EMQ X Broker periodically publishes its running status, message statistics, client online and offline events to the system topic starting with `$SYS/`.
+The EMQ X Broker periodically publishes its running status, message statistics, client online and offline events to the system topic starting with `$SYS/`. 
 
- The `$SYS` topic path begins with `$SYS/brokers/{node}/`. `{node}` is the name of the node where the event/message is generated, for example:
+ The `$SYS` topic path begins with `$SYS/brokers/{node}/`. `{node}` is the name of the node where the event/message is generated, for example: 
 
 ```bash
 $SYS/brokers/emqx@127.0.0.1/version
@@ -10,21 +27,20 @@ $SYS/brokers/emqx@127.0.0.1/uptime
 ```
 
 
- $SYS system message publish interval is configured in `etc/emqx.conf`:
+ $SYS system message publish interval is configured in `etc/emqx.conf`: 
 
 ```bash
 broker.sys_interval = 1m
 ```
 
+::: danger
+By default, only MQTT clients on localhost is allowed to subscribe to the $ SYS topic. Please refer to [build-in ACL](./acl-file.md) to modify the ACL rules for publish and subscription.
 
-By default, only MQTT clients on localhost is allowed to subscribe to the $SYS topic. Please refer to build-in ACL to modify the ACL rules for publish and subscription.
-
-
-Most of the data of the $SYS topic in EMQ X Broker can be obtained through other method with lower Couplings. The device online and offline status can be obtained through [Webhook](./webhook.md)), and the node and cluster status can be obtained through  [HTTP API - Statistics Metrics](./http-api.md#endpoint-metrics).
+Most of the data of the $ SYS topic in EMQ X Broker can be obtained through other method with lower Couplings. The device online and offline status can be obtained through [Webhook](./webhook.md)), and the node and cluster status can be obtained through  [HTTP API - Statistics Metrics](./http-api.md#endpoint-metrics).
 
 :::
 
-## Cluster status information
+### Cluster status information
 
 | Topic                      | Description       |
 | ----------------------------- | -------------------- |
@@ -34,7 +50,7 @@ Most of the data of the $SYS topic in EMQ X Broker can be obtained through other
 | $SYS/brokers/\${node}/datetime | EMQ X Broker time |
 | $SYS/brokers/\${node}/sysdescr | EMQ X Broker description |
 
-## Client Online and Offline Events
+### Client Online and Offline Events
 
 `$SYS` topic prefix: `$SYS/brokers/${node}/clients/`
 
@@ -43,38 +59,34 @@ Most of the data of the $SYS topic in EMQ X Broker can be obtained through other
 | ${clientid}/connected    | Online event. This message is published when a client goes online |
 | ${clientid}/disconnected | Offline event. This message is published when a client is offline |
 
- The Payload of the ‘connected’ event message can be parsed into JSON format:
+ The Payload of the ‘connected’ event message can be parsed into JSON format: 
 
 ```bash
 {
-    "username": "foo",
-    "ts": 1625572213873,
-    "sockport": 1883,
-    "proto_ver": 4,
-    "proto_name": "MQTT",
-    "keepalive": 60,
-    "ipaddress": "127.0.0.1",
-    "expiry_interval": 0,
-    "connected_at": 1625572213873,
-    "connack": 0,
-    "clientid": "emqtt-8348fe27a87976ad4db3",
-    "clean_start": true
+    "username":"undefined",
+    "ts":1582687922392,
+    "sockport":1883,
+    "proto_ver":5,
+    "proto_name":"MQTT",
+    "keepalive":300,
+    "ipaddress":"127.0.0.1",
+    "expiry_interval":0,
+    "connected_at":1582687922,
+    "connack":0,
+    "clientid":"emqtt-8348fe27a87976ad4db3",
+    "clean_start":true
 }
 ```
 
- The Payload of the ‘disconnected’ event message can be parsed into JSON format:
+ The Payload of the ‘disconnected’ event message can be parsed into JSON format: 
 
 ```bash
 {
-    "username": "foo",
-    "ts": 1625572213873,
-    "sockport": 1883,
-    "reason": "tcp_closed",
-    "proto_ver": 4,
-    "proto_name": "MQTT",
-    "ipaddress": "127.0.0.1",
-    "disconnected_at": 1625572213873,
-    "clientid": "emqtt-8348fe27a87976ad4db3"
+    "username":"undefined",
+    "ts":1582688032203,
+    "reason":"tcp_closed",
+    "disconnected_at":1582688032,
+    "clientid":"emqtt-8348fe27a87976ad4db3"
 }
 ```
 
@@ -82,14 +94,14 @@ Most of the data of the $SYS topic in EMQ X Broker can be obtained through other
 
 System topic prefix : `$SYS/brokers/${node}/stats/`
 
-### Client statistics
+#### Client statistics
 
 | Topic       | Description |
 | ----------------- | -------------- |
 | connections/count | Total number of current clients |
 | connections/max   | Maximum number of clients |
 
-### Subscription statistics
+#### Subscription statistics
 
 | Topic                | Description  |
 | -------------------------- | ---------------- |
@@ -102,14 +114,14 @@ System topic prefix : `$SYS/brokers/${node}/stats/`
 | subscriptions/shared/count | total number of current shared subscriptions |
 | subscriptions/shared/max   | maximum number of shared subscriptions |
 
-### Topic statistics
+#### Topic statistics
 
 | Topic  | Description |
 | ------------ | --------------- |
 | topics/count | total number of current topics |
 | topics/max   | maximum number of topics |
 
-### Routes statistics
+#### Routes statistics
 
 | Topic  | Description  |
 | ------------ | ---------------- |
@@ -118,24 +130,18 @@ System topic prefix : `$SYS/brokers/${node}/stats/`
 
  The topics/count and topics/max are numerically equal to routes/count and routes/max.
 
-### Slow subscriber statistics
-
-|  Topic  | Description  |
-| ------------ | ---------------- |
-| slow_subs | Statistics of current slow subscribers |
-
 ### Throughput (bytes/packets/message) statistics
 
  System Topic Prefix : `$SYS/brokers/${node}/metrics/`
 
-### sent and received bytes statistics
+#### sent and received bytes statistics
 
 | Topic          | Description                |
 | -------------- | ------------ |
 | bytes/received | Accumulated received bytes |
 | bytes/sent     | Accumulated sent bytes |
 
-### sent and received MQTT packets statistics
+#### sent and received MQTT packets statistics
 
 | Topic                        | Description                                      |
 | ---------------------------- | ------------------------------------------------ |
@@ -176,7 +182,7 @@ System topic prefix : `$SYS/brokers/${node}/stats/`
 | packets/auth/received        | Accumulative received packets of AUTH            |
 | packets/auth/sent            | Accumulative sent packets of AUTH                |
 
-### MQTT sent and received messages statistics
+#### MQTT sent and received messages statistics
 
 | Topic                           | Description                                      |
 | ------------------------------- | ------------------------------------------------ |

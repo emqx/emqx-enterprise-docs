@@ -1,4 +1,6 @@
 ---
+# 标题
+title: EMQ X 消息服务器功能列表
 # 编写日期
 date: 2020-02-07 17:15:26
 # 作者 Github 名称
@@ -10,7 +12,7 @@ description:
 # 分类
 category: 
 # 引用
-ref:
+ref: undefined
 ---
 
 # EMQ X 消息服务器功能列表
@@ -27,7 +29,8 @@ ref:
 - 客户端在线状态查询与订阅支持
 - 客户端 ID 或 IP 地址认证支持
 - 用户名密码认证支持
-- LDAP、Redis、MySQL、PostgreSQL、MongoDB、HTTP 认证集成
+- LDAP 认证
+- Redis、MySQL、PostgreSQL、MongoDB、HTTP 认证集成
 - 浏览器 Cookie 认证
 - 基于客户端 ID、IP 地址、用户名的访问控制 (ACL)
 - 多服务器节点集群 (Cluster)
@@ -41,7 +44,6 @@ ref:
 - Stomp 协议支持
 - MQTT-SN 协议支持
 - CoAP 协议支持
-- LwM2M 协议支持
 - Stomp/SockJS 支持
 - 延时 Publish ($delay/topic)
 - Flapping 检测
@@ -55,7 +57,7 @@ ref:
   - 检查 (调试)
   - 发送数据到 Web 服务
 
-<strong>
+<strong class="emqxce">
 以下是 EMQ X Enterprise 特有功能
 </strong>
 
@@ -90,24 +92,10 @@ ref:
   - 保存数据到 InfluxDB
   - 保存数据到 Timescale
   - 保存数据到 Cassandra
-  - 保存数据到 ClickHouse
-  - 保存数据到 TDengine
-  - 离线消息保存到 Redis
-  - 离线消息保存到 MySQL
-  - 离线消息保存到 PostgreSQL
-  - 离线消息保存到 Cassandra
-  - 离线消息保存到 MongoDB
-  - 从 Redis 中获取订阅关系
-  - 从 MySQL 中获取订阅关系
-  - 从 PostgreSQL 中获取订阅关系
-  - 从 Cassandra 中获取订阅关系
-  - 从 MongoDB 中获取订阅关系
 - Schema Registry：将 EMQ X 的事件、消息 提供了数据编解码能力
 
 
-
 ## 功能说明
-
 
 
 ### 消息数据存储

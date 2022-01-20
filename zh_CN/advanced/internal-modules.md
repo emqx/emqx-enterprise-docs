@@ -1,5 +1,7 @@
 ---
 
+# 标题
+title: 内置模块
 # 编写日期
 date: 2020-05-09 17:15:26
 # 作者 Github 名称
@@ -11,7 +13,7 @@ description:
 # 分类
 category: 
 # 引用
-ref:
+ref: undefined
 ---
 
 # 内置模块
@@ -23,7 +25,7 @@ EMQ X Broker 将主题重写、代理订阅等功能通过内置模块的形式�
 | `emqx_mod_delayed`       | [延迟发布](./delay-publish.md)         |
 | `emqx_mod_topic_metrics` | [主题指标统计](./metrics-and-stats.md) |
 | `emqx_mod_subscription`  | [代理订阅](./proxy-subscriptions.md)    |
-| `emqx_mod_acl_internal`  | [内置 ACL](./acl-file.md)                |
+| `emqx_mod_acl_internal`  | [内置 ACL](acl-file.md)                |
 | `emqx_mod_rewrite`       | [主题重写](./topic-rewrite.md)         |
 | `emqx_mod_presence`      | 上下线通知                             |
 
@@ -42,7 +44,7 @@ $ curl -i --basic -u admin:public -X PUT "http://localhost:8081/api/v4/nodes/emq
 
 当然，用户也可以在 Dashboard 上完成这些操作，包括查看模块状态，这也更加常用。
 
-EMQ X Broker 在默认情况下会启动 `emqx_mod_acl_internal` 和 `emqx_mod_presence` 这两个模块，即内置 ACL 与上下线通知功能默认开启。用户可以修改 EMQ X `data` 目录下的 `loaded_modules` 文件来更改默认启动的模块。
+EMQ X Broker 在默认情况下会启动 `emqx_mod_acl_internal` 和 `emqx_mod_presence` 这两个模块，即内置 ACL 与上下线通知功能默认开启。用户可以修改 `.../data` 目录下的 `loaded_modules` 文件来更改默认启动的模块。
 
 ***默认不启动***
 

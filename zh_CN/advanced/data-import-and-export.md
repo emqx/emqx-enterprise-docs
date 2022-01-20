@@ -1,4 +1,6 @@
 ---
+# 标题
+title: 数据导入导出
 # 编写日期
 date: 2020-05-09 17:15:26
 # 作者 Github 名称
@@ -8,9 +10,9 @@ keywords:
 # 描述
 description:
 # 分类
-category:
+category: 
 # 引用
-ref:
+ref: undefined
 ---
 
 # 数据导入导出
@@ -25,72 +27,51 @@ EMQ X Broker 为数据导入导出功能提供了[命令行接口](./cli.md#endp
 - Application 数据
 - Dashboard 用户数据
 - 通过 emqx-auth-mnesia 插件添加的 MQTT 用户数据和 ACL 数据
-- 通过 emqx-auth-clientid 插件添加的 MQTT 用户数据和 ACL 数据
-- 通过 emqx-auth-username 插件添加的 MQTT 用户数据和 ACL 数据
-- 编解码 Schema
 
-## 示例
+### 示例
 
-### 命令行接口
+#### 命令行接口
 
 1. 导出数据，导出文件的文件名格式为 `emqx-export-YYYY-MM-DD-HH-mm-SS.json`，默认导出路径为 data 目录（请参见 [目录结构](../getting-started/directory.md)）
 
-    ```bash
+    ```
     $ ./emqx_ctl data export
     The emqx data has been successfully exported to /var/lib/emqx/data/emqx-export-2020-5-15-17-39-0.json.
     ```
-
 2. 保存导出文件，这里将导出文件保存到 tmp 目录
 
-   ```bash
+   ```
    $ cp /var/lib/emqx/data/emqx-export-2020-5-15-17-39-0.json /tmp
    ```
 
 3. 重新安装 EMQ X Broker 并启动
 
-   ```bash
+   ```
    $ ./emqx start
    EMQ X Broker v4.1-rc.1 is started successfully!
    ```
 
 4. 导入数据，导入的文件名必须以绝对路径形式指定
 
-   ```bash
-   $ ./emqx_ctl data import /tmp/emqx-export-2020-5-15-17-39-0.json
-   The emqx data has been imported successfully.
-   ```
-
-5. 数据重载。有时由于一些版本间的兼容性问题和自定义数据处理的需求，我们允许重载被导入的数据内容。通过指定 `--env` 参数来指定一个 JSON 格式重载数据或兼容性指令：
-
     ```
-    $ ./emqx_ctl data import /tmp/emqx-export-2020-5-15-17-39-0.json --env '{"auth.mnesia.as":"username"}'
+    $ ./emqx_ctl data import /tmp/emqx-export-2020-5-15-17-39-0.json
     The emqx data has been imported successfully.
     ```
 
-### HTTP API
+#### HTTP API
 
 1. 导出数据
 
-   ```bash
+   ```
    $ curl -i --basic -u admin:public -X POST "http://localhost:8081/api/v4/data/export"
 
-   {"data":{"size":388,"filename":"emqx-export-2020-9-4-10-24-16.json","created_at":"2020-9-4 10:24:16"},"code":0}
+   {"data":{"size":350,"filename":"emqx-export-2020-5-15-18-6-29.json","created_at":"2020-5-15 18:6:29"},"code":0}
    ```
 
-   > 导出的数据文件位于 `.../emqx/data` 或 `/var/lib/emqx/data` 目录
+2. 导入数据
 
-2. 下载数据文件
+    ```
+    $ curl -i --basic -u admin:public -X POST "http://localhost:8081/api/v4/data/import" -d '{"filename":"emqx-export-2020-5-15-17-39-0.json"}'
 
-   ```bash
-   $ curl --basic -u admin:public -X GET http://localhost:8081/api/v4/data/file/emqx-export-2020-9-4-10-24-16.json -o /tmp/emqx-export-2020-9-4-10-24-16.json
-   ```
-
-3. 导入数据
-
-   ```bash
-   $ curl -i --basic -u admin:public -X POST "http://localhost:8081/api/v4/data/import" -d @/tmp/emqx-export-2020-9-4-10-24-16.json
-
-   {"code":0}
-   ```
-
-   > 第 2、3 步适用于在不同机器上迁移 emqx
+    {"code",0}
+    ```

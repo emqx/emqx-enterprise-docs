@@ -1,10 +1,27 @@
+---
+# 标题
+title: 日志与追踪
+# 编写日期
+date: 2020-02-18 13:52:34
+# 作者 Github 名称
+author: terry-xiaoyu
+# 关键字
+keywords:
+# 描述
+description:
+# 分类
+category: 
+# 引用
+ref: undefined
+---
+
 # Log & Trace 
 ## Control log output 
 EMQ X Broker supports log output to the console or log file, or both, which can be configured in `emqx.conf`:
-```
-log.to = file
-```
-The default value of `log.to` is file, and the optional values are:
+
+    log.to = both
+
+The default value of `log.to` is both, and the optional values are:
 
 - **off:** Disable log function completely
 
@@ -91,7 +108,7 @@ The format of the log message (the fields are separated by spaces):
 - **module_info:** optional field, only exists if this log message is related to a module. Its format is:[Module Info]
 - **msg:** log message content. The format is arbitrary and can contain spaces.
 
-### Log message example 1：
+#### Log message example 1：
 
 ```bash
 2020-02-18 16:10:03.872 [debug] <<"mqttjs_9e49354bb3">>@127.0.0.1:57105 [MQTT/WS] SEND CONNACK(Q0, R0, D0, AckFlags=0, ReasonCode=0)
@@ -106,7 +123,7 @@ The fields in this log message are:
 - **module_info:** `[MQTT/WS]`
 - **msg:** `SEND CONNACK(Q0, R0, D0, AckFlags=0, ReasonCode=0)`
 
-### Log message example 2：
+#### Log message example 2：
 
 ```bash
 2020-02-18 16:10:08.474 [warning] [Alarm Handler] New Alarm: system_memory_high_watermark, Alarm Info: []
@@ -166,7 +183,7 @@ Primary Log Level is equivalent to the main switch of a tap water pipe system. O
 ## Modify log level at runtime 
 You can use EMQ X Broker's command line tool `emqx_ctl` to modify the emqx log level at runtime:
 
-### Modify the global log level:
+#### Modify the global log level:
 
 For example, set the level of primary log level and all log handlers to debug:
 
@@ -174,7 +191,7 @@ For example, set the level of primary log level and all log handlers to debug:
 $ emqx_ctl log set-level debug
 ```
 
-### Modify the primary log level:
+#### Modify the primary log level:
 
 For example, set the primary log level to debug:
 
@@ -182,7 +199,7 @@ For example, set the primary log level to debug:
 $ emqx_ctl log primary-level debug
 ```
 
-### Modify the log level of a log handler:
+#### Modify the log level of a log handler:
 
 For example, set log handler `file` to debug:
 

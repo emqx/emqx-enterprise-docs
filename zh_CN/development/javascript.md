@@ -1,4 +1,6 @@
 ---
+# 标题
+title: MQTT JavaScript 客户端库
 # 编写日期
 date: 2020-02-07 17:15:26
 # 作者 Github 名称
@@ -68,7 +70,7 @@ import mqtt from 'mqtt'
 
 // 连接选项
 const options = {
-      clean: true, // true: 清除会话, false: 保留会话
+  		clean: true, // 保留回话
       connectTimeout: 4000, // 超时时间
       // 认证信息
       clientId: 'emqx_test',

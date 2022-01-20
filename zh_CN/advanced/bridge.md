@@ -1,4 +1,6 @@
 ---
+# 标题
+title: 消息桥接
 # 编写日期
 date: 2020-02-26 17:00:52
 # 作者 Github 名称
@@ -10,11 +12,10 @@ description:
 # 分类
 category:
 # 引用
-ref:
+ref: undefined
 ---
 
-# 消息桥接
-
+# 消息桥接 
 EMQ X 支持两种桥接方式:
 
 - RPC 桥接: 使用 Erlang RPC 协议的桥接方式，只能在 EMQ X 间使用
@@ -51,8 +52,7 @@ $ emqx_ctl plugins load emqx_bridge_mqtt
 ok
 ```
 
-## RPC 桥接的优缺点
-
+## RPC 桥接的优缺点 
 RPC 桥接的优点在于其不涉及 MQTT 协议编解码，效率高于 MQTT 桥接。
 
 RPC 桥接的缺点:
@@ -61,8 +61,7 @@ RPC 桥接的缺点:
 
 - RPC 桥接只能将本地的消息转发到远程桥接节点上，无法将远程桥接节点的消息同步到本地节点上
 
-## RPC 桥接举例
-
+## RPC 桥接举例 
 假设有两个 emqx 节点:
 
 | 名称  |        节点          | MQTT 端口 |
@@ -90,8 +89,7 @@ bridge.mqtt.emqx2.mountpoint = bridge/emqx2/${node}/
 
 挂载点利于 `emqx2` 区分桥接消息和本地消息。例如，以上配置中，原主题为 `sensor1/hello` 的消息，转发到 `emqx2` 后主题会变为 `bridge/emqx2/emqx1@192.168.1.1/sensor1/hello`。
 
-## MQTT 桥接举例
-
+## MQTT 桥接举例 
 MQTT 桥接是让 EMQ X 作为 MQTT 客户端连接到远程的 MQTT Broker。
 
 首先需要配置 MQTT 客户端参数:
@@ -181,8 +179,7 @@ bridge.mqtt.aws.subscription.1.topic = cmd/topic1
 bridge.mqtt.aws.subscription.1.qos = 1
 ```
 
-### EMQ X 桥接缓存配置
-
+### EMQ X 桥接缓存配置 
 EMQ X 的 Bridge 拥有消息缓存机制，当 Bridge 连接断开时会将 forwards 主题的消息缓存，等到桥接恢复时，再把消息重新转发到远程节点上。缓存机制同时适用于 RPC 桥接和 MQTT 桥接。
 
 设置缓存队列总大小:

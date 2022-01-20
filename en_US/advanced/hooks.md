@@ -1,3 +1,20 @@
+---
+# 标题
+title: 钩子
+# 编写日期
+date: 2020-02-18 17:15:26
+# 作者 Github 名称
+author: hjianbo
+# 关键字
+keywords:
+# 描述
+description:
+# 分类
+category: 
+# 引用
+ref: undefined
+---
+
 # Hooks
 
 ## Definition
@@ -12,22 +29,22 @@ When the **Hooks** mechanism does not exist in the system, the entire event proc
 
 In the process, if a HookPoint where a function can be mounted is added, it will allow external plugins to mount multiple callback functions to form a call chain. Then, the internal event processing  can be extended and modified .
 
-The authentication plugin commonly used in the system is implemented according to this logic. Take the simplest  plugin of [emqx_auth_mnesia](https://github.com/emqx/emqx/tree/master/apps/emqx_auth_mnesia) as an example:
+The authentication plugin commonly used in the system is implemented according to this logic. Take the simplest  plugin of [emqx_auth_username](https://github.com/emqx/emqx-auth-username) as an example:
 
-When only the `emqx_auth_mnesia` authentication plugin is enabled and anonymous authentication is disabled, according to the processing logic of the event according in the figure above, the logic of the authentication module at this time is:
+When only the `emqx_auth_username` authentication plugin is enabled and anonymous authentication is disabled, according to the processing logic of the event according in the figure above, the logic of the authentication module at this time is:
 
 1. Receive user authentication request (Authenticate)
 2. Read the parameter of *Whether to allow anonymous login*  and get ***deny*** result
-3. Execute the hook of the authentication event , that is, call back to the `emqx_auth_mnesia` plugin, assume this authentication is valid, and get **allow** result
+3. Execute the hook of the authentication event , that is, call back to the `emqx_auth_username` plugin, assume this authentication is valid, and get **allow** result
 4. Return **Authentication succeeded**, and successfully access the system
 
 It is shown in the following figure:
 
 ```
-                     EMQ X Core          Hooks & Plugins
+                     EMQ X Core          Hooks & Plugins     
                 |<---  Scope  --->|<-------  Scope  -------->|
                 |                 |                          |
-  Authenticate  |     Allow       |   emqx_auth_mnesia       | Authenticate
+  Authenticate  |     Allow       |   emqx_auth_username     | Authenticate
  =============> > - - - - - - No -> - - - - - - - - - - -Yes->==============> Success
      Request    |    Anonymous?   |     authenticate?        |     Result
                 |                 |                          |
@@ -80,21 +97,12 @@ The above is the main design concept of the callback function chain, which regul
 
 In the following two sections of [HookPoint](#hookpoint) and [callback function](#callback), all operations on hooks depend on  Erlang code-level API provided by [emqx](https://github.com/emqx/emqx). They are the basis for the entire hook logic implementation. 
 
-
-
-
 - For hooks and HTTP server applications, Refer to: [WebHook](webhook.md)
-- For hooks and other language applications, Refer to: [Modules - Extensions](../modules/exhook.md)
-
-
-
-
-- For hooks and HTTP server applications, Refer to: [WebHook](webhook.md)
-
+- For hooks and other language applications, Refer to: [Multipe-Language-Support](multiple-language-support.md)
+    - Only Lua is currently supported, Refer to: [emqx_lua_hook](multiple-language-support.md#lua)
 
 
 ## HookPoint
-
 EMQ X Broker is based on a client's key activities during its life cycle, and presets a large number of **HookPoints**. The preset mount points in the system are:
 
 | Name                 | Description                 | Execution Timing                                             |
@@ -152,7 +160,7 @@ emqx:unhook(Name, {Module, Function}).
 ## Callback function
 The input parameters and returned value of the callback function are shown in the following table:
 
-(For parameter data structure, see:[emqx_types.erl](https://github.com/emqx/emqx/blob/main-v4.3/src/emqx_types.erl))
+(For parameter data structure, see:[emqx_types.erl](https://github.com/emqx/emqx/blob/master/src/emqx_types.erl))
 
 
 | Name              | input parameter                                          | Returned value    |

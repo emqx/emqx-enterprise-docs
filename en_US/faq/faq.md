@@ -1,4 +1,6 @@
 ---
+# 标题
+title: 入门概念
 # 编写日期
 date: 2020-02-07 17:15:26
 # 作者 Github 名称
@@ -15,26 +17,26 @@ ref: undefinedBasic concept
 
 # Introduction
 
-## What's EMQ X?
+### What's EMQ X?
 
 EMQ X is an open-source, distributed MQTT messaging broker, it can support up to million level of concurrent MQTT connections.  It can be used for connecting to any devices that support MQTT protocol, and it can also be used for delivering message from server side to client.
 
 
 
 
-## How many products in EMQ X?
+### How many products in EMQ X?
 
 
-EMQ X totally has [3 products.](https://www.emqx.com/en/products/emqx) Different products support different level of connections, features and services etc.
+EMQ X totally has [3 products.](https://www.emqx.io/products) Different products support different level of connections, features and services etc.
 
-- EMQ X Broker: EMQ X open source version, supports the popular IoT protocols, such as MQTT, CoAP and LwM2M.
+- EMQ X Broker: EMQ X open source version, supports the popular IoT protocols, such as MQTT, CoAP and LwM2M. It supports 100k level concurrent MQTT connections.
 - EMQ X Enterprise: EMQ X enterprise version.  It is based on the open source version, and adds data persistence (support Redis, MySQL, MongoDB or PostgreSQL), data bridge to Kafka, LoRaWAN support, EMQ X monitoring, Kubernetes deployment etc. It supports 1M level concurrent MQTT connections.
 - EMQ X Platform: EMQ X Platform version is based on the Enterprise version，and support 10M level concurrent MQTT connections. We provide consulting service for complex IoT platforms, such as cross data center solutions. All kinds of services building an IoT platform can be provided, such as consulting, training, architect design, customized development, platform implementation, testing and operation.
 
 
 
 
-## What's EMQ X authentication and it's use scenario?
+### What's EMQ X authentication and it's use scenario?
 
 **Tags:** [*Auth*](tags.md#auth)
 
@@ -52,7 +54,7 @@ Besides using the configuration file (to configure authentication), EMQ X can al
 
 
 
-## What's Hook? What's the use scenario?
+### What's Hook? What's the use scenario?
 
 **Tags:** [*WebHook*](tags.md#webhook)
 
@@ -68,7 +70,7 @@ Hook is an interface provided by EMQ X, which will be triggered when a connectio
 - session.subscribed: after session subscribe topic
 - session.unsubscribed: after session unsubscribe topic
 - session.terminated: session is terminated
-- message.publish: MQTT message is published
+- message.publish: MQTT message is publish
 - message.delivered: MQTT message is delivered
 - message.acked: MQTT message is acknowledged
 - message.dropped: MQTT message is dropped
@@ -76,7 +78,7 @@ Hook is an interface provided by EMQ X, which will be triggered when a connectio
 
 
 
-## What's mqueue? How to use mqueue in EMQ X?
+### What's mqueue? How to use mqueue in EMQ X?
 
 **Tags:** [*Message Queue*](tags.md#message-queue)
 
@@ -86,7 +88,7 @@ mqueue is message queue stored in session during the message publish process. If
 
 
 
-## What's WebSocket? When to use Websocket to connect EMQ X?
+### What's WebSocket? When to use Websocket to connect EMQ X?
 
 **Tags:** [*WebSocket*](tags.md#websocket)
 
@@ -96,7 +98,7 @@ WebSocket is a full-duplex communication protocol based on HTTP protocol, user c
 
 
 
-## What's shared subscription, and it's use scenario?
+### What's shared subscription, and it's use scenario?
 
 **Tags:** [*Shared Subscription*](tags.md#shared-subscription)  [*Pub/Sub*](tags.md#pub-sub)
 
@@ -108,7 +110,7 @@ Shared subscription is very useful in data collection and centralized data analy
 
 
 
-## What is off-line message?
+### What is off-line message?
 
 **Tags:** [*Retain*](tags.md#retain)
 
@@ -120,7 +122,7 @@ Off-line message is useful when the connection is not stable, or the application
 
 
 
-## What is Subscription by Broker? And its use scenario?
+### What is Subscription by Broker? And its use scenario?
 
 **Tags:** [*Subscription by Broke*](tags.md#subscription-by-broke)
 
@@ -130,13 +132,13 @@ Usually an MQTT client has to subscribe to the topics expressly by itself, if it
 Using of Subscription by Broker can ease the management of massive client, and save the computational resource and bandwidth on device.
 
 ::: tip Tip
-Currently this feature is available in the EMQ X Enterprise edition. 
+Currently this feature is available in the EMQ X Enterprise edition.
 :::
 
 
 
 
-## What is the usage of system topics? What system topics are available?
+### What is the usage of system topics? What system topics are available?
 
 **Tags:** [*System Topic*](tags.md#system-topic)
 
@@ -149,12 +151,3 @@ Here are some examples of system topics, for a complete list of system topic ple
 - $SYS/brokers/${node}/clients/${clientid}/connected: this message is published when a client connects
 - $SYS/broker/${node}/stats/connections/count: Number of connections on a node
 - $SYS/broker/${node}/stats/sessions/count: Number of sessions on a node
-
-
-## Why can the client without username and password still connect after authentication is enabled?
-
-**Tags:** [*Auth*](tags.md#auth)
-
-EMQ X supports anonymous authentication and is enabled by default. After authentication is enabled, clients without username and password will successfully login using anonymous authentication. To change this behavior, you need to modify the `allow_anonymous` configuration item in `emqx.conf`, set it to false, and then restart EMQ X.
-
-Note: If your client is connected to port 11883, you need to modify `zone.internal.allow_anonymous`. For the relevant knowledge of Zone and Listener, please refer to [Configuration](../getting-started/config.md).

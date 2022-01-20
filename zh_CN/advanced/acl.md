@@ -1,4 +1,6 @@
 ---
+# 标题
+title: 发布订阅 ACL
 # 编写日期
 date: 2020-02-19 09:15:26
 # 作者 Github 名称
@@ -8,9 +10,9 @@ keywords:
 # 描述
 description:
 # 分类
-category:
+category: 
 # 引用
-ref:
+ref: undefined
 ---
 
 # 发布订阅 ACL
@@ -32,10 +34,8 @@ EMQ X 支持使用配置文件、外部主流数据库和自定义 HTTP API 作�
 
 **配置文件/内置数据源**
 
-
-* [内置数据库 认证/访问控制](../modules/mnesia_authentication.md)
-
-
+* [内置 ACL](./acl-file.md)
+* [Mnesia ACL](./acl-mnesia.md)
 
 使用配置文件提供认证数据源，适用于变动较小的 ACL 管理。
 
@@ -43,14 +43,10 @@ EMQ X 支持使用配置文件、外部主流数据库和自定义 HTTP API 作�
 
 **外部数据库**
 
-
-* [MySQL 认证/访问控制](../modules/mysql_authentication.md)
-* [PostgreSQL 认证/访问控制](../modules/pgsql_authentication.md)
-* [Redis 认证/访问控制](../modules/redis_authentication.md)
-* [MongoDB 认证/访问控制](../modules/mongo_authentication.md)
-* [LDAP 认证/访问控制](../modules/ldap_authentication.md)
-
-
+* [MySQL ACL](./acl-mysql.md)
+* [PostgreSQL ACL](./acl-postgres.md)
+* [Redis ACL](./acl-redis.md)
+* [MongoDB ACL](./acl-mongodb.md)
 
 外部数据库可以存储大量数据、动态管理 ACL，方便与外部设备管理系统集成。
 
@@ -58,18 +54,20 @@ EMQ X 支持使用配置文件、外部主流数据库和自定义 HTTP API 作�
 
 **其他**
 
-
-* [HTTP 认证/访问控制](../modules/http_authentication.md)
-
-
+* [HTTP ACL](./acl-http.md)
 
 HTTP ACL 能够实现复杂的 ACL 管理。
 
-::: tip
+
+
+::: tip 
 
 ACL 功能包含在认证鉴权插件中，更改插件配置后需要**重启插件**才能生效，
 
 :::
+
+
+
 
 ## 规则详解
 
@@ -81,10 +79,7 @@ ACL 是允许与拒绝条件的集合，EMQ X 中使用以下元素描述 ACL �
 "允许(Allow) / 拒绝(Deny)"  "谁(Who)"  "订阅(Subscribe) / 发布(Publish)" "主题列表(Topics)"
 ```
 
-
-同时具有多条 ACL 规则时，EMQ X 将按照规则排序进行合并，以 ACL 文件中的默认 ACL 为例，ACL 文件中配置了默认的 ACL 规则，规则从下至上加载：
-
-
+同时具有多条 ACL 规则时，EMQ X 将按照规则排序进行合并，以 [ACL 文件](./acl-file.md) 中的默认 ACL 为例，ACL 文件中配置了默认的 ACL 规则，规则从下至上加载：
 
 1. 第一条规则允许客户端发布订阅所有主题
 2. 第二条规则禁止全部客户端订阅 `$SYS/#` 与 `#` 主题
@@ -127,10 +122,7 @@ ACL 是允许与拒绝条件的集合，EMQ X 中使用以下元素描述 ACL �
 acl_nomatch = allow
 ```
 
-
-
-配置默认 ACL 文件，使用文件定义默认 ACL 规则：
-
+配置默认 [ACL 文件](./acl-file.md)，使用文件定义默认 ACL 规则：
 
 ```bash
 # etc/emqx.conf
@@ -138,7 +130,7 @@ acl_nomatch = allow
 acl_file = etc/acl.conf
 ```
 
-配置 ACL 授权结果为**禁止**的响应动作，为 `disconnect` 时将断开设备：
+配置 ACL 授权结果为**禁止**的响应动作，为 `ignore` 时将断开设备：
 
 ```bash
 # etc/emqx.conf
@@ -195,13 +187,13 @@ acl_cache_ttl = 1m
 - 直到最后一个 ACL 插件仍未通过，根据**默认授权**配置判定
   - 默认授权为允许时，允许客户端通过验证
   - 默认授权为禁止时，禁止客户端通过验证
-
+  
 
 ![_images/guide_3.png](./assets/guide_3.png)
 
 <!-- replace -->
 
-::: tip
+::: tip 
 
 同时只启用一个 ACL 插件可以提高客户端 ACL 检查性能。
 

@@ -1,4 +1,6 @@
 ---
+# 标题
+title: 认证
 # 编写日期
 date: 2020-02-19 18:40:28
 # 作者 Github 名称
@@ -10,11 +12,10 @@ description:
 # 分类
 category: 
 # 引用
-ref:
+ref: undefined
 ---
 
-# 认证
-
+# 认证 
 
 身份认证是大多数应用的重要组成部分，MQTT 协议支持用户名密码认证，启用身份认证能有效阻止非法客户端的连接。
 
@@ -38,39 +39,37 @@ EMQ X 支持使用内置数据源（文件、内置数据库）、JWT、外部�
 
 EMQ X 支持的认证方式：
 
+
 **内置数据源**
 
-
-* [内置数据库 认证/访问控制](../modules/mnesia_authentication.md)
-
-
-
+* [Username 认证](./auth-username.md)
+* [Cliend ID 认证](./auth-clientid.md)
+* [Mnesia 认证](./auth-mnesia.md)
 
 使用配置文件与 EMQ X 内置数据库提供认证数据源，通过 HTTP API 进行管理，足够简单轻量。
 
+
+
 **外部数据库**
 
-
-* [MySQL 认证/访问控制](../modules/mysql_authentication.md)
-* [PostgreSQL 认证/访问控制](../modules/pgsql_authentication.md)
-* [Redis 认证/访问控制](../modules/redis_authentication.md)
-* [MongoDB 认证/访问控制](../modules/mongo_authentication.md)
-* [LDAP 认证/访问控制](../modules/ldap_authentication.md)
-
-
+* [LDAP 认证](./auth-ldap.md)
+* [MySQL 认证](./auth-mysql.md)
+* [PostgreSQL 认证](./auth-postgresql.md)
+* [Redis 认证](./auth-redis.md)
+* [MongoDB 认证](./auth-mongodb.md)
 
 外部数据库可以存储大量数据，同时方便与外部设备管理系统集成。
 
+
+
 **其他**
 
-
-* [HTTP 认证/访问控制](../modules/http_authentication.md)
-* [JWT 认证](../modules/jwt_authentication.md)
-
-
-
+* [HTTP 认证](./auth-http.md)
+* [JWT 认证](./auth-jwt.md)
 
 JWT 认证可以批量签发认证信息，HTTP 认证能够实现复杂的认证鉴权逻辑。
+
+
 
 ::: tip 
 
@@ -86,6 +85,7 @@ JWT 认证可以批量签发认证信息，HTTP 认证能够实现复杂的认�
 - 认证成功：经过比对客户端认证成功
 - 认证失败：经过比对客户端认证失败，数据源中密码与当前密码不一致
 - 忽略认证（ignore）：当前认证方式中未查找到认证数据，无法显式判断结果是成功还是失败，交由认证链下一认证方式或匿名认证来判断
+
 
 ## 匿名认证
 
@@ -167,6 +167,8 @@ PostgreSQL 认证功能逻辑图：
   - 匿名认证开启时，允许客户端接入
   - 匿名认证关闭时，禁止客户端接入
 
+
+
 ![_images/guide_2.png](./assets/guide_2.png)
 
 <!-- replace -->
@@ -178,8 +180,7 @@ PostgreSQL 认证功能逻辑图：
 :::
 
 
-## TLS 认证
-
+## TLS 认证 
 MQTT TLS 的默认端口是 8883：
 
 ```bash
@@ -202,8 +203,7 @@ listener.ssl.external.cacertfile = etc/certs/cacert.pem
 listener.ssl.external.ciphers = ECDHE-ECDSA-AES256-GCM-SHA384,ECDHE-RSA-AES256-GCM-SHA384,ECDHE-ECDSA-AES256-SHA384,ECDHE-RSA-AES256-SHA384,ECDHE-ECDSA-DES-CBC3-SHA,ECDH-ECDSA-AES256-GCM-SHA384,ECDH-RSA-AES256-GCM-SHA384,ECDH-ECDSA-AES256-SHA384,ECDH-RSA-AES256-SHA384,DHE-DSS-AES256-GCM-SHA384,DHE-DSS-AES256-SHA256,AES256-GCM-SHA384,AES256-SHA256,ECDHE-ECDSA-AES128-GCM-SHA256,ECDHE-RSA-AES128-GCM-SHA256,ECDHE-ECDSA-AES128-SHA256,ECDHE-RSA-AES128-SHA256,ECDH-ECDSA-AES128-GCM-SHA256,ECDH-RSA-AES128-GCM-SHA256,ECDH-ECDSA-AES128-SHA256,ECDH-RSA-AES128-SHA256,DHE-DSS-AES128-GCM-SHA256,DHE-DSS-AES128-SHA256,AES128-GCM-SHA256,AES128-SHA256,ECDHE-ECDSA-AES256-SHA,ECDHE-RSA-AES256-SHA,DHE-DSS-AES256-SHA,ECDH-ECDSA-AES256-SHA,ECDH-RSA-AES256-SHA,AES256-SHA,ECDHE-ECDSA-AES128-SHA,ECDHE-RSA-AES128-SHA,DHE-DSS-AES128-SHA,ECDH-ECDSA-AES128-SHA,ECDH-RSA-AES128-SHA,AES128-SHA
 ```
 
-## PSK 认证
-
+## PSK 认证 
 如果希望使用 PSK 认证，需要将 [TLS 认证](#auth-tls) 中的 `listener.ssl.external.ciphers` 注释掉，然后配置 `listener.ssl.external.psk_ciphers`：
 
 ```bash

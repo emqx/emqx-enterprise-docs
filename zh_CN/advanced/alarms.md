@@ -1,4 +1,6 @@
 ---
+# 标题
+title: 告警
 # 编写日期
 date: 2020-08-21 17:41:22
 # 作者 Github 名称
@@ -10,7 +12,7 @@ description:
 # 分类
 category: 
 # 引用
-ref:
+ref: undefined
 ---
 
 # Alarm

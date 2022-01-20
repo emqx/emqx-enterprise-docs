@@ -1,7 +1,24 @@
+---
+# 标题
+title: 分布集群
+# 编写日期
+date: 2020-02-25 18:39:23
+# 作者 Github 名称
+author: terry-xiaoyu
+# 关键字
+keywords:
+# 描述
+description:
+# 分类
+category:
+# 引用
+ref: undefined
+---
+
 # Cluster
 
-## Distributed Erlang
-Erlang / OTP was originally a programming language platform designed by Ericsson for the development of telecommunication equipment systems. Telecommunication equipment (routers, access gateways) is typically a distributed system that connects the main control board and multiple business boards through the backplane.
+## Distributed Erlang 
+Erlang / OTP was originally a programming language platform designed by Ericsson for the development of telecommunication equipment systems. Telecommunication equipment (routers, access gateways) is typically a distributed system that connects the main control board and multiple business boards through the backplane. 
 
 ### Nodes and distributed Erlang
 The distributed programs of the Erlang / OTP language platform are composed of distributed interconnected Erlang runtime systems. Each Erlang runtime system is called a node. Nodes are interconnected by TCP to form a network structure.
@@ -69,7 +86,7 @@ Each node in the Erlang cluster can be connected through TCPv4, TCPv6 or TLS, an
 ## EMQ X Broker Distributed cluster design
 The basic function of EMQ X Broker distribution is to forward and publish messages to subscribers on each node, as shown in the following figure:
 
-![image](../assets/design_9.png)
+![image](./../assets/design_9.png)
 
 To achieve this, EMQ X Broker maintains several data structures related to it: subscription tables, routing tables, and topic trees.
 
@@ -286,12 +303,6 @@ Or remove the emqx@s2.emqx.io node from the cluster on s1.emqx.io:
 $ ./bin/emqx_ctl cluster force-leave emqx@s2.emqx.io
 ```
 
-#### Start a cluster on single machine
-
-For users who only have one server, the pseudo-distributed starting mode can be used. Please notice that if we want to start two or more nodes on one machine, we must adjust the listening port of the other node to avoid the port conflicts.
-
-The basic process is to copy another emqx folder and name it emqx2. After that, we let all the listening ports of the original emqx to be added by an offset as the listening ports of the emqx2 node. For example, we can change the MQTT/TCP listening port from the default 1883 to 2883 as the MQTT/TCP listening port for emqx2. Please refer to [Cluster Script](https://github.com/terry-xiaoyu/one_more_emqx) regarding to the above operations and also refer to [Configuration Instructions](../getting-started/config.md) and  [Configuration Items](../configuration/configuration.md) for details.
-
 ## Network Partition Autoheal 
 *EMQ X* supports Network Partition Autoheal, which can be configure in `etc/emqx.conf`:
 
@@ -315,35 +326,12 @@ cluster.autoclean = 5m
 ```
 
 ## Firewall settings
+If there is a firewall between the cluster nodes, the firewall needs to open port 4369 and a TCP port segment. 4369 is used by the epmd port mapping service. The TCP port segment is used to establish connections and communications between nodes.
 
-### The Node Discovery Ports
+After the firewall is set, you need to configure the same port segment in  `emqx/etc/emqx.conf`:
 
-If the environment variable WITH_EPMD=1 is set in advance, the epmd (listening port 4369) will be enabled for node discovery when emqx is started, which is called `epmd mode`.
-
-If the environment variable WITH_EPMD is not set, epmd is not enabled when emqx is started, and emqx ekka is used for node discovery, which is also the default method of node discovery  since version 4.0. This is called `ekka mode`.
-
-**epmd mode：**
-
-If there is a firewall between cluster nodes, the firewall needs to open TCP port 4369 for each node, to allow peers query each other's listening port. The firewall should also allow nodes connecting to port in configurable range from `node.dist_listen_min` to `node.dist_listen_max` (inclusive, default is `6369` for both)
-
-**ekka mode（Default mode since version 4.0）：**
-
-In `ekka` mode, the port mapping is conventional, but not dynamic as in `epmd` mode.
-The configurations `node.dist_listen_min` and `node.dist_listen_max` take no effect in this case.
-
-If there is a firewall between the cluster nodes, the conventional listening port should be allowed
-for nodes to connect each other. See below for port mapping rule in `ekka` mode.
-
-Erlang distribution port mapping rule in `ekka` mode: `ListeningPort = BasePort + Offset`,
-where `BasePort` is 4370 (which is not made configurable), and `Offset` is the numeric suffix of the node's name. If the node name does not have a numeric suffix, `Offsset` is 0.
-
-For example, having `node.name = emqx@192.168.0.12` in `emqx.conf` should make the
-node listen on port `4370`, and port  `4371` for `emqx1` (or `emqx-1`), and so on.
-
-### The Cluster RPC Port
-
-Each emqx node also listens on a (conventional) port for the RPC channels, which should
-also be allowed by the firewall. The port mapping rule is similar to the node discovery
-ports in `ekka mode`, but with the `BasePort = 5370`. That is, having
-`node.name = emqx@192.168.0.12` in `emqx.conf` should make the node listen on port `5370`,
-and port `5371` for `emqx1` (or `emqx-1`), and so on.
+```bash
+## Distributed node port range
+node.dist_listen_min = 6369
+node.dist_listen_max = 7369
+```
