@@ -707,7 +707,7 @@
       "children": [
         {
           "title": "变更日志",
-          "path": "changes/changes-ee-4.3"
+          "path": "changes/changes-ee-4.4"
         },
         {
           "title": "生命周期 EOL",
@@ -715,7 +715,7 @@
         },
         {
           "title": "升级指南",
-          "path": "changes/upgrade-4.3"
+          "path": "changes/upgrade-4.4"
         }
       ]
     },
@@ -1375,7 +1375,7 @@
       "children": [
         {
           "title": "Change log",
-          "path": "changes/changes-ee-4.3"
+          "path": "changes/changes-ee-4.4"
         },
         {
           "title": "End of life dates",
@@ -1383,7 +1383,7 @@
         },
         {
           "title": "Upgrade guide",
-          "path": "changes/upgrade-4.3"
+          "path": "changes/upgrade-4.4"
         }
       ]
     },
