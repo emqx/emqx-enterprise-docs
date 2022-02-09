@@ -2,7 +2,7 @@
 # Table of Contents
 
 1.  [Slow subscribers statistics](#org0a58d32)
-    1.  [open module](#org7939dfc)
+    1.  [Create module](#org7939dfc)
     2.  [Implementation note](#org417d240)
     3.  [Configuration description](#orgf0feb6e)
     4.  [Slow subscribers record](#orga6267c1)
@@ -16,7 +16,7 @@ This module ranks subscribers and topics in descending order according to the la
 
 <a id="org7939dfc"></a>
 
-### Create module
+## Create module
 
 Open EMQ X Dashboard, click on the "Module" on the left. Then, select "add module":
 
